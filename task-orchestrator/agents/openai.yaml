@@ -1,0 +1,4 @@
+interface:
+  display_name: "任务总控"
+  short_description: "自然语言任务的技能路由、计划审批、持续执行与分层学习"
+  default_prompt: "使用 $task-orchestrator 分析我的自然语言任务，重新扫描技能，补全关键信息，先提交计划，获批后执行到交付并整理分层学习。"

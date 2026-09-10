@@ -1,0 +1,24 @@
+# Runtime output (generated per run)
+output/
+workspace/
+requirements/
+
+# Agent memory & evolved prompts (machine-specific)
+agents/memory/*.md
+agents/prompts/*.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code
+.claude/

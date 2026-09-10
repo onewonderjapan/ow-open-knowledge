@@ -1,0 +1,27 @@
+# 工作流配置（声明式真源）。遵循 STANDARD.md §7。
+name: CHANGE-ME-workflow-name
+
+# 运行模式：paper=模拟（默认，安全）；live=真实（需人工显式改并二次确认）
+mode: paper
+
+# 调度：即便由外部 cron 实际注册，也在此登记为真源
+schedule:
+  # 可拆多个时刻，契合业务节奏
+  - at: "07:30"        # 例：开盘前——采集 + 决策
+    phases: [ingest, decide]
+  - at: "16:30"        # 例：收盘后——评估 + 改善
+    phases: [evaluate, improve]
+  timezone: Asia/Tokyo
+
+# 确认门：命中即停下问人（true=需要人工确认）。见 STANDARD.md §9
+gates:
+  real_order: true       # 真实下单/转账
+  send_message: true     # 发邮件/消息
+  publish: true          # 对外发布
+  account_settings: true # 改账户设置
+
+# 业务参数（按需扩展）
+params:
+  benchmark: null        # 评估基准，如某指数代码
+  universe: []           # 关注标的
+  max_position_pct: 20   # 单仓上限（风险约束示例）

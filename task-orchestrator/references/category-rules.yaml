@@ -1,0 +1,53 @@
+categories:
+  frontend:
+    - frontend
+    - react
+    - vue
+    - next.js
+    - ui
+    - browser
+    - css
+    - html
+    - phaser
+    - three.js
+    - expo
+  sre:
+    - sre
+    - deploy
+    - deployment
+    - incident
+    - monitor
+    - kubernetes
+    - docker
+    - terraform
+    - ci
+    - cloud
+    - nvidia
+  excel:
+    - excel
+    - spreadsheet
+    - workbook
+    - xlsx
+    - csv
+  documents:
+    - document
+    - word
+    - docx
+    - pdf
+    - presentation
+    - slides
+    - pptx
+  research:
+    - research
+    - paper
+    - dataset
+    - evaluation
+    - experiment
+  general:
+    - plan
+    - debugging
+    - testing
+    - git
+    - github
+    - workflow
+    - skill

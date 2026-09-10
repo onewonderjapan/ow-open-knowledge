@@ -1,0 +1,8 @@
+# 機密等級「顧客機密」の場合は必須（社内のみでも推奨）
+local_data/
+*.local.json
+# 実行時産物
+out/
+__pycache__/
+*.pyc
+.venv/

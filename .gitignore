@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Project outputs (ai-stack)
+out/
+ai-stack/out/
+
+# Project outputs (dev-pipeline)
+workspace/
+output/
+dev-pipeline/workspace/
+dev-pipeline/output/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

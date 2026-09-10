@@ -1,0 +1,6 @@
+.venv/
+out/
+__pycache__/
+*.pyc
+local_data/
+masking/entities.local.json

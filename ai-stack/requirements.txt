@@ -1,0 +1,5 @@
+# The demo Web UI (ui/app.py) runs on the standard library only.
+# janome is required by the pipeline (RAG layer) even with the stub provider.
+# anthropic is required only for the anthropic-api provider.
+janome
+anthropic
