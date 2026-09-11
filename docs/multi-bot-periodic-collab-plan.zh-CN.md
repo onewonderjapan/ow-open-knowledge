@@ -1,1 +1,1 @@
-{{LOAD_FROM_/tmp/push_content_only.txt}}
+{{FILE:/tmp/exact_body.md}}
