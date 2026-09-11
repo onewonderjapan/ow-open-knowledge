@@ -1,1 +1,1 @@
-PLACEHOLDER_LOAD_FROM_FILE
+{{LOAD_FROM_/tmp/push_content_only.txt}}
