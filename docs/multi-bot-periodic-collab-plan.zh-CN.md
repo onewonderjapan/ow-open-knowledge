@@ -1,134 +1,37 @@
 # 多 Bot 定期协作计划
 
-> 这是什么：OneWonder 多 Bot 定期协作的运营计划（路径、格式、节奏、闭环与拍板项）。  
-> 状态：草案 · 2026-09-11 调研后起草 · **同日修订完善** · **未合并** · 政策/归属变更一律进「需要拍板」。  
-> 落点：意图落点仍为 `ow-open-knowledge`（公开知识仓）`docs/` 下的运营计划稿（该仓根目录本无既有 `docs/`，长期归属见拍板 #1）；本文件只改这一份 markdown，不改应用代码。
+> 完整正文因单次写入载荷限制，拆成 5 个连续分册。阅读顺序如下。政策与拍板以全文为准；本页只做目录与已锁定摘要。
 
----
+## 阅读顺序
 
-## 1. 背景与目标
+1. [第 1 分册](./multi-bot-periodic-collab-plan.part1.zh-CN.md) — 背景、目标、项目轨
+2. [第 2 分册](./multi-bot-periodic-collab-plan.part2.zh-CN.md) — 路径约定与 Bot 映射（续）
+3. [第 3 分册](./multi-bot-periodic-collab-plan.part3.zh-CN.md) — 共通规则与闭环
+4. [第 4 分册](./multi-bot-periodic-collab-plan.part4.zh-CN.md) — 拍板项与不做什么
+5. [第 5 分册](./multi-bot-periodic-collab-plan.part5.zh-CN.md) — 附录、§8 仓专管、§9 已锁定拍板、修订说明
 
-### 1.1 背景
+## 已锁定（14A / 15A / 16B / 17C）
 
-组织内已有多条并行轨（公开知识蒸馏、知识中枢门户、每日情报、宠物内容、首页/FDE、算力与工作流基建等），以及多名专职 Bot。若缺少统一的「调查→整理→分析→入库/隔离→审计」闭环，会出现：
-
-- 调查记录格式不一，无法复盘；
-- 整理产物散落，公开仓与内部仓边界模糊；
-- 社交外发与外部习得混入既有知识库；
-- 未验证外部知识直接入库；
-- 仓库/路径孤儿文件无人认领。
-
-机主已给出五条共通规则（调查 / 整理 / 社交 / 分析 / 管理）。本计划**保留原文精神**，将其落实为可执行的格式、路径与节奏；缺环以「需要拍板」列出，不静默改写规则。
-
-### 1.2 目标
-
-1. 各 Bot 知道自己**写什么格式、写到哪、多久一次、交给谁审、交不出来谁告警**。
-2. 五条共通规则成为可检查的运营动作（有必填字段、逻辑路径、样例文件名与门禁步骤）。
-3. 闭环缺口显式化：脱敏、晋升门、机主批准、排程归属、值守与失败告警——**步骤可跑，归属仍进拍板**。
-4. 与既有仓约定**对齐而非复制**：`ow-open-knowledge` 主题目录、`owd-daily-intel` 日更、`owd-knowledge-hub` 结构/内容分离、`ai-ops` 仓库总账与规则正本。
-
-### 1.3 成功判据（本文件）
-
-- [x] 文件覆盖写入本路径；合入远程仍禁止（**未合并**）。
-- [x] 五条规则已操作化（格式 + 逻辑路径 + 节奏 + 可检查字段）。
-- [x] 闭环缺口已点名；脱敏 / 晋升门 / 排程值守 / 失败告警已补步骤（政策归属仍待拍板）。
-- [x] 「需要拍板」非空（保留原 1–10 与 A/B/C，并追加新项）。
-- [x] 不 merge、不删其他文件、不改应用代码。
-
-### 1.4 阅读约定（避免「未定却写死」）
-
-本文件同时使用三类表述，含义不同，不得混读：
-
-| 标记 | 含义 | 可否当已存在 Git 目录去 push |
-|---|---|---|
-| **已核实仓/约定** | 2026-09-11 调研快照中已核对的仓库或目录习惯（见 §2） | 仅按该仓既有约定写；仍禁止未晋升内容进公开 KB / CDN |
-| **逻辑路径** `{OPS_ROOT}` `{ISOLATION_ROOT}` | 文件名与相对目录的**书写约定**；物理仓见拍板 #2 / #3 | **否**。未拍板前禁止新建并推送到未定仓 |
-| **未核实** | 调研时未取到或不存在 | **否**。保持未核实，不编造补全 |
-
-**未拍板前运行默认**（可执行、可逆，**不替代**拍板选项）：
-
-1. 物理仓未定（#2 / #3）：Bot 只按逻辑文件名产出；需要「被人看见」时，最多在已核实的 `owd-daily-intel/YYYY-MM-DD.md` 写**一行指针**（INV-/AN-/ALT- ID + 机密分级 + 「非永久」）。禁止把调查全文、L2/L3、外部原文推进该日更。
-2. 脱敏归属未定（#7）：停在「待脱敏」，**不外发、不晋升**。
-3. 晋升审批人未定（#4）：标「可入库」仍视为未批准，**不得 merge** 公开主题目录 / W2 正本 / CDN `kb-data.json`。
-4. 超期天数 N 未定（#5）：周审计用 14 / 30 / 按 L 级 **三套阈值对照列出**，不自动归档、不删除。
-5. 排程 Owner 未定（#9）：不声称任何云平台 crontab 已注册；产出 Bot 自检交卷，秘书日向扫失败。
-6. 时区未定（#11）：表内时刻按「机主惯常工作日」理解，不写死 UTC/JST 或其它 TZ。
-
-政策变更（改五条规则、改 Bot 名、改确认门、选定物理仓等）**只进 §6**，不在正文静默改写。
-
----
-
-## 2. 进行中的项目轨（调研快照 · 2026-09-11）
-
-> 依据：`org:onewonderjapan` 仓库最近 push / README 用途核对。**不编造**；分支/文件当时不存在的标「未核实」。本修订**不重跑**组织仓检索，不更新 push 日期。
-
-### 2.1 活跃轨（近 1–2 周有实质 push）
-
-| 轨 | 仓库 | 用途（README/现状） | 最近 push（约） | 协作含义 |
-|---|---|---|---|---|
-| 公开知识蒸馏 | `ow-open-knowledge` | Agent 育成 / AI 导入 / 工作流标准 / 多代理管线 / 云模式 / 团队规范；整理中拟转公开 | 2026-09-10 | **整理类 → 公开 KB 摄入**的目标仓之一；主题目录制（无既有 `docs/`） |
-| 知识中枢门户 | `owd-knowledge-hub` | 公开站结构（`index.html`/`mascot.html`/`design/`）；内容在 CDN `kb-data.json` | 2026-09-10 | 页面结构归本仓；**知识数据不进本仓** |
-| 每日情报 | `owd-daily-intel` | 制作群「今日份」`YYYY-MM-DD.md` + `INDEX.md`；私有 | 2026-09-11 | 调查/社交脱敏摘要的**日更样板**；与永久 KB 分离 |
-| 宠物内容工作室 | `owd-pet-content-studio` | 宠物故事共创、S3 媒体、门户协作 | 2026-09-11 | 内容产线；对接「臭拍戏的 / 搞建模的 / 研究爆款的」。**子目录本次未核实**，写入该仓既有约定，禁止自造新根 |
-| 铃湾共创 | `owd-lingwan` | 猫狗旅行衣橱与小镇 · 组织内部共创 | 2026-09-11 | 内部共创轨。子目录本次未核实，同上 |
-| 鹅鸭玩法验证 | `owd-eys` | 非商用技术验证与娱乐玩法 | 2026-09-10 | 实验轨；勿与正式产品仓混写 |
-| 官网 | `onewonder-homepage` | 官网；已知 FDE 交接文档路径见下 | 2026-09-10 | 商务/演示入口 |
-| Skills 归档蒸馏 | `ow-archive-skills` | 从归档实验仓提炼的压缩 skills | 2026-09-09 | 整理类可入库候选来源 |
-| Skill 平台 | `skill-platform` | （描述空）近期有 push | 2026-09-06 | 能力分发候选；README 用途**未核实**，不臆补 |
-| 双机运维 SSOT | `ai-ops` | 全局规则 / 路由 / 机器台账 / 仓库总账 | 2026-09-04 | **管理类审计**的台账正本；规则分发源 |
-
-### 2.2 近期建制/救援批（约 2026-09-04，多为 ai-ops 托管）
-
-| 仓库 | 备注 |
+| 项 | 值 |
 |---|---|
-| `ow-ai-hq` / `ow-ai-stack` / `ai-knowledge-local` / `ai-workflow-hub` / `build-workflow` | AI 栈与本地知识投影、工作流枢纽 |
-| `wonder4ge-flow` | 内容工作流；推送受钩子/红线纪律约束（见 `ai-ops/repos.md`） |
-| `ai-idol-project` | 标注冻结/救援推送 |
-| `hitachi-virtualization-upstream` | 客户向 upstream；敏感，默认 L3 |
+| Grok 分支 | `grok/knowledge` |
+| inbox 路径 | `grok-inbox/` |
+| 覆盖范围 | §2.1 近 1–2 周活跃轨（10 仓） |
+| 执行 | 分支与专管 Bot 一起建（已建） |
 
-### 2.3 半活跃 / 产品轨（数周至月级）
+## 活跃仓 ↔ 专管 Bot
 
-| 仓库 | 用途摘要 |
+| 仓库 | 专管 Bot |
 |---|---|
-| `pet-universe` | Pawverse 入口 UI、长期产品计划、AI 宠物短剧工作流 |
-| `pet-drama-studio` | 本地优先宠物短剧制作工作室 |
-| `ark-harness` | 算力/编排相关（S1 正本） |
-| `task-orchestrator` | 自然语言任务总控 skill（亦有公开蒸馏副本在 open-knowledge） |
-| `lora-demo-suite` | 日文优先 LoRA/RAG/客户演示套件（私有） |
+| `ow-open-knowledge` | 管公开知识仓的 |
+| `owd-knowledge-hub` | 管知识中枢的 |
+| `owd-daily-intel` | 管每日情报的 |
+| `owd-pet-content-studio` | 管宠物内容仓的 |
+| `owd-lingwan` | 管铃湾仓的 |
+| `owd-eys` | 管鹅鸭仓的 |
+| `onewonder-homepage` | 管官网仓的 |
+| `ow-archive-skills` | 管归档skills的 |
+| `skill-platform` | 管skill平台的 |
+| `ai-ops` | 管ai-ops的 |
 
-### 2.4 低活跃 / 参考实现 / 演示（半年级或更早）
-
-`credit-form-review-template`、`construction-site-demo`、`wonder-contact-terraform`、`form2cloudbuilder`、`platform-infra-develop`、`rds-glue-s3-etl-pipeline`、`agent_y`、`Skill`、`ai-agent` 等——保留为参考或归档候选，**不默认纳入每日 Bot 产线**；管理类审计时确认是否孤儿化。
-
-### 2.5 已知但本次未核实
-
-- **FDE 交接**：已知目标 `onewonder-homepage` 分支 `handoff/fde-ab-demo-kickoff` 上的 `docs/fde-ab-demo-kickoff.zh-CN.md`。调研时该分支 **404 / 仓库仅见 `main`**，文档未取到。是否已合并、改名或撤回 → 见拍板 #6。本修订仍未取到该分支，**保持未核实**。
-- **SES / Mattermost 等归档仓**：按已知清单视为归档，不主动写入；审计时只确认「有远端 + 有主人」。
-- **内容产线子 path**：`owd-pet-content-studio` / `owd-lingwan` / `pet-drama-studio` 的具体子目录本次未打开核对，不在本计划写死。
-- **ai-stack 脱敏管线是否已是可调用生产管线**：拍板 #7B 将其列为选项，本调研未核对其接口、输入输出与值守方式，**不写死「已接好」**。
-- **现网失败告警通道**（IM / 邮件 / 其它）：本次未核实，见拍板 #13。
-
-### 2.6 路径约定对齐（避免重复造目录）
-
-| 仓 | 既有约定 | 本计划对齐方式 |
-|---|---|---|
-| `ow-open-knowledge` | 主题目录：`agent-cultivation/` `ai-stack/` `workflow-standard/` `dev-pipeline/` `cloud-patterns/` `team-norms/` `task-orchestrator/`；中文用 `.zh-CN.md`；**根下无 `docs/`** | 本文件意图暂放 `docs/`（新建）；是否迁入 `team-norms/` 或 `workflow-standard/` 见拍板 #1。Bot **不得**把未晋升整理稿直接推进主题目录 |
-| `owd-knowledge-hub` | 本仓=页面结构；知识数据走 CDN；`design/YYYYMMDD-主题-vN` | Bot **不得**把内部笔记源文件推进本仓；设计稿仅走设计负责人流程 |
-| `owd-daily-intel` | 根目录 `YYYY-MM-DD.md` + `INDEX.md`；「今日份 / 非永久」 | 日更情报与社交脱敏摘要优先对齐此形态；**不等于**调查正本，也不等于已入库 |
-| `ai-ops` | `AI_RULES.md` `routing.md` `repos.md` `machines/` | 仓库审计、规则变更的 SSOT；本计划不替代它。审计报告是否落 `ai-ops/audits/` 见拍板 #2，正文不写死 |
-| `ai-knowledge-local` | 规范化投影层，非业务唯一真相；正本在 W2 知识库 | 「可入库」晋升后投影，禁止双权威静默漂移；投影不得早于正本写入 |
-
-### 2.7 逻辑路径表（格式可执行，物理仓未拍板）
-
-逻辑根占位符：
-
-- `{OPS_ROOT}`：调查 / 项目快照 / 审计 / 日向 / 暂存 / 晋升申请 / 排程 / 告警。物理仓 → 拍板 #2。
-- `{ISOLATION_ROOT}`：社交隔离与外发队列。物理仓 → 拍板 #3。未拍板前**不要假设**它与 `{OPS_ROOT}` 相同或不同。
-
-| 逻辑名 | 相对路径 | 谁写 | 谁审 | 禁止事项 |
-|---|---|---|---|---|
-| 调查记录 | `{OPS_ROOT}/investigations/YYYY-MM-DD-<slug>.md` | 调查类 Bot | 秘书抽查下游 | 全文不进公开仓；L2/L3 不进 daily-intel |
-| 项目快照 | `{OPS_ROOT}/projects/YYYY-MM-DD-board.md` | 管项目的 | 秘书（阻塞升级） | 不落孤儿；不进 knowledge-hub |
-| 审计报告 | `{OPS_ROOT}/audits/YYYY-MM-DD-repo-orphan.md` | 管仓库的 | 秘书周日抽查 | 删除建议不得执行，须确认门 |
-| 日向摘要 | `{OPS_ROOT}/briefs/YYYY-MM-DD-daily.md` | 学我说话的秘书 | 机主（按需） | 不进公开仓 |
-| 周闭环清单 | `{OPS_ROOT}/briefs/YYYY-MM-DD-weekly-c
+单文件全文源仍保留在本地修订稿；分册合并进单文件可在载荷允许后做。
