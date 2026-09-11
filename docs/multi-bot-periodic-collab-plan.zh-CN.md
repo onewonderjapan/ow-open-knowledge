@@ -1,1 +1,1 @@
-{{FILE:/tmp/exact_body.md}}
+PLACEHOLDER_REPLACE_WITH_FULL_CONTENT_FROM_/tmp/verified_body.md
