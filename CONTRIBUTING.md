@@ -51,3 +51,26 @@ CI 在每个 PR 上跑同样的检查。
 ## License
 
 提交即表示你同意以 [MIT](LICENSE) 许可证发布你的贡献。
+
+
+## Bot 协作轨（2026-09-11 起）
+
+本仓有三条协作分支。它们都**不是仓库正本**，不合并进 `main`，只作为建议与反馈的输送通道：
+
+| 分支 | 目录 | 写入方 | 读取方 | 用途 |
+|---|---|---|---|---|
+| `grok/knowledge` | `grok-inbox/` | 专管 Grok Bot | 开发 agent | Bot 定期推送的知识 / 建议 / 风险提醒（条目 `GK-<仓>-YYYYMMDD-NN`） |
+| `grok/feedback` | `grok-feedback/` | 开发 agent / 机主 | 专管 Grok Bot | 对 GK 条目的采纳 / 拒绝 / 修正要求（条目 `GF-<仓>-YYYYMMDD-NN`） |
+| `claude/review` | `claude-review/` | Claude（开发侧 review） | 开发 agent / 机主 | 对仓内容本身的 review 建议（条目 `CR-<仓>-YYYYMMDD-NN`） |
+
+开发 agent 每次会话开始：
+
+```bash
+git fetch origin grok/knowledge grok/feedback claude/review
+git show origin/grok/knowledge --stat --oneline   # 看最新 GK 条目
+```
+
+- 读 `grok-inbox/` 最新条目当**建议输入**，不当已生效规则。
+- 对 GK 的裁定写进 `grok/feedback`，**不直接写 `grok/knowledge`**（那是 Bot 专属写入分支）。
+- 要落地的改动走正常 PR → `main`，PR 描述引用对应 GK / CR 条目 ID。
+- 专管 Bot 只写 `grok/knowledge`，运行前读 `grok/feedback`；禁止 push `main`。
