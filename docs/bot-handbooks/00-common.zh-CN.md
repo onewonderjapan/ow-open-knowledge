@@ -34,16 +34,51 @@
 - 外发或公开前：待脱敏 → 三件套（src/map/out）→ 第二人抽查通过。  
 - 脱敏归属未拍板前：停在待脱敏，不外发、不晋升。
 
-## 5. 交卷与失败
+## 5. CLI 优先（省 Bot 额度）
+
+机主已付费开通 Cursor；共享机上已安装并登录 Cursor CLI。接到多步/重任务时，**默认调 CLI 执行**，少用 Bot 对话本身烧额度。
+
+### 5.1 命令名（禁止混用）
+
+| 命令 | 用途 |
+|---|---|
+| `cursor-agent` | Cursor Agent CLI（默认重活入口） |
+| `grok` | Grok Build CLI（本地 `grok-4.6` / xhigh 等） |
+| `agent` | **仅** Grok 旧入口；**不要**用它调 Cursor |
+
+PATH 约定：`~/.local/bin` 里用 `cursor-agent`；`~/.grok/bin` 里 `grok` / `agent` 仍属 Grok。裸写 `agent` 一律当 Grok，不写 Cursor。
+
+### 5.2 什么时候必须走 CLI
+
+- 仓库审查、写稿、改文件、长推理、批量整理、计划扩写
+- 需要指定模型/effort 的任务（Cursor 用 `--model`；Grok 用 `grok` 的模型参数）
+- 无头自动化：`cursor-agent -p "…" --output-format text`（必要时加 `--trust` / `--force`，但仍遵守本手则红线）
+
+### 5.3 什么时候可以只在 Bot 里做
+
+- 一两句确认、转发指令、读手则后的短答
+- 请示机主确认门、收齐结果后的汇报
+- CLI 不可用时：写失败说明，改走备用路径或请示，不假装已跑完
+
+### 5.4 仍不可突破的红线
+
+CLI 不放宽手则：不 push `main` 交建议、三轨不合（`claude/review` / `grok/knowledge` / `grok/feedback`）、不删库、不外发未脱敏、确认门事项仍停并请示。
+
+### 5.5 交卷时要写明
+
+报告里注明：用了 `cursor-agent` 还是 `grok`、模型/关键参数、命令摘要；失败则附退出码与关键日志要点。
+
+## 6. 交卷与失败
 
 - 到点无产出：写空窗说明或 ALT 告警（见计划附录 F），不要假装完成。  
 - 禁止路径、缺必填、未授权 live → 停 + ALT。  
 - 秘书日向会扫失败；被点名要在宽限内补交或说明。
 
-## 6. 确认门（默认停下请示机主）
+## 7. 确认门（默认停下请示机主）
 
 改五条规则或本手则政策、改 Bot 名/裁撤、删文件、对外 live、晋升公开 KB/CDN、动用客户 L3 原文。
 
-## 7. 版本
+## 8. 版本
 
 - 2026-09-11 初版 · 与计划分支 `plan/multi-bot-periodic-collab` 对齐 · 未合并政策以拍板为准
+- 2026-09-12 增补 §5 CLI 优先：`cursor-agent` / `grok` 分名；重任务默认走 CLI 省 Bot 额度
