@@ -21,7 +21,7 @@ Copy the skill folders into your workbench's `.claude/skills/` (Claude Code) or
 ```bash
 cp -r workbench-skills/<skill-name>            <your-workbench>/.claude/skills/
 cp workbench-skills/_agents/coach.md  <your-workbench>/.claude/agents/coach.md
-# Codex-style: .agents/skills/ and .agents/agents/
+# Codex-style skills path: .agents/skills/<skill-name>
 ```
 
 Then invoke them in a workbench session as `/daily-start`, `/weekly-check`, etc.

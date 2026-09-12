@@ -43,6 +43,9 @@ jobs:
       - name: task-orchestrator tests
         run: python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests -v
 
+      - name: skill frontmatter tests
+        run: python -m unittest discover -s scripts -t scripts -p "test_*.py" -v
+
   demo-smoke:
     name: ai-stack offline demo
     runs-on: ubuntu-latest

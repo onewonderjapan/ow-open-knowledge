@@ -32,10 +32,11 @@ itself as usable in both ecosystems:
 Looking only in `.agents/skills` made a Claude Code user's skills invisible to the
 very tool that is supposed to catalog them.
 
-A default scan of *this* knowledge-base repository is empty on purpose: the
-published skills (`cloud-patterns/skills/`, `agent-cultivation/workbench-skills/`,
-this directory, `workflow-standard/template/`) are source packages, not an
-installed `.claude/` or `.agents/` tree. Catalog them with `--root`:
+A default scan of *this* knowledge-base repository does not see the published
+skills (`cloud-patterns/skills/`, `agent-cultivation/workbench-skills/`,
+this directory, `workflow-standard/template/`): they are source packages, not an
+installed `.claude/` or `.agents/` tree here. A default scan may still list
+skills from your user home. Catalog this repo's published skills with `--root`:
 
 ```bash
 python3 scripts/scan_skills.py --cwd .. --pretty \

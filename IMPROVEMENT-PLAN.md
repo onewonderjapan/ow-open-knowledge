@@ -205,7 +205,7 @@ cd task-orchestrator && python3 scripts/scan_skills.py --cwd /workspace --pretty
 
 **仓库自带的技能扫描器，扫不到本仓库发布的任何技能。**
 
-**方案**：不要强行收成一条路径。`.claude/skills` 是 Claude Code 的约定，`.agents/skills` 是 Codex 系的约定；`task-orchestrator` 自称两边都能用，扫描器就必须两边都看。本仓发布的 skill 是源码包，不在那两棵树下，默认扫根目录为空是对的——用 `--root` 编目。公开的 `SKILL.md` 必须带 `name` / `description` frontmatter，否则任何加载器都当它不存在。**已落地**：`scan_skills.py` 的 `SKILL_DIRS`、四份 `cloud-patterns` skill 补了 frontmatter、`scripts/check_skills.py` 进 CI。实测从 6 skills / 4 warnings 变成 10 skills / 0 warnings（加上模板与本 skill 共 11 个）。
+**方案**：不要强行收成一条路径。`.claude/skills` 是 Claude Code 的约定，`.agents/skills` 是 Codex 系的约定；`task-orchestrator` 自称两边都能用，扫描器就必须两边都看。本仓发布的 skill 是源码包，不在那两棵树下，默认扫根目录为空是对的——用 `--root` 编目。公开的 `SKILL.md` 必须带 `name` / `description` frontmatter，否则任何加载器都当它不存在。**已落地**：`scan_skills.py` 的 `SKILL_DIRS`、四份 `cloud-patterns` skill 补了 frontmatter、`scripts/check_skills.py` 进 CI。补 frontmatter 前扫描器报 6 skills / 4 warnings；用 `--root` 编目后本仓 11 个 `SKILL.md` 全部可见、0 warnings。
 
 ### P2-3 文档里的路径照抄会失败
 
@@ -283,14 +283,14 @@ EN / JA / ZH 三语混排，且存在**单文件内混用**：`AGENT育成標準
 - **P1-2/P1-3/P1-4/P1-5/P1-6** UI 输入校验、去掉 `shell=True` 并改用 `shutil.which()`、provider 注册表、章节与 leak 规则单一真实源、依赖与 Python 版本声明改正、`add_dir` 的 df 二重计上修复。
 - **P2-3/P2-4/P2-5** 文档路径与阶段数修正、提交进仓的要件样例、`SECURITY.md`、`CODE_OF_CONDUCT.md`、issue/PR 模板、`.editorconfig`、根 `CHANGELOG.md`。
 
-测试从 0 增至 94 件。另外修了要件解析器两个会静默吃掉正文的 bug（无分隔线时 header 残留进正文；正文中的 Markdown 水平线被误认为分隔线）。
+测试从 0 增至 99 件。另外修了要件解析器两个会静默吃掉正文的 bug（无分隔线时 header 残留进正文；正文中的 Markdown 水平线被误认为分隔线）。
 
 P2-1 / P2-2 / P2-6 也已落地（见下节）。留给后续的是阶段四（正式版替换：GiNZA NER、multilingual-e5 + Qdrant、provider entry-points）。
 
 ### P2 本轮落地
 
 - **P2-1** 三份根 README 增加「按目标选入口」决策表，以及人工审批门 / 学习固化 / 经验沉淀的对照表。`agent-cultivation`、`workflow-standard`、`task-orchestrator`、`dev-pipeline`（含日文 README）顶部各加一行「本目录与其他三者的关系」。
-- **P2-2** `scan_skills.py` 同时看 `.agents/skills` 与 `.claude/skills`（项目级与用户级）。`cloud-patterns` 四份 skill 补上 YAML frontmatter 后，扫描器从 6 skills / 4 warnings 变为能编目本仓全部 11 个 `SKILL.md`。新增 `scripts/check_skills.py`（及 10 件回归）并接入 CI。根 README 与 `task-orchestrator/README.md` 写明两套生态和 `--root` 编目命令。
+- **P2-2** `scan_skills.py` 同时看 `.agents/skills` 与 `.claude/skills`（项目级与用户级）。`cloud-patterns` 四份 skill 补上 YAML frontmatter 后，扫描器从 6 skills / 4 warnings 变为能编目本仓全部 11 个 `SKILL.md`。新增 `scripts/check_skills.py`（复用 `parse_skill`，15 件回归）并接入 CI。根 README 与 `task-orchestrator/README.md` 写明两套生态和 `--root` 编目命令。
 - **P2-6** 三份根 README 的目录表增加语言列，正文未做翻译式重写。
 
 ### 一条值得记下的自陷

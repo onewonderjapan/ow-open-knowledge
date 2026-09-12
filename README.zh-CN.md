@@ -36,7 +36,7 @@ OneWonder Japan 的公开知识库：把内部实战中蒸馏出来的 AI Agent 
 |------|----------|------------------|
 | 人工审批门 | [task-orchestrator/SKILL.md](task-orchestrator/SKILL.md)（计划批准前不得改任何东西）；[workflow-standard/STANDARD.md](workflow-standard/STANDARD.md) P4（不可逆 / 对外副作用）；[dev-pipeline/USAGE.md](dev-pipeline/USAGE.md)（Human / Hybrid 执行者） | 任务启动 vs. 上线副作用 vs. 子任务由谁做 |
 | 学习 / 记忆固化 | [AGENT育成標準.md](agent-cultivation/AGENT育成標準.md) 三层（code / skill / memory）；[learning-policy.md](task-orchestrator/references/learning-policy.md)（project / personal / none）；[dev-pipeline `agents/memory/`](dev-pipeline/README.md) | 育成标准 vs. 任务结束后的规则分流 vs. 每个 agent 的运行记忆 |
-| 经验沉淀 | [PITFALLS.md](agent-cultivation/PITFALLS.md)；工作流 `state/` 只追加账本；task-orchestrator 的 run `learning.md` | 人手写的踩坑 vs. 工作流回放账本 vs. 单次运行的学习笔记 |
+| 经验沉淀 | [PITFALLS.md](agent-cultivation/PITFALLS.md)；[工作流 `state/ledger.jsonl`](workflow-standard/STANDARD.md)；[task-orchestrator 的 run `learning.md`](task-orchestrator/references/execution-contract.md) | 人手写的踩坑 vs. 工作流回放账本 vs. 单次运行的学习笔记 |
 
 ### 技能安装路径
 
@@ -47,7 +47,7 @@ OneWonder Japan 的公开知识库：把内部实战中蒸馏出来的 AI Agent 
 | Claude Code | `.claude/skills/` | `~/.claude/skills/` |
 | Codex 系 | `.agents/skills/` | `~/.agents/skills/` |
 
-`task-orchestrator` 自称两边都能用，`scripts/scan_skills.py` 也会扫两边。在**本仓库根目录**默认扫一遍仍然是空的：发布的 skill 是源码包，并没有安装到 `.claude/` 或 `.agents/` 下。要编目它们：
+`task-orchestrator` 自称两边都能用，`scripts/scan_skills.py` 也会扫两边。在**本仓库根目录**默认扫一遍，看不到本仓发布的 skill：它们是源码包，并没有安装到这里的 `.claude/` 或 `.agents/` 下（默认扫描仍可能列出你用户目录里的 skill）。要编目本仓发布的 skill：
 
 ```bash
 python3 task-orchestrator/scripts/scan_skills.py --cwd . --pretty \
@@ -65,10 +65,10 @@ python3 task-orchestrator/scripts/scan_skills.py --cwd . --pretty \
 |------|------|------|
 | ⭐ [agent-cultivation/](agent-cultivation/) | **核心资产**。Agent 育成标准（五条原则 + 三层固化）、既存 agent 训练指南、新项目 STARTUP 标准、数据安全分级规则、个人工作台 skill 组 | 日 / 中混写 |
 | [ai-stack/](ai-stack/) | 企业 AI 导入参考实现：需求书→脱敏→社内先例检索（RAG）→LLM 起草→质检 的端到端薄切片 | 日文（README 英 + 日） |
-| [workflow-standard/](workflow-standard/) | 自动化工作流构建标准：四阶段闭环 + 7 条铁则 + 新工作流脚手架 | 中文 |
+| [workflow-standard/](workflow-standard/) | 自动化工作流构建标准：四阶段闭环 + 7 条铁则 + 新工作流脚手架 | 中文（README 英文） |
 | [task-orchestrator/](task-orchestrator/) | 自然语言任务总控 skill：技能路由→计划审批→持续执行→分层学习（纯标准库） | 英文 |
 | [dev-pipeline/](dev-pipeline/) | 6-agent 开发管线：Dispatcher/Investigator/Analyst/Developer/Reviewer/Tester + 自我学习 | 日文（README 英 + 日） |
-| [cloud-patterns/](cloud-patterns/) | 云架构模式 skill：Glue×RDS 合并、API Gateway+Lambda+SES 表单、Form→IAM、Terraform 踩坑 | 中文 |
+| [cloud-patterns/](cloud-patterns/) | 云架构模式 skill：Glue×RDS 合并、API Gateway+Lambda+SES 表单、Form→IAM、Terraform 踩坑 | 中文（README 英文） |
 | [team-norms/](team-norms/) | 团队协作规范：Git 使用规范、Teams 聊天礼仪、商务邮件基础 | 日文 |
 
 ## 快速开始
@@ -117,6 +117,7 @@ python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests       # 
 python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
 python scripts/check_links.py                                                 # markdown 相对链接
 python scripts/check_skills.py                                                # SKILL.md frontmatter
+python -m unittest discover -s scripts -t scripts -p "test_*.py"
 ```
 
 CI 会在每个 PR 上跑同样的检查，外加离线 demo。

@@ -49,7 +49,7 @@
 ### Added
 
 - [IMPROVEMENT-PLAN.md](IMPROVEMENT-PLAN.md)：全仓审查结论与分阶段升级路线，每条附证据（文件:行号 + 复现命令 + 实际输出）与验收标准。
-- 测试从 0 增至 94 件：`ai-stack/tests/` 54、`dev-pipeline/tests/` 19、`task-orchestrator/tests/` 11、`scripts/test_check_skills.py` 10。
+- 测试从 0 增至 99 件：`ai-stack/tests/` 54、`dev-pipeline/tests/` 19、`task-orchestrator/tests/` 11、`scripts/test_check_skills.py` 15。
 - CI（[.github/workflows/ci.yml](.github/workflows/ci.yml)）：三套测试在 Python 3.10/3.12 上运行、离线 demo 冒烟（机械校验 masked 输出无实名且 QC 通过）、Markdown 相对链接校验、SKILL.md frontmatter 校验、全量字节编译。
 - `scripts/check_links.py`：Markdown 相对链接校验（对 `%20` 等百分号编码解码后判断，与 GitHub 渲染一致）。
 - `scripts/check_skills.py`：公开 `SKILL.md` 必须带非空 `name` / `description` frontmatter，且 `name` 与目录名一致（`CHANGE-ME` 模板除外）。没有 frontmatter 的 skill 对任何加载器都是隐形的。

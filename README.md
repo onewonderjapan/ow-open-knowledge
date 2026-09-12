@@ -36,7 +36,7 @@ These concepts appear in more than one system. Read the copy that matches the jo
 |---------|---------------------|------------------------|
 | Human approval gate | [task-orchestrator/SKILL.md](task-orchestrator/SKILL.md) (plan approval before any mutation); [workflow-standard/STANDARD.md](workflow-standard/STANDARD.md) P4 (irreversible / external side effects); [dev-pipeline/USAGE.md](dev-pipeline/USAGE.md) (Human / Hybrid executor) | Task start vs. live side effects vs. who implements a subtask |
 | Learning consolidation | [AGENT育成標準.md](agent-cultivation/AGENT育成標準.md) three layers (code / skill / memory); [learning-policy.md](task-orchestrator/references/learning-policy.md) (project / personal / none); [dev-pipeline `agents/memory/`](dev-pipeline/README.md) | Cultivation standard vs. post-task rule routing vs. per-agent run memory |
-| Experience log | [PITFALLS.md](agent-cultivation/PITFALLS.md); workflow `state/` append-only ledger; task-orchestrator run `learning.md` | Human-written pitfalls vs. workflow replay log vs. per-run learning notes |
+| Experience log | [PITFALLS.md](agent-cultivation/PITFALLS.md); [workflow `state/ledger.jsonl`](workflow-standard/STANDARD.md); [task-orchestrator run `learning.md`](task-orchestrator/references/execution-contract.md) | Human-written pitfalls vs. workflow replay log vs. per-run learning notes |
 
 ### Skill install paths
 
@@ -47,7 +47,7 @@ Published skills in this repo live next to their docs (`cloud-patterns/skills/`,
 | Claude Code | `.claude/skills/` | `~/.claude/skills/` |
 | Codex-style | `.agents/skills/` | `~/.agents/skills/` |
 
-`task-orchestrator` documents itself as usable in both, and `scripts/scan_skills.py` searches both. A default scan of *this* repository still finds nothing, because the published skills are source packages — they are not installed under `.claude/` or `.agents/`. To catalog them:
+`task-orchestrator` documents itself as usable in both, and `scripts/scan_skills.py` searches both. A default scan of *this* repository does not see the published skills — they are source packages, not an installed `.claude/` or `.agents/` tree here. (A default scan may still list skills from your user home.) To catalog this repo's published skills:
 
 ```bash
 python3 task-orchestrator/scripts/scan_skills.py --cwd . --pretty \
@@ -65,10 +65,10 @@ Copy a skill folder into `.claude/skills/` or `.agents/skills/` in *your* projec
 |-----------|---------------|----------|
 | ⭐ [agent-cultivation/](agent-cultivation/) | **The core asset.** Agent Cultivation Standard (5 principles + three-layer consolidation), training guide for existing agents, new-project startup standard, data classification rules, and a personal workbench skill set | JA / ZH (mixed) |
 | [ai-stack/](ai-stack/) | Enterprise AI adoption reference implementation: requirement doc → masking → in-house precedent search (RAG) → LLM drafting → local verification, end to end | JA (READMEs EN + JA) |
-| [workflow-standard/](workflow-standard/) | Automation workflow building standard: four-phase loop + 7 iron rules + a scaffold for new workflows | ZH |
+| [workflow-standard/](workflow-standard/) | Automation workflow building standard: four-phase loop + 7 iron rules + a scaffold for new workflows | ZH (README EN) |
 | [task-orchestrator/](task-orchestrator/) | A master skill for natural-language tasks: skill routing → plan approval → sustained execution → layered learning (standard library only) | EN |
 | [dev-pipeline/](dev-pipeline/) | A 6-agent development pipeline: Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester with self-learning | JA (READMEs EN + JA) |
-| [cloud-patterns/](cloud-patterns/) | Cloud architecture skills: Glue×RDS merge, API Gateway + Lambda + SES contact form, Form→IAM, Terraform pitfalls | ZH |
+| [cloud-patterns/](cloud-patterns/) | Cloud architecture skills: Glue×RDS merge, API Gateway + Lambda + SES contact form, Form→IAM, Terraform pitfalls | ZH (README EN) |
 | [team-norms/](team-norms/) | Team norms: Git conventions, Teams chat manners, business email basics | JA |
 
 ## Quick start
@@ -118,6 +118,7 @@ python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests       # 
 python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
 python scripts/check_links.py                                                 # relative markdown links
 python scripts/check_skills.py                                                # SKILL.md frontmatter
+python -m unittest discover -s scripts -t scripts -p "test_*.py"
 ```
 
 CI runs the same checks plus the offline demo on every PR.
