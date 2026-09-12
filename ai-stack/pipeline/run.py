@@ -38,7 +38,8 @@ def main():
     # 2) 脱敏(ローカル)
     masker = Masker(str(ROOT / "masking" / "entities.json"))
     masked, mapping = masker.mask(raw)
-    report["masked_entities"] = mapping
+    report["masked_entity_count"] = len(mapping)
+    report["masked_labels"] = list(mapping.values())
 
     # 3) 類似先例検索(ローカルRAG)
     idx = BM25Index()
@@ -63,11 +64,15 @@ def main():
     (outdir / f"{stem}_draft.md").write_text(draft, encoding="utf-8")
     (outdir / f"{stem}_masked.md").write_text(masked, encoding="utf-8")
     (outdir / f"{stem}_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    (outdir / f"{stem}_mapping.json").write_text(
+        json.dumps(mapping, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
-    print(f"[OK] draft -> out/{stem}_draft.md")
+    print(f"[OK] draft -> {outdir / f'{stem}_draft.md'}")
     print(f"     masked entities: {len(mapping)} | refs: {[h['title'] for h in hits]}")
     print(f"     QC: {'PASS' if qc['ok'] else 'FINDINGS: ' + '; '.join(qc['findings'])}")
     print(f"     elapsed: {report['elapsed_sec']}s (provider={args.provider})")
+    print(f"     mapping (do not publish): {outdir / f'{stem}_mapping.json'}")
 
 
 if __name__ == "__main__":

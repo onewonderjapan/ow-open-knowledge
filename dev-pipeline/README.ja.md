@@ -38,7 +38,7 @@
 | **Analyst** | `--analyze` | 要件分析・タスク分割・実行者判定（AI/Human/Hybrid） | `analyst/analysis.md` |
 | **Developer** | `--develop` | サブタスクごとにコード・ドキュメント生成 | `developer/development.md` |
 | **Reviewer** | (自動) | 成果物の品質検証・クロスシステム検査・修正指示 | `reviewer/review.md` |
-| **Tester** | `--test` | 機能テスト + セキュリティ脆弱性スキャン | `tester/test_report.md` |
+| **Tester** | `--test` | LLM による成果物レビュー（プロジェクトのテストスイートは実行しない） | `tester/test_report.md` |
 
 ### Dispatcher（分類者）
 
@@ -108,7 +108,7 @@ repo: https://github.com/user/project.git
 [██░░░░] 2/6   Analyst       - 要件分析、サブタスク分割、実行者判定
 [███░░░] 3/6   Developer     - サブタスクごとにコード/ドキュメント生成
 [████░░] 4/6   Reviewer      - 成果物レビュー + 修正ループ（不合格時）
-[█████░] 5/6   Tester        - 機能テスト + セキュリティ脆弱性スキャン
+[█████░] 5/6   Tester        - LLM による成果物レビュー（テストスイートは未実行）
 [██████] 6/6   Investigator  - 検出された問題の原因調査・修正方針提案
 ```
 

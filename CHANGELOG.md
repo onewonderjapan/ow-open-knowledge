@@ -23,6 +23,7 @@
   新增 `dev-pipeline/core/paths.py::resolve_in_workspace()`，拒绝父级引用、绝对路径、符号链接逃逸与前缀相同的兄弟目录。
 - `ClaudeCLIProvider` 移除不必要的 `subprocess(shell=True)`，改为 `shutil.which()` 解析可执行文件后以 `shell=False` 启动（Windows 的 `claude.cmd` 同样可解析）。
 - Web UI 输入校验：请求体上限 2MB，校验 `Content-Length`/JSON/必需键并返回 4xx，异常详情只进服务端日志（避免泄漏路径与环境信息）。
+- 审计报告 `out/*_report.json` 不再写入实名逆查表。公开产物只保留件数与伏字标签；逆查表单独落在 `*_mapping.json`（`out/` 已被 gitignore）。
 - 新增 [SECURITY.md](SECURITY.md)：漏洞私下上报流程，明确脱敏绕过为最高深刻度，并区分「设计上的已知限制」与真正的漏洞。
 
 ### Fixed
@@ -39,6 +40,10 @@
 - `get_provider` 的 if/elif 改为注册表，新增 `register_provider()`，外部可在不改动核心分支的前提下添加 provider。
 - `claude` CLI 缺失时给出可操作的错误提示，而非 `FileNotFoundError` 回溯。
 - 要件文件解析器（`dev-pipeline/core/requirement_parser.py`）：无分隔线时 `branch:` 行会残留在正文并原样传给 Agent；正文中的 Markdown 水平线会被误认为分隔线而丢弃其前的正文。改为只将「开头连续的 header 行」视为 header，并支持 YAML frontmatter 形式。
+- `dev-pipeline` 的 JSON/Markdown 读写补上 `encoding="utf-8"`（Windows cp932 下写日文会炸）。Claude CLI 的 cwd 从硬编码 `/tmp` 改为 `tempfile.gettempdir()`。
+- `--memory` / `--consolidate` / `--optimize` 纳入 Reviewer（它会写 memory，此前被漏掉）。
+- Tester 文档不再写成“执行功能测试”；实际是 LLM 评审，不跑项目测试套件。
+- 结构检查会对已知全名留下的姓氏断片报警。Demo UI 默认 stub，高亮 `担当者NN`。
 
 ### Changed
 
@@ -48,9 +53,11 @@
 
 ### Added
 
+- `workflow-standard/scripts/validate.py`：可机检的铁则子集（必备文件、`paper`/`live`、jsonl、`run_key` 唯一）。
+- `pyproject.toml`：ruff 配置。
 - [IMPROVEMENT-PLAN.md](IMPROVEMENT-PLAN.md)：全仓审查结论与分阶段升级路线，每条附证据（文件:行号 + 复现命令 + 实际输出）与验收标准。
-- 测试从 0 增至 99 件：`ai-stack/tests/` 54、`dev-pipeline/tests/` 19、`task-orchestrator/tests/` 11、`scripts/test_check_skills.py` 15。
-- CI（[.github/workflows/ci.yml](.github/workflows/ci.yml)）：三套测试在 Python 3.10/3.12 上运行、离线 demo 冒烟（机械校验 masked 输出无实名且 QC 通过）、Markdown 相对链接校验、SKILL.md frontmatter 校验、全量字节编译。
+- 测试从 0 增至 112 件：`ai-stack/tests/` 59、`dev-pipeline/tests/` 24、`task-orchestrator/tests/` 11、`scripts/test_check_skills.py` 15、`workflow-standard/tests/` 3。
+- CI（[.github/workflows/ci.yml](.github/workflows/ci.yml)）：四套测试在 Python 3.10/3.12 上运行、离线 demo 冒烟（机械校验 masked 输出与 report.json 均无实名且 QC 通过）、Markdown 相对链接校验、SKILL.md frontmatter 校验、全量字节编译。
 - `scripts/check_links.py`：Markdown 相对链接校验（对 `%20` 等百分号编码解码后判断，与 GitHub 渲染一致）。
 - `scripts/check_skills.py`：公开 `SKILL.md` 必须带非空 `name` / `description` frontmatter，且 `name` 与目录名一致（`CHANGE-ME` 模板除外）。没有 frontmatter 的 skill 对任何加载器都是隐形的。
 - OSS 基础设施：[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)、issue 模板（bug/proposal）与 `config.yml`、PR 模板（含改动脱敏层时的测试必须项）、`.editorconfig`、本 CHANGELOG。

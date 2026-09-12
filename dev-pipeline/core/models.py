@@ -29,7 +29,7 @@ class DispatchResult:
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
     def save(self, path: Path) -> None:
-        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2))
+        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 # ── Reviewer Agent 出力 ──────────────────────────────────────
@@ -67,7 +67,7 @@ class ReviewResult:
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
     def save(self, path: Path) -> None:
-        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2))
+        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 class Priority(str, Enum):
@@ -114,11 +114,11 @@ class InvestigationReport:
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
     def save(self, path: Path) -> None:
-        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2))
+        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2), encoding="utf-8")
 
     @classmethod
     def load(cls, path: Path) -> "InvestigationReport":
-        data = json.loads(path.read_text())
+        data = json.loads(path.read_text(encoding="utf-8"))
         data["key_files"] = [FileInfo(**f) for f in data.get("key_files", [])]
         return cls(**data)
 
@@ -141,11 +141,11 @@ class PostTestInvestigation:
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
     def save(self, path: Path) -> None:
-        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2))
+        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2), encoding="utf-8")
 
     @classmethod
     def load(cls, path: Path) -> "PostTestInvestigation":
-        data = json.loads(path.read_text())
+        data = json.loads(path.read_text(encoding="utf-8"))
         data["issue_causes"] = [IssueCause(**ic) for ic in data.get("issue_causes", [])]
         return cls(**data)
 
@@ -176,11 +176,11 @@ class AnalysisResult:
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
     def save(self, path: Path) -> None:
-        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2))
+        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2), encoding="utf-8")
 
     @classmethod
     def load(cls, path: Path) -> "AnalysisResult":
-        data = json.loads(path.read_text())
+        data = json.loads(path.read_text(encoding="utf-8"))
         data["subtasks"] = [
             SubTask(**{**st, "priority": Priority(st["priority"])})
             for st in data["subtasks"]
@@ -218,11 +218,11 @@ class AllDevelopmentResults:
     def save(self, path: Path) -> None:
         path.write_text(json.dumps(
             [asdict(r) for r in self.results], ensure_ascii=False, indent=2
-        ))
+        ), encoding="utf-8")
 
     @classmethod
     def load(cls, path: Path) -> "AllDevelopmentResults":
-        data = json.loads(path.read_text())
+        data = json.loads(path.read_text(encoding="utf-8"))
         results = []
         for r in data:
             r["status"] = TaskStatus(r["status"])
@@ -267,11 +267,11 @@ class TestReport:
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
     def save(self, path: Path) -> None:
-        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2))
+        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2), encoding="utf-8")
 
     @classmethod
     def load(cls, path: Path) -> "TestReport":
-        data = json.loads(path.read_text())
+        data = json.loads(path.read_text(encoding="utf-8"))
         data["test_cases"] = [
             TestCase(**{**tc, "status": TaskStatus(tc["status"])})
             for tc in data["test_cases"]

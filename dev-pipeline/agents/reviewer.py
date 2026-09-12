@@ -165,7 +165,7 @@ class ReviewerAgent(BaseAgent):
 
         # Markdown レポートも保存
         md_path = output_dir / "review.md"
-        md_path.write_text(self._format_md_report(result))
+        md_path.write_text(self._format_md_report(result), encoding="utf-8")
 
         # ログ出力
         critical = sum(1 for i in issues if i.severity == "critical")

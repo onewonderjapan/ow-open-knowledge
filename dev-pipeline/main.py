@@ -310,12 +310,14 @@ def run_consolidate(args: argparse.Namespace) -> None:
     from agents.investigator import InvestigatorAgent
     from agents.analyst import AnalystAgent
     from agents.developer import DeveloperAgent
+    from agents.reviewer import ReviewerAgent
     from agents.tester import TesterAgent
 
     agents = [
         InvestigatorAgent(config),
         AnalystAgent(config),
         DeveloperAgent(config),
+        ReviewerAgent(config),
         TesterAgent(config),
     ]
 
@@ -334,7 +336,7 @@ def run_show_memory() -> None:
     print("  Agent メモリ一覧")
     print("=" * 50)
 
-    agent_names = ["investigator", "analyst", "developer", "tester"]
+    agent_names = ["dispatcher", "investigator", "analyst", "developer", "reviewer", "tester"]
     for name in agent_names:
         path = MEMORY_DIR / f"{name}.md"
         if path.exists():
@@ -362,12 +364,14 @@ def run_optimize(args: argparse.Namespace) -> None:
     from agents.investigator import InvestigatorAgent, PRE_INVESTIGATION_PROMPT
     from agents.analyst import AnalystAgent, SYSTEM_PROMPT as ANALYST_PROMPT
     from agents.developer import DeveloperAgent, SYSTEM_PROMPT as DEVELOPER_PROMPT
+    from agents.reviewer import ReviewerAgent, SYSTEM_PROMPT as REVIEWER_PROMPT
     from agents.tester import TesterAgent, SYSTEM_PROMPT as TESTER_PROMPT
 
     agent_prompts = [
         (InvestigatorAgent(config), PRE_INVESTIGATION_PROMPT),
         (AnalystAgent(config), ANALYST_PROMPT),
         (DeveloperAgent(config), DEVELOPER_PROMPT),
+        (ReviewerAgent(config), REVIEWER_PROMPT),
         (TesterAgent(config), TESTER_PROMPT),
     ]
 

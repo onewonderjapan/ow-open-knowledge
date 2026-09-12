@@ -135,7 +135,7 @@ class InvestigatorAgent(BaseAgent):
         report.save(output_path)
 
         readable_path = self.config.output_dir / "investigator" / "investigation.md"
-        readable_path.write_text(self._format_investigation_report(report))
+        readable_path.write_text(self._format_investigation_report(report), encoding="utf-8")
 
         self.logger.info(f"事前調査完了 -> {readable_path}")
 
@@ -225,7 +225,7 @@ class InvestigatorAgent(BaseAgent):
 
         # 可読レポートも生成
         readable_path = self.config.output_dir / "investigator" / "post_investigation.md"
-        readable_path.write_text(self._format_readable_report(investigation))
+        readable_path.write_text(self._format_readable_report(investigation), encoding="utf-8")
 
         self.logger.info(f"テスト後調査完了 -> {readable_path}")
 
@@ -255,7 +255,7 @@ class InvestigatorAgent(BaseAgent):
                 continue
 
             try:
-                content = f.read_text()
+                content = f.read_text(encoding="utf-8")
             except Exception:
                 continue
 

@@ -67,3 +67,11 @@
     スキップしていた（6 skills / 4 warnings）。本文がいくら良くても skill として
     認識されない。→ 公開する SKILL.md は必ず frontmatter を付け、
     `scripts/check_skills.py` で門番する。ディレクトリ名と `name` も揃える。
+
+21. **監査 report.json に実名の逆引きを入れると「証跡」が最機密ファイルになる**:
+    mapping を report に直書きしていた。公開してよいのは件数と伏せ字ラベル。逆引きは別ファイル。
+22. **`cwd="/tmp"` は Windows で死ぬ**: Claude CLI の作業ディレクトリ。`tempfile.gettempdir()` に。
+23. **学習メモリの一覧から Reviewer が抜けていた**: `reflect_and_learn` は動くのに `--memory` に出ない。
+24. **鉄則のうち機械検査できるものを検査していなかった**: ledger の JSON 壊れ・run_key 重複は
+    `workflow-standard/scripts/validate.py` で落とせる。
+

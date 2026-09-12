@@ -96,7 +96,7 @@ class AnalystAgent(BaseAgent):
         result.save(output_dir / "analysis.json")
 
         md_path = output_dir / "analysis.md"
-        md_path.write_text(self._format_md_report(result))
+        md_path.write_text(self._format_md_report(result), encoding="utf-8")
         self.logger.info(
             f"要件分析完了：{len(result.subtasks)} 件のサブタスク -> {md_path}"
         )
