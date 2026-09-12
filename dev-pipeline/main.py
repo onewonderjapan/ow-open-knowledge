@@ -487,7 +487,7 @@ def run_full_pipeline(args: argparse.Namespace) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="4 Agent 協調パイプライン",
+        description="6 Agent 協調パイプライン",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""\
 単独 Agent 実行:
@@ -497,7 +497,7 @@ def main() -> None:
   --test         Analyst + Developer + Tester（分析→実装→テスト）
 
 フルパイプライン:
-  -f FILE        全5フェーズ実行（調査→分析→実装→テスト→問題調査）
+  -f FILE        全6フェーズ実行（調査→分析→実装→レビュー→テスト→問題調査）
 """,
     )
     parser.add_argument("requirement", nargs="?", help="要件テキスト")

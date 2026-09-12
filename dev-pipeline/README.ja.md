@@ -136,7 +136,7 @@ repo: https://github.com/user/project.git
 ## ディレクトリ構成
 
 ```text
-agent/
+dev-pipeline/
 ├── main.py              # CLI エントリーポイント
 ├── core/
 │   ├── config.py        # 設定

@@ -192,7 +192,7 @@ description: <一句话触发描述>     # 决定何时被调用，写清"何时
 
 ## 11. 新建工作流 · 落地清单（Checklist）
 
-1. `cp -r templates/_workflow-template workflows/<name>`
+1. `cp -r template workflows/<name>`（脚手架在本目录的 `template/`）
 2. 填写 `SKILL.md` 的 frontmatter（`name`/`description`）与四阶段手顺。
 3. 定义 `state/` 初始文件与 `scorecard` 评分口径（先定指标）。
 4. 设置 `config.yml`：模式（默认 `paper`）、调度时刻、确认门开关。

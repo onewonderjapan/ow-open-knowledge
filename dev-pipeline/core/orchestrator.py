@@ -43,7 +43,11 @@ class PipelineResult:
 
 
 class Orchestrator:
-    """4つの Agent を順次実行するパイプラインオーケストレーター."""
+    """6 Agent を順次実行するパイプラインオーケストレーター.
+
+    Dispatcher が作業種別を決め、Investigator → Analyst → Developer → Reviewer →
+    Tester → Investigator(問題調査) の順に実行する。
+    """
 
     def __init__(self, config: Config | None = None) -> None:
         self.config = config or Config()
@@ -143,7 +147,7 @@ class Orchestrator:
         )
 
     def run(self, requirement: str, dispatch: DispatchResult | None = None) -> PipelineResult:
-        """フルパイプライン実行：調査 -> 分析 -> 開発 -> テスト -> 問題調査."""
+        """フルパイプライン実行：調査 -> 分析 -> 開発 -> レビュー -> テスト -> 問題調査（全6フェーズ）."""
         import time
         pipeline_start = time.time()
 

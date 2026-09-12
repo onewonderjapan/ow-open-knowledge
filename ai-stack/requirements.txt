@@ -1,5 +1,10 @@
-# The demo Web UI (ui/app.py) runs on the standard library only.
-# janome is required by the pipeline (RAG layer) even with the stub provider.
-# anthropic is required only for the anthropic-api provider.
-janome
-anthropic
+# Python 3.10+ が必要（`str | None` 等を実行時に評価している）。
+#
+# janome: RAG層(rag/retriever.py)の分かち書き。stub プロバイダでも必要。
+#         **Web UI (ui/app.py) も RAG層を読むので必要**（「UIは標準ライブラリのみ」は誤り）。
+janome>=0.4.2
+# anthropic: --provider anthropic-api のときのみ必要。stub / claude-cli では不要。
+anthropic>=0.40.0
+# python-pptx: tools/pptx_extract.py と tools/md_to_pptx.py のみで必要。
+#              パイプライン本体・UI・テストには不要。
+python-pptx>=0.6.21

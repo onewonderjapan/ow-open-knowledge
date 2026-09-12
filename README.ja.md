@@ -43,13 +43,13 @@ python -m venv .venv
 
 出力は3点セット：送信内容のマスキング結果（`out/*_masked.md`）、設計書ドラフト（`out/*_draft.md`）、監査レポート（`out/*_report.json`）。
 
-依存ゼロのデモ Web UI（標準ライブラリのみ）もあります：
+デモ Web UI もあります：
 
 ```bash
 python ui/app.py    # → http://127.0.0.1:7877
 ```
 
-> 注意：パイプライン自体は stub モードでも `janome`（RAG 層）が必要です。`anthropic` は API プロバイダ利用時のみ。Web UI のみ完全に依存ゼロです。
+> 依存：Web UI の HTTP 層は標準ライブラリのみですが、RAG 層を再利用するためパイプラインと同じく `janome` が必要です（パイプラインは stub モードでも必要）。`anthropic` は API プロバイダ利用時のみ、`python-pptx` は `tools/` のみ。Python 3.10+。
 
 ## 関連公開リポジトリ
 

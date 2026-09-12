@@ -2,7 +2,7 @@
 
 [English](README.md) | 日本語（オリジナル版）
 
-![License](https://img.shields.io/badge/license-MIT-blue) ![Python](https://img.shields.io/badge/python-3.9+-blue)
+![License](https://img.shields.io/badge/license-MIT-blue) ![Python](https://img.shields.io/badge/python-3.10+-blue)
 
 「要件書 → 脱敏 → 社内先例検索(RAG) → クラウドLLM起草 → ローカル質検」の
 エンドツーエンド最小実装。営業デモ・社内ドッグフーディング・顧客PoCの土台。
@@ -11,7 +11,7 @@
 
 ```bash
 python -m venv .venv
-.venv/Scripts/pip install -r requirements.txt   # janome / anthropic（stub・Web UI は依存ゼロ）
+.venv/Scripts/pip install -r requirements.txt   # janome（必須）/ anthropic（API利用時）/ python-pptx（tools のみ）
 
 # ネット不要のデモ(スタブ応答)
 .venv/Scripts/python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
@@ -22,7 +22,7 @@ python -m venv .venv
 # 本番向け(要 ANTHROPIC_API_KEY)
 .venv/Scripts/python pipeline/run.py demo_data/incoming/new_rfp.md --provider anthropic-api
 
-# デモ用Web UI (依存ゼロ・オフライン可)
+# デモ用Web UI (オフライン可)
 .venv/Scripts/python ui/app.py   # → http://127.0.0.1:7877
 ```
 
@@ -62,7 +62,8 @@ ai-stack/
 ├── rag/                   # 社内先例検索（janome+BM25 / retriever.py）
 ├── llm/                   # provider 差し替え（stub / claude-cli / anthropic-api）
 ├── evalkit/               # 決定論的構造検査（structure_check.py）
-├── ui/app.py              # 依存ゼロのデモ Web UI（標準ライブラリのみ）
+├── ui/app.py              # デモ Web UI（HTTP層は標準ライブラリのみ。RAG層経由で janome が必要）
+├── tests/                 # 脱敏層・プロンプト組立の回帰テスト（標準ライブラリのみ）
 ├── tools/                 # md→pptx 変換・pptx抽出
 ├── demo_data/             # 全て架空のデモデータ
 └── templates/             # 新プロジェクトのスケルトン

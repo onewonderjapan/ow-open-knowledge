@@ -289,7 +289,7 @@ output/<要件名>/
 ## 8. ディレクトリ構成
 
 ```text
-agent/
+dev-pipeline/
 ├── main.py              # CLI エントリーポイント
 ├── requirements.txt     # Python 依存パッケージ
 ├── USAGE.md             # 本ドキュメント

@@ -1,1 +1,10 @@
-anthropic>=0.40.0
+# サードパーティ依存はありません（標準ライブラリのみ）。
+#
+# Agent は Anthropic SDK ではなく **Claude Code CLI** を子プロセス起動して動きます
+# （agents/base.py）。そのため ANTHROPIC_API_KEY も anthropic パッケージも不要です。
+# 必要なのは以下の外部コマンドだけです:
+#   - claude (Claude Code CLI、サブスク認証)
+#   - git
+#
+# 以前ここに anthropic>=0.40.0 が書かれていましたが、コード内で import されておらず
+# （USAGE.md も「API Key は不要」と明記）、誤解を招くため削除しました。

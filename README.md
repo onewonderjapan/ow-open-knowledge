@@ -43,13 +43,13 @@ python -m venv .venv
 
 Output: the masked content actually sent out (`out/*_masked.md`), a design-doc draft (`out/*_draft.md`), and an audit report (`out/*_report.json`).
 
-A dependency-free demo web UI (standard library only) is also included:
+A demo web UI is also included:
 
 ```bash
 python ui/app.py    # → http://127.0.0.1:7877
 ```
 
-> Note: the pipeline itself needs `janome` (RAG layer) even in stub mode; `anthropic` is only required for the API provider. The web UI truly needs nothing.
+> Dependencies: the HTTP layer of the web UI is standard-library only, but it reuses the RAG layer, so it needs `janome` just like the pipeline — which needs it even in stub mode. `anthropic` is only required for the API provider, and `python-pptx` only for `tools/`. Python 3.10+.
 
 ## Related public repos
 

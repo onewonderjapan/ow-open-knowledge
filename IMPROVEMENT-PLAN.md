@@ -215,9 +215,10 @@ cd task-orchestrator && python3 scripts/scan_skills.py --cwd /workspace --pretty
 | `agent-cultivation/新プロジェクトSTARTUP標準.md:21` | `templates/project-skeleton/` | 实际在 `ai-stack/templates/project-skeleton/` |
 | `dev-pipeline/USAGE.md:292` | 根目录叫 `agent/` | 实际叫 `dev-pipeline/` |
 | `dev-pipeline/README.md:102` | 有 `requirements/` 目录 | 被 gitignore，仓里没有样例文件 |
-| `team-norms/README.md:9` | `Git%20使用規範ドキュメント.md` | URL 编码在部分渲染器下解析不到 |
 
 新人照着「快速开始」敲第一条命令就会失败，这是留存杀手。**方案**：逐条改正，并补一个提交进仓的 `dev-pipeline/requirements/example.md`。
+
+顺带核实过一处**不是**问题的地方：`team-norms/README.md:9` 用 `Git%20使用規範ドキュメント.md` 指向含空格的文件名，URL 编码后能正确解析（全仓 75 条相对链接经解码校验后 0 断链）。保持原样。
 
 ### P2-4 CLI 帮助文本与实际流水线不一致
 

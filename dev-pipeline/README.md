@@ -86,9 +86,15 @@ Requirement body goes here...
 
 ## Requirements
 
-- Python 3.9+
+- Python 3.9+ (standard library only — no third-party packages)
 - Git
-- Claude Code CLI (Claude subscription)
+- Claude Code CLI (Claude subscription; no `ANTHROPIC_API_KEY` needed)
+
+## Tests
+
+```bash
+python -m unittest discover -s tests -t tests
+```
 
 ## Directory layout
 
@@ -97,12 +103,17 @@ dev-pipeline/
 ├── main.py              # CLI entry point
 ├── core/                # config, shared models, orchestrator, requirement parser
 ├── agents/              # 6 agents + base class (CLI + self-learning)
-│   ├── memory/          # per-agent learning records (auto-accumulated)
-│   └── prompts/         # evolved prompts (--optimize)
-├── requirements/        # requirement files
-├── workspace/           # code output (one folder per requirement)
-└── output/              # report output (one folder per requirement)
+│   ├── memory/          # per-agent learning records (auto-accumulated, gitignored)
+│   └── prompts/         # evolved prompts (--optimize, gitignored)
+├── tests/               # unit tests (standard library only)
+├── requirements/        # requirement files (gitignored except example.md)
+│   └── example.md       # committed example — copy this to start
+├── workspace/           # code output, one folder per requirement (gitignored)
+└── output/              # report output, one folder per requirement (gitignored)
 ```
+
+`memory/`, `prompts/`, `workspace/` and `output/` are created at runtime and are not
+part of the repository.
 
 Detailed walkthrough: [USAGE.md](USAGE.md) (Japanese; note that CLI messages are in Japanese too). The original Japanese README: [README.ja.md](README.ja.md).
 

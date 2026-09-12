@@ -43,13 +43,13 @@ python -m venv .venv
 
 输出三件套：脱敏后的发送内容（`out/*_masked.md`）、设计书草稿（`out/*_draft.md`）、审计报告（`out/*_report.json`）。
 
-另附零依赖演示 Web UI（纯标准库）：
+另附演示 Web UI：
 
 ```bash
 python ui/app.py    # → http://127.0.0.1:7877
 ```
 
-> 注意：pipeline 本身即使在 stub 模式下也需要 `janome`（RAG 层）；`anthropic` 仅 API provider 需要。Web UI 才是真正的零依赖。
+> 依赖：Web UI 的 HTTP 层是纯标准库，但它复用了 RAG 层，所以和 pipeline 一样需要 `janome`——pipeline 即使在 stub 模式下也需要它。`anthropic` 仅 API provider 需要，`python-pptx` 仅 `tools/` 需要。Python 3.10+。
 
 ## 关联公开仓库
 

@@ -1,7 +1,11 @@
 # Runtime output (generated per run)
 output/
 workspace/
-requirements/
+# Ignore requirement files' contents but keep the committed example so newcomers
+# have something to copy. `requirements/` (directory form) would stop git from
+# descending at all, and the negation below could never take effect.
+requirements/*
+!requirements/example.md
 
 # Agent memory & evolved prompts (machine-specific)
 agents/memory/*.md

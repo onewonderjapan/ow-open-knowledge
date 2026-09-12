@@ -2,7 +2,7 @@
 
 > 制定: 2026-07-04。親文書: `AGENT育成標準.md`（原則はそちら、本書は立ち上げ手順）。
 > 適用: AIエージェント/生成AIを使う新プロジェクト全て（画像・動画・文書・コード・音楽…領域不問）。
-> **使い方: `templates/project-skeleton/` をコピーして空欄を埋める。本書は埋め方の説明書。**
+> **使い方: [`../ai-stack/templates/project-skeleton/`](../ai-stack/templates/project-skeleton/) をコピーして空欄を埋める。本書は埋め方の説明書。**
 
 ---
 
@@ -18,7 +18,7 @@
 
 ## 1. 初日にやること（30分）
 
-1. `templates/project-skeleton/` をプロジェクトルートへコピー
+1. [`../ai-stack/templates/project-skeleton/`](../ai-stack/templates/project-skeleton/) をプロジェクトルートへコピー
 2. `CLAUDE.md`（またはプロジェクトの流儀のagent規約ファイル）の空欄を埋める: 正典の所在・機密等級・借用する共用ツール
 3. `library/outcomes/README.md` の failure_modes を領域別表（§3）から選んで確定
 4. git init + 初回コミット（機密等級に応じた .gitignore を先に）
@@ -69,4 +69,4 @@ flowchart LR
 
 ---
 
-関連: `AGENT育成標準.md`（原則） / `templates/project-skeleton/`（コピー元） / `AI研究会-学習と業適用の基礎.md`（学習原理）
+関連: `AGENT育成標準.md`（原則） / [`../ai-stack/templates/project-skeleton/`](../ai-stack/templates/project-skeleton/)（コピー元） / `AI研究会-学習と業適用の基礎.md`（学習原理）

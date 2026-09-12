@@ -6,7 +6,7 @@ Use it as the backbone for sales demos, internal dogfooding, or a client PoC.
 
 [English](README.md) | [日本語](README.ja.md)
 
-![License](https://img.shields.io/badge/license-MIT-blue) ![Python](https://img.shields.io/badge/python-3.9+-blue)
+![License](https://img.shields.io/badge/license-MIT-blue) ![Python](https://img.shields.io/badge/python-3.10+-blue)
 
 ## Quick start
 
@@ -21,13 +21,21 @@ python -m venv .venv
 # source .venv/bin/activate && pip install -r requirements.txt
 # python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
 
-# Dependency-free demo web UI (standard library only):
+# Demo web UI (offline-capable):
 python ui/app.py   # → http://127.0.0.1:7877
 ```
 
 Output: `out/<name>_draft.md` (design-doc draft) / `out/<name>_masked.md` (what actually leaves the building) / `out/<name>_report.json` (audit trail).
 
-> Dependencies: the pipeline needs `janome` (RAG layer) even with the stub provider. `anthropic` is only needed for the API provider. The web UI needs nothing.
+> Dependencies: the pipeline needs `janome` (RAG layer) even with the stub provider. The web UI's HTTP layer is standard-library only, but it reuses the RAG layer, so it needs `janome` too. `anthropic` is only needed for the API provider, `python-pptx` only for `tools/`.
+
+## Tests
+
+```bash
+python -m unittest discover -s tests -t tests
+```
+
+Masking is a security control here: do not change masking rules without adding regression tests (see [CLAUDE.md](CLAUDE.md)).
 
 ## Providers
 
