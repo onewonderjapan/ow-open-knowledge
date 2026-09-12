@@ -36,7 +36,7 @@ OneWonder Japan の公開ナレッジベース。実戦で検証してきた AI 
 |------|----------|----------------------|
 | 人の承認ゲート | [task-orchestrator/SKILL.md](task-orchestrator/SKILL.md)（計画承認まで一切変更しない）；[workflow-standard/STANDARD.md](workflow-standard/STANDARD.md) P4（不可逆 / 対外副作用）；[dev-pipeline/USAGE.md](dev-pipeline/USAGE.md)（Human / Hybrid 実行者） | タスク開始 vs. 本番副作用 vs. サブタスクの実行者 |
 | 学習 / 記憶の固化 | [AGENT育成標準.md](agent-cultivation/AGENT育成標準.md) の三層（code / skill / memory）；[learning-policy.md](task-orchestrator/references/learning-policy.md)（project / personal / none）；[dev-pipeline `agents/memory/`](dev-pipeline/README.md) | 育成標準 vs. タスク後のルール振り分け vs. エージェントごとの実行記憶 |
-| 経験の蓄積 | [PITFALLS.md](agent-cultivation/PITFALLS.md)；ワークフロー `state/` の追記専用台帳；task-orchestrator の run `learning.md` | 人手の踩坑 vs. ワークフロー再生ログ vs. 1回分の学習メモ |
+| 経験の蓄積 | [PITFALLS.md](agent-cultivation/PITFALLS.md)；ワークフロー `state/` の追記専用台帳；task-orchestrator の run `learning.md` | 人手の踏み穴記録 vs. ワークフロー再生ログ vs. 1回分の学習メモ |
 
 ### skill のインストールパス
 
