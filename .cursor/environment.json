@@ -1,0 +1,13 @@
+{
+  "name": "ow-open-knowledge",
+  "user": "ubuntu",
+  "install": "sudo apt-get update && sudo apt-get install -y python3.12-venv && python3 -m venv .venv && .venv/bin/pip install --upgrade pip && .venv/bin/pip install -r ai-stack/requirements.txt -r dev-pipeline/requirements.txt",
+  "terminals": [
+    {
+      "name": "ai-stack-ui",
+      "command": "cd ai-stack && exec ../.venv/bin/python ui/app.py",
+      "description": "ai-stack zero-dependency demo web UI on http://127.0.0.1:7877"
+    }
+  ],
+  "ports": [7877]
+}
