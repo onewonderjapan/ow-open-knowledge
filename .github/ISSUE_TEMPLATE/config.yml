@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability / 脆弱性の報告 / 安全漏洞
+    url: https://github.com/onewonderjapan/ow-open-knowledge/security/advisories/new
+    about: Masking bypasses, unmasked data reaching an LLM, path traversal — report these privately, not as a public issue.
+  - name: Contribution guide / 貢献ガイド / 贡献指南
+    url: https://github.com/onewonderjapan/ow-open-knowledge/blob/main/CONTRIBUTING.md
+    about: What this repository does and does not accept — please read the inclusion boundary first.

@@ -14,6 +14,30 @@
 2. 保持各文档原有语言：日文文档用日文修改，中文文档用中文修改，不做翻译式重写。
 3. 代码改动需附可运行的验证命令与输出（证据主义）。
 4. 每个 PR 聚焦一件事，保持最小可审。
+5. **改脱敏层必须补回归测试**。`ai-stack/masking/` 决定什么可以离开内网，属于安全控制；
+   规则改了没测试就是漏出事故（见 `ai-stack/CLAUDE.md`）。测试加在
+   `ai-stack/tests/test_masker.py`，并确认改动前失败、改动后通过。
+6. 踩到的坑追记到 `agent-cultivation/PITFALLS.md`——这本身就是仓库的资产。
+
+## 本地验证
+
+```bash
+python -m pip install janome                                                  # ai-stack RAG 层
+python -m unittest discover -s ai-stack/tests -t ai-stack/tests
+python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests
+python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
+python scripts/check_links.py
+
+# 离线端到端 demo（无需 API key）
+cd ai-stack && python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
+```
+
+CI 在每个 PR 上跑同样的检查。
+
+## 安全问题不要开公开 issue
+
+脱敏绕过、未脱敏数据进入 LLM、模型输出驱动的任意文件读写——请按 [SECURITY.md](SECURITY.md)
+私下上报。
 
 ## 文档约定
 

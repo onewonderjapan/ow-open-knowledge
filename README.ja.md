@@ -60,7 +60,28 @@ python ui/app.py    # → http://127.0.0.1:7877
 
 ## コントリビュート
 
-Issue・PR を歓迎します。詳しくは [CONTRIBUTING.md](CONTRIBUTING.md) を参照。
+Issue・PR を歓迎します。収録範囲は [CONTRIBUTING.md](CONTRIBUTING.md)、行動規範は
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) を参照。
+
+PR を出す前にテストを実行してください：
+
+```bash
+python -m pip install janome                                                  # ai-stack の RAG 層
+python -m unittest discover -s ai-stack/tests -t ai-stack/tests               # 脱敏 + プロンプト組立
+python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests       # workspace 境界 + パーサー
+python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
+python scripts/check_links.py                                                 # Markdown 相対リンク
+```
+
+CI は全 PR で同じ検査とオフラインデモを実行します。
+
+**脱敏は安全制御です**。`ai-stack/masking/` が「何が外に出てよいか」を決めているため、
+テストなしのルール変更は漏洩事故の入口になります → [ai-stack/CLAUDE.md](ai-stack/CLAUDE.md)。
+
+## セキュリティ
+
+脱敏の突破、未脱敏データが LLM に渡る経路、モデル出力由来の任意ファイルアクセスを
+見つけた場合は、公開 issue ではなく非公開でご報告ください → [SECURITY.md](SECURITY.md)。
 
 ## License
 

@@ -60,7 +60,27 @@ python ui/app.py    # → http://127.0.0.1:7877
 
 ## 贡献
 
-欢迎 issue 与 PR，见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+欢迎 issue 与 PR，见 [CONTRIBUTING.md](CONTRIBUTING.md)（收录边界）与
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
+
+提 PR 前先跑测试：
+
+```bash
+python -m pip install janome                                                  # ai-stack RAG 层
+python -m unittest discover -s ai-stack/tests -t ai-stack/tests               # 脱敏 + prompt 组装
+python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests       # workspace 边界 + 解析器
+python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
+python scripts/check_links.py                                                 # markdown 相对链接
+```
+
+CI 会在每个 PR 上跑同样的检查，外加离线 demo。
+
+**脱敏是安全控制**。`ai-stack/masking/` 决定什么可以离开内网，改规则不补回归测试就是漏出事故的来源
+——见 [ai-stack/CLAUDE.md](ai-stack/CLAUDE.md)。
+
+## 安全
+
+发现脱敏绕过、未脱敏数据进入 LLM、或模型输出驱动的任意文件访问？请私下上报，见 [SECURITY.md](SECURITY.md)。
 
 ## License
 

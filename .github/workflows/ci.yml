@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: tests (python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # ai-stack evaluates `str | None` at runtime, so 3.10 is the floor.
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # janome is needed by the RAG layer (and therefore by the pipeline and the web UI).
+      - name: Install ai-stack dependencies
+        run: python -m pip install --upgrade pip janome
+
+      # Masking is a security control: these are the regression tests CLAUDE.md mandates.
+      - name: ai-stack tests
+        run: python -m unittest discover -s ai-stack/tests -t ai-stack/tests -v
+
+      - name: dev-pipeline tests
+        run: python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests -v
+
+      - name: task-orchestrator tests
+        run: python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests -v
+
+  demo-smoke:
+    name: ai-stack offline demo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip janome
+
+      # The README promises this runs end to end with no API key. Keep that promise honest.
+      - name: Run the stub pipeline
+        working-directory: ai-stack
+        run: python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
+
+      # The masked file is what would actually leave the building. No real name may survive.
+      - name: Assert no real entity survives masking
+        working-directory: ai-stack
+        run: |
+          python - <<'PY'
+          import json, sys
+          from pathlib import Path
+          masked = Path("out/new_rfp_masked.md").read_text(encoding="utf-8")
+          report = json.loads(Path("out/new_rfp_report.json").read_text(encoding="utf-8"))
+          entities = json.loads(Path("masking/entities.json").read_text(encoding="utf-8"))
+          failures = [n for n in entities["companies"] + entities["persons"] if n in masked]
+          if failures:
+              sys.exit(f"実名が masked 出力に残っている: {failures}")
+          if not report["masked_entities"]:
+              sys.exit("何もマスクされていない（脱敏が動いていない）")
+          if not report["qc"]["ok"]:
+              sys.exit(f"QC に findings: {report['qc']['findings']}")
+          print(f"OK: {len(report['masked_entities'])} 実体をマスク、QC PASS")
+          PY
+
+  docs:
+    name: docs links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check relative markdown links
+        run: python scripts/check_links.py
+
+  compile:
+    name: byte-compile all python
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Compile
+        run: python -m compileall -q ai-stack dev-pipeline task-orchestrator scripts

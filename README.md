@@ -60,7 +60,30 @@ python ui/app.py    # → http://127.0.0.1:7877
 
 ## Contributing
 
-Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for the inclusion
+boundary (what may and may not go into this repo), and
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+Run the tests before opening a PR:
+
+```bash
+python -m pip install janome                                                  # ai-stack RAG layer
+python -m unittest discover -s ai-stack/tests -t ai-stack/tests               # masking + prompt assembly
+python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests       # workspace boundary + parser
+python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
+python scripts/check_links.py                                                 # relative markdown links
+```
+
+CI runs the same checks plus the offline demo on every PR.
+
+**Masking is a security control.** `ai-stack/masking/` decides what is allowed to
+leave the building, so a rule change without a regression test is how leaks ship —
+see [ai-stack/CLAUDE.md](ai-stack/CLAUDE.md).
+
+## Security
+
+Found a masking bypass, unmasked data reaching an LLM, or arbitrary file access driven
+by model output? Please report it privately — see [SECURITY.md](SECURITY.md).
 
 ## License
 
