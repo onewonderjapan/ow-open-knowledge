@@ -227,7 +227,9 @@ cd task-orchestrator && python3 scripts/scan_skills.py --cwd /workspace --pretty
 ### P2-5 缺开源基础设施
 
 已有：`LICENSE`(MIT)、`CONTRIBUTING.md`、`.gitignore`、各目录 README。
-缺：CI、issue/PR 模板、`SECURITY.md`、`CODE_OF_CONDUCT.md`、根 `CHANGELOG.md`（`AGENT育成標準.md` 引用了但根目录没有）、版本号/tag、`.editorconfig`、lint 配置。
+缺：CI、issue/PR 模板、`SECURITY.md`、`CODE_OF_CONDUCT.md`、根 `CHANGELOG.md`、版本号/tag、`.editorconfig`、lint 配置。
+
+其中 `CHANGELOG` 尤其讽刺：`AGENT育成標準.md:115` 明文要求「本標準の変更は CHANGELOG 付きで版数を上げる」，`新プロジェクトSTARTUP標準.md:25` 把「CHANGELOG に1行」列为第一天的必做项，但仓库自身没有 CHANGELOG。方法论没有作用在自己身上。
 
 考虑到本仓库自带一个**安全控制性质的脱敏层**，`SECURITY.md`（漏洞如何私下上报）不是可选项。
 
@@ -272,13 +274,19 @@ EN / JA / ZH 三语混排，且存在**单文件内混用**：`AGENT育成標準
 
 ## 7. 本次已落地的改动
 
-本 PR 不止给方案，同时把阶段一（止血）与阶段二的一部分实现了，让方案自带证据：
+本 PR 不止给方案，同时把阶段一（止血）与阶段二基本实现了，让方案自带证据。完整清单见 [CHANGELOG.md](CHANGELOG.md)，要点：
 
-- **P0-1/P0-2/P0-4** 脱敏层重写：NFKC 归一化、边界感知替换、法人形态整体消化、标签池无上限、职务名白名单排除；新增 `ai-stack/tests/test_masker.py` 回归测试。
-- **P0-3** `pipeline/run.py` 与 `ui/app.py` 在组装 prompt 前对召回文档脱敏，先例 mapping 并入审计报告。
-- **P0-5** `developer.py` 写入/删除前做 workspace 越界校验。
-- **P1-1** 新增 GitHub Actions：unittest + demo 冒烟 + markdown 链接校验。
-- **P1-2/P1-3/P1-4/P1-5/P1-6** UI 输入校验、去掉 `shell=True`、共享章节与 leak 常量、依赖声明改正、`add_dir` df 修复。
-- **P2-3/P2-4/P2-5** 文档路径与阶段数修正、`SECURITY.md`、issue/PR 模板。
+- **P0-1/P0-2/P0-4** 脱敏层重写：NFKC 归一化、单趟最长匹配替换、法人格整体消化、标签池无上限、职务名排除表。
+- **P0-3** 新增 `ai-stack/pipeline/drafting.py` 收敛 prompt 组装，先例正文与标题一并脱敏、先脱敏后截断、跨文档共享编号；`run.py` 与 `ui/app.py` 都改走这条路径。
+- **P0-5** 新增 `dev-pipeline/core/paths.py::resolve_in_workspace()`，`developer.py` 的写入/删除与 `tester.py` 的读取都做越界校验。
+- **P1-1** GitHub Actions 四个 job：三套测试（Python 3.10/3.12）、离线 demo 冒烟（机械校验 masked 输出无实名）、Markdown 链接校验、全量字节编译。
+- **P1-2/P1-3/P1-4/P1-5/P1-6** UI 输入校验、去掉 `shell=True` 并改用 `shutil.which()`、provider 注册表、章节与 leak 规则单一真实源、依赖与 Python 版本声明改正、`add_dir` 的 df 二重计上修复。
+- **P2-3/P2-4/P2-5** 文档路径与阶段数修正、提交进仓的要件样例、`SECURITY.md`、`CODE_OF_CONDUCT.md`、issue/PR 模板、`.editorconfig`、根 `CHANGELOG.md`。
+
+测试从 0 增至 82 件。另外修了要件解析器两个会静默吃掉正文的 bug（无分隔线时 header 残留进正文；正文中的 Markdown 水平线被误认为分隔线）。
 
 留给后续 issue 对齐的是需要产品决策的部分：P2-1（导航层重构）、P2-2（技能路径规范统一）、P2-6（语言地图）、阶段四（正式版替换）。
+
+### 一条值得记下的自陷
+
+为统一电话分隔符，我一开始把 `ー`(U+30FC) 全文替换成 `-`。新写的回归测试立刻报错：「承認フロー」变成了「承認フロ-」——该字符兼作长音符。改为只在数字之间的分隔位置允许。**正规化不设计作用范围，就会从一个事故变成另一个事故**；这也正好说明为什么 `CLAUDE.md` 那条「改脱敏必须先有测试」的规矩值得当作硬约束。已记入 `PITFALLS.md` 13。
