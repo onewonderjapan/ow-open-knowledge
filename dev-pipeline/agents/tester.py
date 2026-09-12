@@ -7,6 +7,7 @@ from typing import Any
 
 from agents.base import BaseAgent
 from core.config import Config
+from core.paths import PathEscapeError, resolve_in_workspace
 from core.models import (
     AnalysisResult,
     AllDevelopmentResults,
@@ -178,9 +179,14 @@ class TesterAgent(BaseAgent):
             for change in result.changes:
                 if change.action == "delete":
                     continue
-                disk_path = self.config.workspace / change.file_path
+                # パスは LLM 出力由来。workspace 外を読ませない（任意ファイル読み取り防止）
+                try:
+                    disk_path = resolve_in_workspace(self.config.workspace, change.file_path)
+                except PathEscapeError as e:
+                    self.logger.error(f"  読取拒否: {change.file_path} ({e})")
+                    continue
                 if disk_path.exists():
-                    content = disk_path.read_text()
+                    content = disk_path.read_text(encoding="utf-8")
                 else:
                     content = change.content
                 sections.append(f"### {change.file_path}\n```\n{content}\n```")

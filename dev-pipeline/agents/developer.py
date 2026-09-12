@@ -9,6 +9,7 @@ from typing import Any
 
 from agents.base import BaseAgent
 from core.config import Config
+from core.paths import PathEscapeError, resolve_in_workspace
 from core.models import (
     AnalysisResult,
     AllDevelopmentResults,
@@ -327,14 +328,22 @@ class DeveloperAgent(BaseAgent):
         return "\n\n".join(sections)
 
     def _apply_changes(self, changes: list[CodeChange]) -> None:
-        """コード変更を workspace ディレクトリに書き込み."""
+        """コード変更を workspace ディレクトリに書き込み.
+
+        パスは LLM 出力由来なので workspace 境界を必ず検証する。
+        1件が不正でも他の変更は適用する（拒否した事実はログに残す）。
+        """
         for change in changes:
-            file_path = self.config.workspace / change.file_path
+            try:
+                file_path = resolve_in_workspace(self.config.workspace, change.file_path)
+            except PathEscapeError as e:
+                self.logger.error(f"    拒否: {change.file_path} ({e})")
+                continue
             if change.action == "delete":
                 if file_path.exists():
                     file_path.unlink()
                     self.logger.info(f"    削除: {change.file_path}")
             else:
                 file_path.parent.mkdir(parents=True, exist_ok=True)
-                file_path.write_text(change.content)
+                file_path.write_text(change.content, encoding="utf-8")
                 self.logger.info(f"    書込: {change.file_path}")
