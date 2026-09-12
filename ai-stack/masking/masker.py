@@ -46,6 +46,10 @@ _RULES = [
     ("MONEY",  re.compile(r"(?:[0-9,]+|[一二三四五六七八九十百千]+)(?:億|万)?円")),
 ]
 
+# 質検層(evalkit)が「マスク漏れ」を判定するときに使う。生成者と同じ規則を共有することで
+# 検査者が生成者より緩くなる（漏れを見逃す）事故を防ぐ。
+LEAK_PATTERNS = [("PHONE", _PHONE_RE), ("EMAIL", _EMAIL_RE)]
+
 # 法人格: 辞書実体と一体で消化する（「株式会社田中商事」→「B社」。「株式会社B社」を残さない）
 _LEGAL_FORMS = ("株式会社", "有限会社", "合同会社", "合資会社", "合名会社")
 _LEGAL_ALT = "|".join(_LEGAL_FORMS)
@@ -65,7 +69,9 @@ _ORG_WORDS = frozenset(
     "人事 営業 総務 経理 開発 製造 品質 法務 広報 財務 企画 購買 情報 技術 管理 事業 研究 調達 物流 監査 経営".split()
 )
 # 生成済みラベル（A社 / AA社 / 担当者01）。再マスク・二重マスクを防ぐ
-_LABEL_RE = re.compile(r"[A-Z]{1,3}社|担当者\d{2,}")
+_COMPANY_LABEL_RE = re.compile(r"[A-Z]{1,3}社")
+_PERSON_LABEL_RE = re.compile(r"担当者\d{2,}")
+_LABEL_RE = re.compile(rf"{_COMPANY_LABEL_RE.pattern}|{_PERSON_LABEL_RE.pattern}")
 
 
 def normalize(text: str) -> str:
@@ -147,9 +153,21 @@ class Masker:
                 break
         return core
 
-    def mask(self, text: str) -> tuple[str, dict]:
-        mapping: dict[str, str] = {}   # 実名 -> 伏せ字
+    def mask(self, text: str, mapping: dict | None = None) -> tuple[str, dict]:
+        """text を脱敏し (脱敏後テキスト, 実名->伏せ字 の mapping) を返す。
+
+        mapping を渡すと採番を引き継ぐ。複数文書（要件書 + RAG召回した先例）を跨いで
+        同一実体に同一ラベルを与えるため。渡さない場合は毎回 A社/担当者01 から始まるので、
+        別文書の別会社が同じラベルになり監査表が壊れる。
+        """
+        mapping = {} if mapping is None else mapping
         counters = {"company": 0, "person": 0}
+        # 既存 mapping から採番位置を復元（custom の値は連番ラベルではないので数えない）
+        for v in mapping.values():
+            if _COMPANY_LABEL_RE.fullmatch(v):
+                counters["company"] += 1
+            elif _PERSON_LABEL_RE.fullmatch(v):
+                counters["person"] += 1
 
         def label_for(kind: str, name: str) -> str:
             if name in mapping:

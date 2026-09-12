@@ -18,19 +18,7 @@ from masking.masker import Masker                    # noqa: E402
 from rag.retriever import BM25Index                  # noqa: E402
 from llm.providers import get_provider               # noqa: E402
 from evalkit.structure_check import check            # noqa: E402
-
-PROMPT_TEMPLATE = """あなたはSIerの上級システムエンジニア。以下の顧客要件から「基本設計書のドラフト」を日本語で作成せよ。
-
-# 社内標準の章立て(必須・この順)
-1. 概要 / 2. システム構成 / 3. 機能一覧 / 4. 画面設計 / 5. データ設計 / 6. 外部連携 / 7. 非機能要件 / 8. 移行・運用
-
-# 過去の類似プロジェクトの設計書(参考。書式・粒度を踏襲すること)
-{references}
-
-# 顧客要件(機密は伏せ字済み。伏せ字はそのまま使うこと)
-{requirements}
-
-Markdownで、各章に具体的な内容を記述。推測が必要な箇所は「【要確認】」を付けて仮置きする。"""
+from pipeline.drafting import PROMPT_TEMPLATE, build_prompt, build_references   # noqa: E402,F401
 
 
 def main():
@@ -56,13 +44,13 @@ def main():
     idx = BM25Index()
     idx.add_dir(args.corpus, "**/design_*.md")
     hits = idx.search(masked, k=2)
+    # 先例文書も脱敏する。要件書だけ脱敏してここを素通りさせると実名が出境する
+    refs_text, mapping = build_references(hits, masker, mapping)
     report["references"] = [{"title": h["title"], "score": h["score"]} for h in hits]
-    refs_text = "\n\n---\n\n".join(f"【{h['title']}】\n{h['text'][:2500]}" for h in hits) or "(先例なし)"
 
     # 4) LLM起草(クラウド脳。渡るのは伏せ字済みテキストのみ)
     provider = get_provider(args.provider)
-    prompt = PROMPT_TEMPLATE.format(references=refs_text, requirements=masked)
-    draft = provider.complete(prompt)
+    draft = provider.complete(build_prompt(masked, refs_text))
 
     # 5) 構造検査(ローカル質検)
     qc = check(draft, known_real_names=list(mapping.keys()))

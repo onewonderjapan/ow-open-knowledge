@@ -9,6 +9,7 @@
 デモの見せ方: ①生の要件書 ②「クラウドに渡るのはこれだけ」③先例 ④ドラフト ⑤監査
 """
 import json
+import logging
 import sys
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -21,8 +22,12 @@ from masking.masker import Masker            # noqa: E402
 from rag.retriever import BM25Index          # noqa: E402
 from llm.providers import get_provider       # noqa: E402
 from evalkit.structure_check import check    # noqa: E402
+from pipeline.drafting import build_prompt, build_references   # noqa: E402
 
 PORT = 7877
+MAX_BODY_BYTES = 2 * 1024 * 1024   # 入力上限。無制限だとローカルでもメモリ枯渇させられる
+
+log = logging.getLogger("ui")
 _masker = Masker(str(ROOT / "masking" / "entities.json"))
 _index = BM25Index()
 _index.add_dir(str(ROOT / "demo_data" / "past_projects"), "**/design_*.md")
@@ -196,36 +201,79 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _read_json(self) -> dict | None:
+        """リクエストボディを検証して読む。不正なら 400 を返して None。"""
+        raw_len = self.headers.get("Content-Length", "0")
+        try:
+            n = int(raw_len)
+        except ValueError:
+            self._json({"error": "Content-Length が不正です"}, 400)
+            return None
+        if n < 0 or n > MAX_BODY_BYTES:
+            self._json({"error": f"リクエストが大きすぎます (上限 {MAX_BODY_BYTES} bytes)"}, 413)
+            return None
+        try:
+            req = json.loads(self.rfile.read(n).decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            self._json({"error": "JSON として解析できません"}, 400)
+            return None
+        if not isinstance(req, dict):
+            self._json({"error": "JSON オブジェクトを渡してください"}, 400)
+            return None
+        return req
+
+    def _require_text(self, req: dict, key: str) -> str | None:
+        val = req.get(key)
+        if not isinstance(val, str) or not val.strip():
+            self._json({"error": f"'{key}' に文字列が必要です"}, 400)
+            return None
+        return val
+
     def do_POST(self):
-        n = int(self.headers.get("Content-Length", 0))
-        req = json.loads(self.rfile.read(n).decode("utf-8"))
+        req = self._read_json()
+        if req is None:
+            return
         if self.path == "/prepare":
-            masked, mapping = _masker.mask(req["text"])
+            text = self._require_text(req, "text")
+            if text is None:
+                return
+            masked, mapping = _masker.mask(text)
             hits = _index.search(masked, k=2)
-            self._json({
-                "masked": masked, "mapping": mapping,
-                "refs": [{"title": h["title"], "score": h["score"], "snippet": h["text"][:110].replace("\n", " ")} for h in hits],
-            })
+            # スニペットも脱敏する。画面に出るだけでも実名は見せない
+            snippets = []
+            for h in hits:
+                masked_ref, _ = _masker.mask(h["text"][:400], dict(mapping))
+                snippets.append({"title": h["title"], "score": h["score"],
+                                 "snippet": masked_ref[:110].replace("\n", " ")})
+            self._json({"masked": masked, "mapping": mapping, "refs": snippets})
             return
         if self.path == "/draft":
-            from pipeline.run import PROMPT_TEMPLATE
+            masked_req = self._require_text(req, "masked")
+            if masked_req is None:
+                return
+            mapping = req.get("mapping")
+            if not isinstance(mapping, dict):
+                mapping = {}
             t0 = time.time()
-            hits = _index.search(req["masked"], k=2)
-            refs_text = "\n\n---\n\n".join(f"【{h['title']}】\n{h['text'][:2500]}" for h in hits) or "(先例なし)"
+            hits = _index.search(masked_req, k=2)
+            # 先例文書も脱敏してからプロンプトへ。生テキストを渡すと実名が出境する
+            refs_text, mapping = build_references(hits, _masker, dict(mapping))
             try:
                 provider = get_provider(req.get("provider", "stub"))
-                draft = provider.complete(PROMPT_TEMPLATE.format(references=refs_text, requirements=req["masked"]))
-            except Exception as e:  # noqa: BLE001
-                self._json({"error": f"LLM呼び出し失敗: {e}"})
+                draft = provider.complete(build_prompt(masked_req, refs_text))
+            except Exception:
+                # 例外詳細はサーバ側ログのみ。パスや環境情報をクライアントに返さない
+                log.exception("LLM 呼び出しに失敗")
+                self._json({"error": "LLM呼び出しに失敗しました。サーバログを確認してください。"}, 502)
                 return
-            qc = check(draft, known_real_names=list(req.get("mapping", {}).keys()))
+            qc = check(draft, known_real_names=list(mapping))
             elapsed = round(time.time() - t0, 1)
             self._json({
                 "draft": draft, "qc": qc, "elapsed": elapsed, "provider": provider.name,
                 "audit": {
                     "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
                     "provider": provider.name,
-                    "masked_entities": req.get("mapping", {}),
+                    "masked_entities": mapping,   # 先例文書側の実体も監査対象に含める
                     "references_used": [h["title"] for h in hits],
                     "qc": qc,
                     "elapsed_sec": elapsed,
@@ -239,5 +287,6 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     print(f"demo UI: http://127.0.0.1:{PORT}")
     ThreadingHTTPServer(("127.0.0.1", PORT), Handler).serve_forever()
