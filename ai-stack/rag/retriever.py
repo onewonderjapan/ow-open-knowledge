@@ -33,11 +33,19 @@ class BM25Index:
         self.avgdl = 0.0
 
     def add_dir(self, root: str, glob: str = "**/*.md"):
+        """複数回の呼び出しに対応（語料ディレクトリを分けている場合）。
+
+        df は**今回追加した文書のみ**加算する。全 docs を毎回数え直すと2回目の呼び出しで
+        既存文書が二重計上され、IDF が壊れる。
+        """
+        added = []
         for p in sorted(Path(root).glob(glob)):
             text = p.read_text(encoding="utf-8")
             toks = tokenize(text)
-            self.docs.append({"id": len(self.docs), "path": str(p), "title": p.stem, "text": text, "tokens": toks})
-        for d in self.docs:
+            doc = {"id": len(self.docs), "path": str(p), "title": p.stem, "text": text, "tokens": toks}
+            self.docs.append(doc)
+            added.append(doc)
+        for d in added:
             for w in set(d["tokens"]):
                 self.df[w] += 1
         self.avgdl = sum(len(d["tokens"]) for d in self.docs) / max(1, len(self.docs))

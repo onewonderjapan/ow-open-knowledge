@@ -6,7 +6,7 @@
                   ※PoC/社内狗糧用。顧客本番はAPI版に切替。
   anthropic-api : Anthropic API (要 ANTHROPIC_API_KEY)。本番向け。
 """
-import os
+import shutil
 import subprocess
 
 
@@ -39,11 +39,20 @@ class ClaudeCLIProvider(BaseProvider):
         self.model = model
 
     def complete(self, prompt: str) -> str:
-        cmd = ["claude", "-p"]
+        # shutil.which で実行ファイルを解決してから shell=False で起動する。
+        # shell=True は不要（かつ POSIX ではリストと組み合わせると cmd[0] しか実行されない）。
+        # Windows の claude.cmd も which が PATHEXT 経由で解決するのでシェルは要らない。
+        exe = shutil.which("claude")
+        if exe is None:
+            raise RuntimeError(
+                "claude コマンドが見つかりません。Claude Code CLI を入れて PATH に通すか、"
+                "--provider stub / anthropic-api を使ってください。"
+            )
+        cmd = [exe, "-p"]
         if self.model:
             cmd += ["--model", self.model]
         r = subprocess.run(cmd, input=prompt, capture_output=True, text=True,
-                           encoding="utf-8", timeout=600, shell=True)
+                           encoding="utf-8", timeout=600)
         if r.returncode != 0:
             raise RuntimeError(f"claude-cli failed: {r.stderr[:500]}")
         return r.stdout.strip()
@@ -65,11 +74,30 @@ class AnthropicAPIProvider(BaseProvider):
         return "".join(b.text for b in msg.content if b.type == "text")
 
 
-def get_provider(name: str) -> BaseProvider:
-    if name == "stub":
-        return StubProvider()
-    if name == "claude-cli":
-        return ClaudeCLIProvider()
-    if name == "anthropic-api":
-        return AnthropicAPIProvider()
-    raise ValueError(f"unknown provider: {name} (stub / claude-cli / anthropic-api)")
+_REGISTRY: dict[str, type[BaseProvider]] = {
+    "stub": StubProvider,
+    "claude-cli": ClaudeCLIProvider,
+    "anthropic-api": AnthropicAPIProvider,
+}
+
+
+def register_provider(name: str, cls: type[BaseProvider]) -> None:
+    """プロバイダを追加する。「モデル追加=設定1行」を外部からも成立させるための口。
+
+    if/elif の分岐に手を入れさせると、追加のたびにコア側を書き換える必要が出る。
+    """
+    _REGISTRY[name] = cls
+
+
+def available_providers() -> list[str]:
+    return sorted(_REGISTRY)
+
+
+def get_provider(name: str, **kwargs) -> BaseProvider:
+    try:
+        cls = _REGISTRY[name]
+    except KeyError:
+        raise ValueError(
+            f"unknown provider: {name} ({' / '.join(available_providers())})"
+        ) from None
+    return cls(**kwargs)
