@@ -12,6 +12,7 @@ It applies to any recurring, automated, feedback-looped job: financial analysis 
 |------|------------|
 | [STANDARD.md](STANDARD.md) | **The core standard (read first).** 7 iron rules, the four-phase lifecycle, directory conventions, and a launch checklist |
 | [template/](template/) | Scaffold for a new workflow (SKILL.md + config.yml + steps/ + state/) |
+| [scripts/validate.py](scripts/validate.py) | Machine-checkable subset of the iron rules (required files, `paper`/`live` mode, append-only jsonl, unique `run_key`) |
 
 ## Create a workflow
 
@@ -20,6 +21,7 @@ cp -r template workflows/<name>
 ln -s ../../workflows/<name> .claude/skills/<name>   # Claude Code
 # ln -s ../../workflows/<name> .agents/skills/<name>  # Codex-style
 # edit workflows/<name>/SKILL.md and state/, then dry-run it: /<name>
+python scripts/validate.py workflows/<name>
 ```
 
 The template's `SKILL.md` ships with placeholder frontmatter (`CHANGE-ME-workflow-name`). Fill `name` and `description` before using it — loaders ignore a skill that has no YAML frontmatter.
@@ -32,6 +34,7 @@ See STANDARD.md §11 for the launch checklist.
 workflow-standard/
 ├── STANDARD.md        # the core standard
 ├── README.md
+├── scripts/validate.py
 └── template/          # scaffold for new workflows
     ├── SKILL.md
     ├── config.yml

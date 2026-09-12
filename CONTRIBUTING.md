@@ -26,6 +26,7 @@ python -m pip install janome                                                  # 
 python -m unittest discover -s ai-stack/tests -t ai-stack/tests
 python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests
 python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
+python -m unittest discover -s workflow-standard/tests -t workflow-standard/tests
 python scripts/check_links.py
 python scripts/check_skills.py
 python -m unittest discover -s scripts -t scripts -p "test_*.py"

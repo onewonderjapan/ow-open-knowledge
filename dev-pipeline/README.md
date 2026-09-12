@@ -36,7 +36,7 @@ Full pipeline (6 phases):
 | **Analyst** | `--analyze` | requirement analysis, task split, executor decision (AI/Human/Hybrid) | `analyst/analysis.md` |
 | **Developer** | `--develop` | generate code & docs per subtask | `developer/development.md` |
 | **Reviewer** | (automatic) | quality checks, cross-system review, fix instructions | `reviewer/review.md` |
-| **Tester** | `--test` | functional tests + security vulnerability scan | `tester/test_report.md` |
+| **Tester** | `--test` | LLM-judged review of generated code (does not execute the project test suite) | `tester/test_report.md` |
 
 The **Reviewer** verifies Developer output automatically (empty/truncated files, requirement coverage, and cross-system gaps like DNS/firewall/auth/monitoring), and on failure loops one fix round back to Developer.
 

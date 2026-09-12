@@ -288,7 +288,7 @@ System Prompt を改善してください。"""
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            cwd="/tmp",
+            cwd=tempfile.gettempdir(),
             env=env,
         )
 

@@ -121,7 +121,7 @@ class TesterAgent(BaseAgent):
         report.save(output_dir / "test_report.json")
 
         readable_path = output_dir / "test_report.md"
-        readable_path.write_text(self._format_readable_report(report))
+        readable_path.write_text(self._format_readable_report(report), encoding="utf-8")
 
         self.logger.info(f"テスト完了 -> {readable_path}")
         self.logger.info(
@@ -156,7 +156,7 @@ class TesterAgent(BaseAgent):
                 continue
 
             try:
-                content = f.read_text()
+                content = f.read_text(encoding="utf-8")
             except Exception:
                 continue
 

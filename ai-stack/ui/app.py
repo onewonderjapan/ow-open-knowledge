@@ -82,7 +82,7 @@ HTML = """<!DOCTYPE html>
   <textarea id="rfp"></textarea>
   <div style="margin-top:10px; display:flex; gap:12px; align-items:center;">
    <button class="ghost" onclick="loadDemo()">デモ要件書を読み込む</button>
-   <select id="provider"><option value="claude-cli">Claude(本物)</option><option value="stub">スタブ(オフライン)</option></select>
+   <select id="provider"><option value="stub">スタブ(オフライン)</option><option value="claude-cli">Claude(本物)</option></select>
    <button id="goBtn" onclick="prepare()">▶ 実行</button>
    <span class="note">実行しても、この画面の下で「何が社外に渡るか」を確認できます</span>
   </div>
@@ -119,7 +119,7 @@ let PREP = null;
 const $ = id => document.getElementById(id);
 function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
 function hi(s){ // 伏せ字ラベルをハイライト
-  return esc(s).replace(/(\\[(?:EMAIL|PHONE|MONEY|POSTAL|URL)\\]|[A-N]社|担当者[甲乙丙丁戊己庚辛])/g, "<mark>$1</mark>");
+  return esc(s).replace(/(\\[(?:EMAIL|PHONE|MONEY|POSTAL|URL)\\]|[A-N]社|担当者\\d+)/g, "<mark>$1</mark>");
 }
 function loadDemo(){ fetch("/demo").then(r=>r.text()).then(t=>{ $("rfp").value = t; }); }
 async function prepare(){
@@ -230,6 +230,10 @@ class Handler(BaseHTTPRequestHandler):
         return val
 
     def do_POST(self):
+        origin = self.headers.get("Origin", "")
+        if origin and origin not in (f"http://127.0.0.1:{PORT}", f"http://localhost:{PORT}"):
+            self._json({"error": "forbidden origin"}, 403)
+            return
         req = self._read_json()
         if req is None:
             return
@@ -273,7 +277,8 @@ class Handler(BaseHTTPRequestHandler):
                 "audit": {
                     "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
                     "provider": provider.name,
-                    "masked_entities": mapping,   # 先例文書側の実体も監査対象に含める
+                    "masked_entity_count": len(mapping),
+                    "masked_labels": list(mapping.values()),
                     "references_used": [h["title"] for h in hits],
                     "qc": qc,
                     "elapsed_sec": elapsed,

@@ -43,6 +43,9 @@ jobs:
       - name: task-orchestrator tests
         run: python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests -v
 
+      - name: workflow-standard tests
+        run: python -m unittest discover -s workflow-standard/tests -t workflow-standard/tests -v
+
       - name: skill frontmatter tests
         run: python -m unittest discover -s scripts -t scripts -p "test_*.py" -v
 
@@ -74,11 +77,19 @@ jobs:
           failures = [n for n in entities["companies"] + entities["persons"] if n in masked]
           if failures:
               sys.exit(f"実名が masked 出力に残っている: {failures}")
-          if not report["masked_entities"]:
+          names = entities["companies"] + entities["persons"]
+          report_text = json.dumps(report, ensure_ascii=False)
+          leaked = [n for n in names if n in report_text]
+          if leaked:
+              sys.exit(f"実名が report.json に残っている: {leaked}")
+          if report.get("masked_entity_count", 0) < 1:
               sys.exit("何もマスクされていない（脱敏が動いていない）")
+          mapping_path = Path("out/new_rfp_mapping.json")
+          if not mapping_path.exists():
+              sys.exit("mapping ファイルが無い")
           if not report["qc"]["ok"]:
               sys.exit(f"QC に findings: {report['qc']['findings']}")
-          print(f"OK: {len(report['masked_entities'])} 実体をマスク、QC PASS")
+          print(f"OK: {report['masked_entity_count']} 実体をマスク、QC PASS")
           PY
 
   docs:
@@ -107,4 +118,4 @@ jobs:
         with:
           python-version: "3.10"
       - name: Compile
-        run: python -m compileall -q ai-stack dev-pipeline task-orchestrator scripts
+        run: python -m compileall -q ai-stack dev-pipeline task-orchestrator scripts workflow-standard

@@ -148,7 +148,7 @@ class DeveloperAgent(BaseAgent):
         all_results.save(output_dir / "development.json")
 
         md_path = output_dir / "development.md"
-        md_path.write_text(self._format_md_report(all_results, analysis))
+        md_path.write_text(self._format_md_report(all_results, analysis), encoding="utf-8")
         self.logger.info(f"開発完了 -> {md_path}")
 
         done = sum(1 for r in all_results.results if r.status.value == "done")
@@ -311,7 +311,7 @@ class DeveloperAgent(BaseAgent):
                 continue
 
             try:
-                content = f.read_text()
+                content = f.read_text(encoding="utf-8")
             except Exception:
                 continue
 

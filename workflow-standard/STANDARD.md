@@ -198,7 +198,8 @@ description: <一句话触发描述>     # 决定何时被调用，写清"何时
 4. 设置 `config.yml`：模式（默认 `paper`）、调度时刻、确认门开关。
 5. `ln -s ../../workflows/<name> .claude/skills/<name>` 暴露为 Skill。
 6. 手动干跑一轮：`/<name>`，检查三件套产物与 state 更新是否符合规范。
-7. 注册 cron，观察数日，确认幂等与确认门行为正确后再谈上量。
+7. `python workflow-standard/scripts/validate.py workflows/<name>`（可机检的铁则：文件齐全、mode、jsonl、run_key 唯一）。
+8. 注册 cron，观察数日，确认幂等与确认门行为正确后再谈上量。
 
 ---
 
@@ -210,3 +211,4 @@ description: <一句话触发描述>     # 决定何时被调用，写清"何时
 - [ ] 三件套产物齐全，run-key 幂等
 - [ ] 默认 paper 模式，确认门覆盖所有不可逆动作
 - [ ] 无机密入库
+- [ ] `python workflow-standard/scripts/validate.py` 通过

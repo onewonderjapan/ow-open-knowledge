@@ -44,4 +44,15 @@ def check(draft: str, known_real_names: list[str] | None = None) -> dict:
     for name in known_real_names or []:
         if normalize(name) in normalized:
             findings.append(f"実名の混入: {name}")
+            continue
+        for fragment in _name_fragments(name):
+            if fragment and normalize(fragment) in normalized:
+                findings.append(f"氏名断片の残存: {fragment}")
     return {"ok": not findings, "findings": findings, "sections_found": headers}
+
+
+def _name_fragments(name: str) -> list[str]:
+    """辞書登録されたフルネームから、本文に残りやすい姓などの断片を返す。"""
+    if re.fullmatch(r"[一-龥]{3,4}", name):
+        return [name[:2]]
+    return []
