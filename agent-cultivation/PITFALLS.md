@@ -61,3 +61,9 @@
     過去設計書は生テキストのままだった。デモ語料は匿名済みなので気付けない。
     → 出境するテキストは**プロンプト組立の直前で全て**脱敏する。
     教訓: 「何が外に出るか」はデータの入口ではなく**出口で**数える。
+20. **SKILL.md に YAML frontmatter が無いとローダが無視する**: `cloud-patterns/` は
+    「Claude Code 系ツールにそのまま置ける」と README で謳っていたが、4本とも
+    `name` / `description` の frontmatter が無く、`scan_skills.py` は警告付きで
+    スキップしていた（6 skills / 4 warnings）。本文がいくら良くても skill として
+    認識されない。→ 公開する SKILL.md は必ず frontmatter を付け、
+    `scripts/check_skills.py` で門番する。ディレクトリ名と `name` も揃える。

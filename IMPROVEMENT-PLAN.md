@@ -192,7 +192,7 @@ for d in self.docs:
 - **学习/记忆固化**三种模型：三层固化（`AGENT育成標準.md:46`）、project/personal/none（`learning-policy.md:17`）、`agents/memory/`（`dev-pipeline/README.md:75`）。
 - **经验沉淀**三种存储：`PITFALLS.md`、append-only `ledger.jsonl`、`.task-workflow/runs/*/learning.md`。
 
-**方案**：根 README 加一张「按目标选入口」的决策表；四个体系各自 README 顶部加一行「本目录与其他三者的关系」；把重叠概念显式交叉链接，而不是各写一遍。
+**方案**：根 README 加一张「按目标选入口」的决策表；四个体系各自 README 顶部加一行「本目录与其他三者的关系」；把重叠概念显式交叉链接，而不是各写一遍。**已落地**：三份根 README 的「从哪进 / Start here / まずどこから」、重叠概念对照表、四个体系 README 顶部的关系行。三套定义保持独立，只做交叉链接，不合并成一份——它们服务的时机不同。
 
 ### P2-2 技能安装路径分裂成两套
 
@@ -205,7 +205,7 @@ cd task-orchestrator && python3 scripts/scan_skills.py --cwd /workspace --pretty
 
 **仓库自带的技能扫描器，扫不到本仓库发布的任何技能。**
 
-**方案**：确定一个规范路径，另一个作为兼容 root 明确写进文档；README 说明两种 agent 生态的映射关系。
+**方案**：不要强行收成一条路径。`.claude/skills` 是 Claude Code 的约定，`.agents/skills` 是 Codex 系的约定；`task-orchestrator` 自称两边都能用，扫描器就必须两边都看。本仓发布的 skill 是源码包，不在那两棵树下，默认扫根目录为空是对的——用 `--root` 编目。公开的 `SKILL.md` 必须带 `name` / `description` frontmatter，否则任何加载器都当它不存在。**已落地**：`scan_skills.py` 的 `SKILL_DIRS`、四份 `cloud-patterns` skill 补了 frontmatter、`scripts/check_skills.py` 进 CI。实测从 6 skills / 4 warnings 变成 10 skills / 0 warnings（加上模板与本 skill 共 11 个）。
 
 ### P2-3 文档里的路径照抄会失败
 
@@ -237,7 +237,7 @@ cd task-orchestrator && python3 scripts/scan_skills.py --cwd /workspace --pretty
 
 EN / JA / ZH 三语混排，且存在**单文件内混用**：`AGENT育成標準.md` 是日文正文夹中文术语（狗糧原則、踩坑、金牌、回流），`dev-pipeline/USAGE.md:166` 日文里出现中文「文件」，`task-orchestrator/references/execution-contract.md:33` 英文里出现中文审批词（同意/批准）。
 
-保持原文是 `CONTRIBUTING.md:14` 的明确纪律，**不应该翻译式重写**。但读者需要知道点开之前是什么语言。**方案**：根 README 加一列语言标注（含「混用」标记），不动正文。
+保持原文是 `CONTRIBUTING.md:14` 的明确纪律，**不应该翻译式重写**。但读者需要知道点开之前是什么语言。**方案**：根 README 加一列语言标注（含「混用」标记），不动正文。**已落地**：三份根 README 的 Contents / 目录 / 目次表都加了语言列（日/中混写、日文、中文、英文）。
 
 ---
 
@@ -252,7 +252,7 @@ EN / JA / ZH 三语混排，且存在**单文件内混用**：`AGENT育成標準
 纯工程债与文档事实性修正，彼此独立，可并行小 PR。无架构风险。
 
 **阶段三：结构升级（P2-1/P2-2/P2-6）**
-需要产品判断而非纯技术判断：先定「技能安装路径规范」这一个决策，再重写导航层。建议先开 issue 对齐（`CONTRIBUTING.md:13` 的要求），不要直接大改 PR。
+产品判断已经拍板，并写进本 PR：技能路径保留两套生态而不是收成一条；导航层用决策表 + 交叉链接，不合并三套重叠定义；语言地图只加列、不改正文。不再需要单独开 issue。
 
 **阶段四：薄切片 → 正式版（原设计已规划）**
 既有契约已经预留了替换点：脱敏叠 GiNZA NER、RAG 换 multilingual-e5 + Qdrant、`get_provider` 改注册表/entry-points（当前是 `providers.py:68` 的硬编码 if/else）。前置条件是阶段一的回归测试先建起来——**没有测试就替换脱敏引擎，等于把 P0-1 重做一遍**。
@@ -267,7 +267,7 @@ EN / JA / ZH 三语混排，且存在**单文件内混用**：`AGENT育成標準
 2. `grep` 不到任何把未脱敏 `h["text"]` 送进 prompt 的路径。
 3. CI 在 PR 上跑：unittest 全绿 + `ai-stack` 离线 demo 冒烟通过 + markdown 链接无断链。
 4. 文档里每条 `cp` / `python` 命令都能照抄跑通。
-5. `scan_skills.py` 在本仓库根目录能扫到本仓库发布的技能（或文档明确说明为什么扫不到、该怎么配）。
+5. `scan_skills.py` 在本仓库根目录默认扫不到发布技能（它们是源码包，不在 `.claude/` / `.agents/` 下）；文档给出 `--root` 编目命令，且该命令能扫到全部 11 个 `SKILL.md`。`scripts/check_skills.py` 在 CI 里守 frontmatter。
 6. 必需章节、leak 正则各只有一处定义。
 
 ---
@@ -283,9 +283,15 @@ EN / JA / ZH 三语混排，且存在**单文件内混用**：`AGENT育成標準
 - **P1-2/P1-3/P1-4/P1-5/P1-6** UI 输入校验、去掉 `shell=True` 并改用 `shutil.which()`、provider 注册表、章节与 leak 规则单一真实源、依赖与 Python 版本声明改正、`add_dir` 的 df 二重计上修复。
 - **P2-3/P2-4/P2-5** 文档路径与阶段数修正、提交进仓的要件样例、`SECURITY.md`、`CODE_OF_CONDUCT.md`、issue/PR 模板、`.editorconfig`、根 `CHANGELOG.md`。
 
-测试从 0 增至 82 件。另外修了要件解析器两个会静默吃掉正文的 bug（无分隔线时 header 残留进正文；正文中的 Markdown 水平线被误认为分隔线）。
+测试从 0 增至 94 件。另外修了要件解析器两个会静默吃掉正文的 bug（无分隔线时 header 残留进正文；正文中的 Markdown 水平线被误认为分隔线）。
 
-留给后续 issue 对齐的是需要产品决策的部分：P2-1（导航层重构）、P2-2（技能路径规范统一）、P2-6（语言地图）、阶段四（正式版替换）。
+P2-1 / P2-2 / P2-6 也已落地（见下节）。留给后续的是阶段四（正式版替换：GiNZA NER、multilingual-e5 + Qdrant、provider entry-points）。
+
+### P2 本轮落地
+
+- **P2-1** 三份根 README 增加「按目标选入口」决策表，以及人工审批门 / 学习固化 / 经验沉淀的对照表。`agent-cultivation`、`workflow-standard`、`task-orchestrator`、`dev-pipeline`（含日文 README）顶部各加一行「本目录与其他三者的关系」。
+- **P2-2** `scan_skills.py` 同时看 `.agents/skills` 与 `.claude/skills`（项目级与用户级）。`cloud-patterns` 四份 skill 补上 YAML frontmatter 后，扫描器从 6 skills / 4 warnings 变为能编目本仓全部 11 个 `SKILL.md`。新增 `scripts/check_skills.py`（及 10 件回归）并接入 CI。根 README 与 `task-orchestrator/README.md` 写明两套生态和 `--root` 编目命令。
+- **P2-6** 三份根 README 的目录表增加语言列，正文未做翻译式重写。
 
 ### 一条值得记下的自陷
 

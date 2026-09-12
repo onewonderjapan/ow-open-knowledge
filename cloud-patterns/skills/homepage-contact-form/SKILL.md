@@ -1,3 +1,7 @@
+---
+name: homepage-contact-form
+description: 官网联系表单要发邮件时用。API Gateway + Lambda + SES 的完整链路与 Terraform 部署约定（区域 ap-northeast-1）。
+---
 # 官网咨询表单
 
 官网联系表单要发邮件时用。旧实现是 Terraform，区域 `ap-northeast-1`。

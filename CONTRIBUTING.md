@@ -27,6 +27,8 @@ python -m unittest discover -s ai-stack/tests -t ai-stack/tests
 python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests
 python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
 python scripts/check_links.py
+python scripts/check_skills.py
+python -m unittest discover -s scripts -t scripts -p "test_*.py"
 
 # 离线端到端 demo（无需 API key）
 cd ai-stack && python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub

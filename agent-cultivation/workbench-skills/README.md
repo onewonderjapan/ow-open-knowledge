@@ -15,11 +15,13 @@ A set of skills for Claude Code-style tools that turn the daily rhythm of a "90-
 
 ## Usage
 
-Copy the skill folders into your workbench's `.claude/skills/`, and the coach into `.claude/agents/`:
+Copy the skill folders into your workbench's `.claude/skills/` (Claude Code) or
+`.agents/skills/` (Codex-style), and the coach into the matching agents path:
 
 ```bash
 cp -r workbench-skills/<skill-name>            <your-workbench>/.claude/skills/
 cp workbench-skills/_agents/coach.md  <your-workbench>/.claude/agents/coach.md
+# Codex-style: .agents/skills/ and .agents/agents/
 ```
 
 Then invoke them in a workbench session as `/daily-start`, `/weekly-check`, etc.

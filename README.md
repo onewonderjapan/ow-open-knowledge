@@ -12,19 +12,64 @@ English | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
 **Isn't:** a client case study or a product codebase. No client information, internal strategy, or unpublished IP; all demo data is fictional.
 
-**Languages:** READMEs are in English. The underlying documents keep their original wording — Japanese, Chinese, or a Japanese–Chinese mix — exactly as the team writes them (task-orchestrator is English). Translating the core methodology documents is welcome future work.
+**Languages:** READMEs are in English. The underlying documents keep their original wording — Japanese, Chinese, or a Japanese–Chinese mix — exactly as the team writes them (task-orchestrator is English). Translating the core methodology documents is welcome future work. The Contents table marks the language of each directory so you know before you click.
+
+## Start here
+
+This repo is a kit, not a single product. Four directories describe how to run agents; they overlap on purpose and are not interchangeable.
+
+| If you want to… | Start here |
+|-----------------|------------|
+| Learn how the team grows an agent (principles, training, data classification) | [agent-cultivation/](agent-cultivation/) |
+| Build a recurring cron workflow that improves itself | [workflow-standard/](workflow-standard/) |
+| Route a one-off natural-language task: discover skills, approve a plan, then execute | [task-orchestrator/](task-orchestrator/) |
+| Turn a written requirement into code with a 6-agent pipeline | [dev-pipeline/](dev-pipeline/) |
+| Send a business document to an LLM without leaking names or phone numbers | [ai-stack/](ai-stack/) |
+| Reuse a distilled AWS/cloud flow (or its don't-do list) | [cloud-patterns/](cloud-patterns/) |
+| Look up Git / Teams / email conventions | [team-norms/](team-norms/) |
+
+### The same idea, three places
+
+These concepts appear in more than one system. Read the copy that matches the job you are doing; they are not one shared implementation.
+
+| Concept | Where it is defined | What that copy is for |
+|---------|---------------------|------------------------|
+| Human approval gate | [task-orchestrator/SKILL.md](task-orchestrator/SKILL.md) (plan approval before any mutation); [workflow-standard/STANDARD.md](workflow-standard/STANDARD.md) P4 (irreversible / external side effects); [dev-pipeline/USAGE.md](dev-pipeline/USAGE.md) (Human / Hybrid executor) | Task start vs. live side effects vs. who implements a subtask |
+| Learning consolidation | [AGENT育成標準.md](agent-cultivation/AGENT育成標準.md) three layers (code / skill / memory); [learning-policy.md](task-orchestrator/references/learning-policy.md) (project / personal / none); [dev-pipeline `agents/memory/`](dev-pipeline/README.md) | Cultivation standard vs. post-task rule routing vs. per-agent run memory |
+| Experience log | [PITFALLS.md](agent-cultivation/PITFALLS.md); workflow `state/` append-only ledger; task-orchestrator run `learning.md` | Human-written pitfalls vs. workflow replay log vs. per-run learning notes |
+
+### Skill install paths
+
+Published skills in this repo live next to their docs (`cloud-patterns/skills/`, `agent-cultivation/workbench-skills/`, …). Agent runtimes look in **two** conventional trees:
+
+| Runtime | Project skills | User skills |
+|---------|----------------|-------------|
+| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+| Codex-style | `.agents/skills/` | `~/.agents/skills/` |
+
+`task-orchestrator` documents itself as usable in both, and `scripts/scan_skills.py` searches both. A default scan of *this* repository still finds nothing, because the published skills are source packages — they are not installed under `.claude/` or `.agents/`. To catalog them:
+
+```bash
+python3 task-orchestrator/scripts/scan_skills.py --cwd . --pretty \
+  --root project=cloud-patterns/skills \
+  --root project=agent-cultivation/workbench-skills \
+  --root project=task-orchestrator \
+  --root project=workflow-standard/template
+```
+
+Copy a skill folder into `.claude/skills/` or `.agents/skills/` in *your* project to install it. Every `SKILL.md` needs YAML frontmatter (`name` + `description`) or loaders ignore it — `scripts/check_skills.py` guards that.
 
 ## Contents
 
-| Directory | What's inside |
-|-----------|---------------|
-| ⭐ [agent-cultivation/](agent-cultivation/) | **The core asset.** Agent Cultivation Standard (5 principles + three-layer consolidation), training guide for existing agents, new-project startup standard, data classification rules, and a personal workbench skill set |
-| [ai-stack/](ai-stack/) | Enterprise AI adoption reference implementation: requirement doc → masking → in-house precedent search (RAG) → LLM drafting → local verification, end to end |
-| [workflow-standard/](workflow-standard/) | Automation workflow building standard: four-phase loop + 7 iron rules + a scaffold for new workflows |
-| [task-orchestrator/](task-orchestrator/) | A master skill for natural-language tasks: skill routing → plan approval → sustained execution → layered learning (standard library only) |
-| [dev-pipeline/](dev-pipeline/) | A 6-agent development pipeline: Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester with self-learning |
-| [cloud-patterns/](cloud-patterns/) | Cloud architecture skills: Glue×RDS merge, API Gateway + Lambda + SES contact form, Form→IAM, Terraform pitfalls |
-| [team-norms/](team-norms/) | Team norms (Japanese): Git conventions, Teams chat manners, business email basics |
+| Directory | What's inside | Language |
+|-----------|---------------|----------|
+| ⭐ [agent-cultivation/](agent-cultivation/) | **The core asset.** Agent Cultivation Standard (5 principles + three-layer consolidation), training guide for existing agents, new-project startup standard, data classification rules, and a personal workbench skill set | JA / ZH (mixed) |
+| [ai-stack/](ai-stack/) | Enterprise AI adoption reference implementation: requirement doc → masking → in-house precedent search (RAG) → LLM drafting → local verification, end to end | JA (READMEs EN + JA) |
+| [workflow-standard/](workflow-standard/) | Automation workflow building standard: four-phase loop + 7 iron rules + a scaffold for new workflows | ZH |
+| [task-orchestrator/](task-orchestrator/) | A master skill for natural-language tasks: skill routing → plan approval → sustained execution → layered learning (standard library only) | EN |
+| [dev-pipeline/](dev-pipeline/) | A 6-agent development pipeline: Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester with self-learning | JA (READMEs EN + JA) |
+| [cloud-patterns/](cloud-patterns/) | Cloud architecture skills: Glue×RDS merge, API Gateway + Lambda + SES contact form, Form→IAM, Terraform pitfalls | ZH |
+| [team-norms/](team-norms/) | Team norms: Git conventions, Teams chat manners, business email basics | JA |
 
 ## Quick start
 
@@ -72,6 +117,7 @@ python -m unittest discover -s ai-stack/tests -t ai-stack/tests               # 
 python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests       # workspace boundary + parser
 python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
 python scripts/check_links.py                                                 # relative markdown links
+python scripts/check_skills.py                                                # SKILL.md frontmatter
 ```
 
 CI runs the same checks plus the offline demo on every PR.

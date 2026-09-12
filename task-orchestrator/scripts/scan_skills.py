@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Discover Codex skills and classify them without executing their contents."""
+"""Discover agent skills and classify them without executing their contents.
+
+Looks in both conventional trees: Codex-style `.agents/skills` and Claude Code
+`.claude/skills`. A tool that documents itself as usable in both ecosystems
+has to search both, or one of them is invisible.
+"""
 
 from __future__ import annotations
 
@@ -202,11 +207,18 @@ def _git_root(cwd: Path) -> Path:
     return cwd.resolve()
 
 
+# Skill directories differ per agent ecosystem. `.agents/skills` is the Codex-style
+# convention; `.claude/skills` is Claude Code's. This skill documents itself as usable
+# in both, so discovery has to look in both — otherwise a Claude Code user's skills are
+# invisible to the very tool that is supposed to catalog them.
+SKILL_DIRS = (Path(".agents") / "skills", Path(".claude") / "skills")
+
+
 def _project_skill_roots(cwd: Path, project_root: Path) -> list[tuple[str, Path]]:
     roots: list[tuple[str, Path]] = []
     current = cwd.resolve()
     while True:
-        roots.append(("project", current / ".agents" / "skills"))
+        roots.extend(("project", current / skill_dir) for skill_dir in SKILL_DIRS)
         if current == project_root or current.parent == current:
             break
         current = current.parent
@@ -220,7 +232,7 @@ def build_default_roots(cwd: Path) -> tuple[Path, list[tuple[str, Path]]]:
     roots = _project_skill_roots(cwd, project_root)
 
     user_home = Path.home()
-    roots.append(("user", user_home / ".agents" / "skills"))
+    roots.extend(("user", user_home / skill_dir) for skill_dir in SKILL_DIRS)
 
     codex_home = Path(os.environ.get("CODEX_HOME", user_home / ".codex")).expanduser()
     compatibility_skills = codex_home / "skills"

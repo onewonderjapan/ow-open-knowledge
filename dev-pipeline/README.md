@@ -2,6 +2,8 @@
 
 Six AI agents cooperate to run **requirement classification → investigation → analysis → implementation → review → testing → issue investigation** automatically. Every agent self-learns after each run — the pipeline gets smarter the more you use it.
 
+> **Where this sits.** This directory is the requirement-to-code pipeline. Cultivation methodology: [agent-cultivation](../agent-cultivation/). Recurring cron workflows: [workflow-standard](../workflow-standard/). One-off natural-language tasks with a plan-approval gate: [task-orchestrator](../task-orchestrator/). The Human / Hybrid executor in [USAGE.md](USAGE.md) decides who implements a subtask; it is not task-orchestrator's plan-approval step or the live-side-effect gate in [workflow-standard/STANDARD.md](../workflow-standard/STANDARD.md) P4. Per-agent files in `agents/memory/` are run memory, not the three-layer consolidation in [AGENT育成標準.md](../agent-cultivation/AGENT育成標準.md).
+
 [English](README.md) | [日本語](README.ja.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue) ![Python](https://img.shields.io/badge/python-3.9+-blue)

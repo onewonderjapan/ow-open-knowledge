@@ -155,6 +155,33 @@ class ScanSkillsTests(unittest.TestCase):
         self.assertEqual(project_root, cwd.resolve())
         self.assertIn(("project", cwd / ".agents" / "skills"), roots)
 
+    def test_default_roots_cover_both_agent_ecosystems(self):
+        """`.agents/skills` is Codex-style, `.claude/skills` is Claude Code.
+
+        This skill documents itself as usable in both, so discovery must cover both.
+        Looking only in `.agents/skills` made a Claude Code user's skills invisible.
+        """
+        module = load_module()
+        cwd = self.root / "plain-directory"
+        cwd.mkdir()
+        _, roots = module.build_default_roots(cwd)
+        project_paths = [path for scope, path in roots if scope == "project"]
+        self.assertIn(cwd / ".agents" / "skills", project_paths)
+        self.assertIn(cwd / ".claude" / "skills", project_paths)
+
+        user_paths = [path for scope, path in roots if scope == "user"]
+        home = Path.home()
+        self.assertIn(home / ".agents" / "skills", user_paths)
+        self.assertIn(home / ".claude" / "skills", user_paths)
+
+    def test_finds_claude_convention_skill_by_default(self):
+        module = load_module()
+        cwd = self.root / "proj"
+        write_skill(cwd / ".claude" / "skills", "deployer", "deployer", "Deploy on incident")
+        _, roots = module.build_default_roots(cwd)
+        result = module.scan_roots(roots, module.load_category_rules(self.rules_file))
+        self.assertIn("deployer", [item["name"] for item in result["skills"]])
+
 
 if __name__ == "__main__":
     unittest.main()

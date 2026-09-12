@@ -2,6 +2,8 @@
 
 How do you *grow* an AI agent/skill/workflow instead of just writing one? This is the standard we distilled after running the same improvement loop across four business lines (image production, business AI, MV production, LoRA training): a cultivation loop (real task → pitfall log → three-layer consolidation → golden-sample recycling), a training guide for agents already in production, a startup standard for new agent projects, and the data classification rules that make it all safe.
 
+> **Where this sits.** This directory is the cultivation methodology — how an agent grows. It is not a runtime. Recurring cron workflows: [workflow-standard](../workflow-standard/). One-off natural-language tasks with a plan-approval gate: [task-orchestrator](../task-orchestrator/). Requirement-to-code automation: [dev-pipeline](../dev-pipeline/). The runnable companion that masks documents before they leave the building: [ai-stack](../ai-stack/). The three-layer consolidation here is the cultivation standard; it is not the same object as task-orchestrator's project/personal/none routing or `dev-pipeline/agents/memory/`.
+
 ## Contents
 
 | File | What it covers |

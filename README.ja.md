@@ -12,19 +12,64 @@ OneWonder Japan の公開ナレッジベース。実戦で検証してきた AI 
 
 **こうではない**: 顧客事例集でもプロダクトのコードベースでもありません。顧客情報・社内戦略・未公開 IP は含まず、デモデータはすべて架空です。
 
-**言語**: README は英語が主体です。元ドキュメントは原文（日本語・中国語、またはその混在——チームが実際に書いたまま）です。中核となる方法論ドキュメントの翻訳は歓迎します。
+**言語**: README は英語が主体です。元ドキュメントは原文（日本語・中国語、またはその混在——チームが実際に書いたまま）です。中核となる方法論ドキュメントの翻訳は歓迎します。目次の言語列で、開く前に何語かが分かります。
+
+## まずどこから
+
+このリポジトリはキットであり、単一のプロダクトではない。エージェントの回し方を書くディレクトリが4つある。重なっているのは意図であり、互いに置き換えられない。
+
+| したいこと | 入口 |
+|------------|------|
+| エージェントの育て方を知る（原則、訓練、データ分類） | [agent-cultivation/](agent-cultivation/) |
+| 自己改善する定期ワークフローを作る（cron + skill） | [workflow-standard/](workflow-standard/) |
+| 一度きりの自然言語タスクを「skill 発見 → 計画承認 → 実行」にする | [task-orchestrator/](task-orchestrator/) |
+| 要件ファイルを 6 エージェントパイプラインに渡して実装させる | [dev-pipeline/](dev-pipeline/) |
+| ビジネス文書を LLM に渡しても人名や電話を漏らさない | [ai-stack/](ai-stack/) |
+| 蒸留済みの AWS/クラウド手順（または「やるな」リスト）を使う | [cloud-patterns/](cloud-patterns/) |
+| Git / Teams / メールの約束を見る | [team-norms/](team-norms/) |
+
+### 同じ考えが三箇所にある
+
+これらの概念は複数の体系にそれぞれ定義がある。今やっている仕事に合う方を読むこと。一つの実装を共有してはいない。
+
+| 概念 | 定義箇所 | そのコピーが担う範囲 |
+|------|----------|----------------------|
+| 人の承認ゲート | [task-orchestrator/SKILL.md](task-orchestrator/SKILL.md)（計画承認まで一切変更しない）；[workflow-standard/STANDARD.md](workflow-standard/STANDARD.md) P4（不可逆 / 対外副作用）；[dev-pipeline/USAGE.md](dev-pipeline/USAGE.md)（Human / Hybrid 実行者） | タスク開始 vs. 本番副作用 vs. サブタスクの実行者 |
+| 学習 / 記憶の固化 | [AGENT育成標準.md](agent-cultivation/AGENT育成標準.md) の三層（code / skill / memory）；[learning-policy.md](task-orchestrator/references/learning-policy.md)（project / personal / none）；[dev-pipeline `agents/memory/`](dev-pipeline/README.md) | 育成標準 vs. タスク後のルール振り分け vs. エージェントごとの実行記憶 |
+| 経験の蓄積 | [PITFALLS.md](agent-cultivation/PITFALLS.md)；ワークフロー `state/` の追記専用台帳；task-orchestrator の run `learning.md` | 人手の踩坑 vs. ワークフロー再生ログ vs. 1回分の学習メモ |
+
+### skill のインストールパス
+
+このリポジトリが公開している skill はドキュメントの隣にある（`cloud-patterns/skills/`、`agent-cultivation/workbench-skills/` など）。エージェント実行系は **2系統** の慣例ディレクトリを見る：
+
+| 実行系 | プロジェクト | ユーザー |
+|--------|--------------|----------|
+| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+| Codex 系 | `.agents/skills/` | `~/.agents/skills/` |
+
+`task-orchestrator` は両方で使えると書いてあり、`scripts/scan_skills.py` も両方を探す。**このリポジトリのルートをデフォルト掃引しても空**なのは、公開 skill がソースパッケージであり、`.claude/` や `.agents/` には入っていないからだ。カタログするには：
+
+```bash
+python3 task-orchestrator/scripts/scan_skills.py --cwd . --pretty \
+  --root project=cloud-patterns/skills \
+  --root project=agent-cultivation/workbench-skills \
+  --root project=task-orchestrator \
+  --root project=workflow-standard/template
+```
+
+自分のプロジェクトの `.claude/skills/` か `.agents/skills/` にコピーして初めてインストールになる。`SKILL.md` には YAML frontmatter（`name` + `description`）が必須で、無いとローダは無視する——`scripts/check_skills.py` がそれを門番する。
 
 ## 目次
 
-| ディレクトリ | 内容 |
-|------|------|
-| ⭐ [agent-cultivation/](agent-cultivation/) | **最重要資産**。AIエージェント育成標準（5箇条＋三層固化）、既存エージェント訓練ガイド、新プロジェクト STARTUP 標準、データ分類ルール、個人ワークベース skill セット |
-| [ai-stack/](ai-stack/) | 企業 AI 導入の参考実装：要件書→マスキング→社内先例検索（RAG）→LLM 起草→ローカル質検の E2E 薄切片 |
-| [workflow-standard/](workflow-standard/) | 自動化ワークフロー構築標準：四段階クローズドループ＋7つの鉄則＋新規ワークフロー用スキャフォールド |
-| [task-orchestrator/](task-orchestrator/) | 自然言語タスクのマスター skill：skill ルーティング→計画承認→継続実行→層別学習（標準ライブラリのみ） |
-| [dev-pipeline/](dev-pipeline/) | 6 エージェント開発パイプライン：Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester＋自己学習 |
-| [cloud-patterns/](cloud-patterns/) | クラウドパターン skill 集：Glue×RDS 結合、API Gateway＋Lambda＋SES 問い合わせフォーム、Form→IAM、Terraform の落とし穴 |
-| [team-norms/](team-norms/) | チーム規範（日本語）：Git 使用規範、Teams チャットマナー、ビジネスメール基礎 |
+| ディレクトリ | 内容 | 言語 |
+|------|------|------|
+| ⭐ [agent-cultivation/](agent-cultivation/) | **最重要資産**。AIエージェント育成標準（5箇条＋三層固化）、既存エージェント訓練ガイド、新プロジェクト STARTUP 標準、データ分類ルール、個人ワークベース skill セット | 日 / 中混在 |
+| [ai-stack/](ai-stack/) | 企業 AI 導入の参考実装：要件書→マスキング→社内先例検索（RAG）→LLM 起草→ローカル質検の E2E 薄切片 | 日本語（README 英 + 日） |
+| [workflow-standard/](workflow-standard/) | 自動化ワークフロー構築標準：四段階クローズドループ＋7つの鉄則＋新規ワークフロー用スキャフォールド | 中国語 |
+| [task-orchestrator/](task-orchestrator/) | 自然言語タスクのマスター skill：skill ルーティング→計画承認→継続実行→層別学習（標準ライブラリのみ） | 英語 |
+| [dev-pipeline/](dev-pipeline/) | 6 エージェント開発パイプライン：Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester＋自己学習 | 日本語（README 英 + 日） |
+| [cloud-patterns/](cloud-patterns/) | クラウドパターン skill 集：Glue×RDS 結合、API Gateway＋Lambda＋SES 問い合わせフォーム、Form→IAM、Terraform の落とし穴 | 中国語 |
+| [team-norms/](team-norms/) | チーム規範：Git 使用規範、Teams チャットマナー、ビジネスメール基礎 | 日本語 |
 
 ## クイックスタート
 
@@ -71,6 +116,7 @@ python -m unittest discover -s ai-stack/tests -t ai-stack/tests               # 
 python -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests       # workspace 境界 + パーサー
 python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests
 python scripts/check_links.py                                                 # Markdown 相対リンク
+python scripts/check_skills.py                                                # SKILL.md frontmatter
 ```
 
 CI は全 PR で同じ検査とオフラインデモを実行します。

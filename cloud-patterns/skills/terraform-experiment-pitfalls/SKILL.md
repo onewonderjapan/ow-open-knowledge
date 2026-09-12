@@ -1,3 +1,7 @@
+---
+name: terraform-experiment-pitfalls
+description: 看到旧的 QuickSight、S3、RDS、IAM Terraform 实验仓时用。负面知识：只留规矩，不要复刻那些模块。
+---
 # Terraform 实验仓踩坑
 
 看到旧的 QuickSight、S3、RDS、IAM 实验仓时用。只留规矩，不留那些模块。

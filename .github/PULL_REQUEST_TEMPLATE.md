@@ -34,13 +34,15 @@ what should happen — the actual output.
       operational data (see [CONTRIBUTING.md](https://github.com/onewonderjapan/ow-open-knowledge/blob/main/CONTRIBUTING.md))
 - [ ] Affected documents keep their original language (no translation-style rewrites)
 - [ ] Relative links to files inside the repo still resolve (`python3 scripts/check_links.py`)
+- [ ] Published `SKILL.md` files still have `name` + `description` frontmatter (`python3 scripts/check_skills.py`)
 
 ### If you touched code
 
 - [ ] Tests pass:
       `python3 -m unittest discover -s ai-stack/tests -t ai-stack/tests`,
       `python3 -m unittest discover -s dev-pipeline/tests -t dev-pipeline/tests`,
-      `python3 -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests`
+      `python3 -m unittest discover -s task-orchestrator/tests -t task-orchestrator/tests`,
+      `python3 -m unittest discover -s scripts -t scripts -p "test_*.py"`
 
 ### If you touched the masking layer
 

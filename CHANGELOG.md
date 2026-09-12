@@ -49,12 +49,16 @@
 ### Added
 
 - [IMPROVEMENT-PLAN.md](IMPROVEMENT-PLAN.md)：全仓审查结论与分阶段升级路线，每条附证据（文件:行号 + 复现命令 + 实际输出）与验收标准。
-- 测试从 0 增至 82 件：`ai-stack/tests/`（脱敏回归 + prompt 组装，54 件）、`dev-pipeline/tests/`（workspace 边界 + 要件解析，19 件），既有 `task-orchestrator/tests/` 9 件。
-- CI（[.github/workflows/ci.yml](.github/workflows/ci.yml)）：三套测试在 Python 3.10/3.12 上运行、离线 demo 冒烟（机械校验 masked 输出无实名且 QC 通过）、Markdown 相对链接校验、全量字节编译。
+- 测试从 0 增至 94 件：`ai-stack/tests/` 54、`dev-pipeline/tests/` 19、`task-orchestrator/tests/` 11、`scripts/test_check_skills.py` 10。
+- CI（[.github/workflows/ci.yml](.github/workflows/ci.yml)）：三套测试在 Python 3.10/3.12 上运行、离线 demo 冒烟（机械校验 masked 输出无实名且 QC 通过）、Markdown 相对链接校验、SKILL.md frontmatter 校验、全量字节编译。
 - `scripts/check_links.py`：Markdown 相对链接校验（对 `%20` 等百分号编码解码后判断，与 GitHub 渲染一致）。
+- `scripts/check_skills.py`：公开 `SKILL.md` 必须带非空 `name` / `description` frontmatter，且 `name` 与目录名一致（`CHANGE-ME` 模板除外）。没有 frontmatter 的 skill 对任何加载器都是隐形的。
 - OSS 基础设施：[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)、issue 模板（bug/proposal）与 `config.yml`、PR 模板（含改动脱敏层时的测试必须项）、`.editorconfig`、本 CHANGELOG。
 - `dev-pipeline/requirements/example.md`：提交进仓的要件文件样例。此前 `requirements/` 被整目录 gitignore，新人无可复制的起点（目录形式的 ignore 会让 git 不再进入该目录，否定模式因此失效，已改为 `requirements/*`）。
-- `agent-cultivation/PITFALLS.md` 追加第 12–19 条踩坑记录，含一条自陷：为统一电话分隔符而全文替换 `ー`(U+30FC) 会把「承認フロー」变成「承認フロ-」——该字符兼作长音符。由新写的回归测试当场捕获。
+- `agent-cultivation/PITFALLS.md` 追加第 12–20 条踩坑记录。12–19 是脱敏层；第 20 条是 `cloud-patterns` 四份 skill 缺 YAML frontmatter、被加载器整份忽略（README 还写着「可以直接放进 Claude Code」）。
+- 根 README（英 / 日 / 中）增加「按目标选入口」决策表、三套重叠概念的对照表、两套 skill 安装路径说明，以及目录表的语言列（日/中混写、日文、中文、英文）。四个 Agent 体系的 README 顶部各加一行相互关系。
+- `task-orchestrator/scripts/scan_skills.py` 同时发现 `.agents/skills`（Codex 系）与 `.claude/skills`（Claude Code）。只扫前者时，Claude Code 用户的 skill 对编目工具本身不可见。
+- `cloud-patterns/skills/*/SKILL.md` 四份补上 `name` / `description` frontmatter。补之前扫描器报 6 skills / 4 warnings，补之后本仓 11 个 `SKILL.md` 全部可编目。
 
 ## [0.1.0] - 2026-09-11
 

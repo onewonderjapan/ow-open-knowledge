@@ -6,6 +6,8 @@
 
 6つの AI Agent が連携して、**要件分類 → 事前調査 → 要件分析 → 実装 → レビュー → テスト → 問題調査**を自動実行する開発支援ツールです。各 Agent は実行ごとに自己学習し、使うほど賢くなります。
 
+> **このディレクトリの位置づけ。** ここは要件ファイルからコードを書くパイプライン。育成方法論は [agent-cultivation](../agent-cultivation/)。定期 cron ワークフローは [workflow-standard](../workflow-standard/)。計画承認付きの一度きり自然言語タスクは [task-orchestrator](../task-orchestrator/)。[USAGE.md](USAGE.md) の Human / Hybrid はサブタスクの実行者判定であり、task-orchestrator の計画承認でも [workflow-standard/STANDARD.md](../workflow-standard/STANDARD.md) P4 の対外副作用ゲートでもない。`agents/memory/` は実行記憶であり、[AGENT育成標準.md](../agent-cultivation/AGENT育成標準.md) の三層固化とは別物。
+
 ---
 
 ## 概要

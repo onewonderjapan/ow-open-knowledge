@@ -1,6 +1,8 @@
 # cloud-patterns — Cloud Architecture Skills
 
-Four skills distilled from real projects, each written as "flow + don't-do list" and ready to drop into a Claude Code-style agent tool: an AWS data merge, a full contact-form chain, form-triggered resource creation, and a collection of Terraform lessons learned the hard way.
+Four skills distilled from real projects, each written as "flow + don't-do list" and ready to drop into a Claude Code or Codex-style agent tool: an AWS data merge, a full contact-form chain, form-triggered resource creation, and a collection of Terraform lessons learned the hard way.
+
+Each `SKILL.md` has YAML frontmatter (`name` + `description`). Without it, every skill loader ignores the file — the body never gets a chance to run.
 
 ## Contents
 
@@ -13,10 +15,12 @@ Four skills distilled from real projects, each written as "flow + don't-do list"
 
 ## Usage
 
-Copy a skill folder into your agent tool's skills path (Claude Code example):
+Copy a skill folder into your agent tool's skills path. Claude Code uses
+`.claude/skills/`; Codex-style agents use `.agents/skills/`. Both work:
 
 ```bash
 cp -r skills/<skill-name> <your-project>/.claude/skills/
+# cp -r skills/<skill-name> <your-project>/.agents/skills/
 ```
 
 ## Notes

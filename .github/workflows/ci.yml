@@ -79,7 +79,7 @@ jobs:
           PY
 
   docs:
-    name: docs links
+    name: docs links and skills
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -88,6 +88,12 @@ jobs:
           python-version: "3.12"
       - name: Check relative markdown links
         run: python scripts/check_links.py
+      # A SKILL.md without name/description frontmatter is invisible to every
+      # skill loader. README-advertised skills that cannot be loaded is a lie.
+      - name: Check SKILL.md frontmatter
+        run: python scripts/check_skills.py
+      - name: check_skills unit tests
+        run: python -m unittest discover -s scripts -t scripts -p "test_*.py" -v
 
   compile:
     name: byte-compile all python

@@ -1,3 +1,7 @@
+---
+name: glue-json-rds-merge
+description: 在需要用 AWS Glue/PySpark 把 S3 上的 JSON 与 RDS 里的同一批记录合并成 CSV 时用。含 Secrets Manager 取凭据与 Slack 通知的约定。
+---
 # Glue JSON 与 RDS 合并
 
 在需要把 S3 上的 JSON 和 RDS 里的同一批记录合并成 CSV 时用。不要把旧 Glue 仓原样搬过来。
