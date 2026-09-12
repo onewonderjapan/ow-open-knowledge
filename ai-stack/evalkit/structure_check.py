@@ -4,9 +4,21 @@
 決定論的チェック: 必須章の欠落 / 空章 / マスク漏れの疑い。
 LLM評価(rubric採点)は evalkit/judge.py として今後追加。
 """
+from __future__ import annotations
+
 import re
 
-REQUIRED_SECTIONS = ["概要", "システム構成", "機能一覧", "画面設計", "データ設計", "非機能要件"]
+# pipeline/run.py の PROMPT_TEMPLATE と揃える（8章）
+REQUIRED_SECTIONS = [
+    "概要",
+    "システム構成",
+    "機能一覧",
+    "画面設計",
+    "データ設計",
+    "外部連携",
+    "非機能要件",
+    "移行・運用",
+]
 
 # マスク漏れ検知: 生の電話/メール/実在っぽい社名が残っていないか
 _LEAK_PATTERNS = [

@@ -31,9 +31,9 @@ class RequirementSpec:
 
 def parse_requirement_file(file_path: Path) -> RequirementSpec:
     """要件ファイルを解析し、branch・repo・本文を抽出する."""
-    text = file_path.read_text().strip()
+    text = file_path.read_text(encoding="utf-8").strip()
 
-    # --- でヘッダーと本文を分割
+    # --- でヘッダーと本文を分割（最初の区切りのみ。本文中の --- は残す）
     if "---" in text:
         header, content = text.split("---", 1)
     else:

@@ -6,7 +6,9 @@
                   ※PoC/社内狗糧用。顧客本番はAPI版に切替。
   anthropic-api : Anthropic API (要 ANTHROPIC_API_KEY)。本番向け。
 """
-import os
+from __future__ import annotations
+
+import shutil
 import subprocess
 
 
@@ -39,11 +41,21 @@ class ClaudeCLIProvider(BaseProvider):
         self.model = model
 
     def complete(self, prompt: str) -> str:
-        cmd = ["claude", "-p"]
+        binary = shutil.which("claude") or "claude"
+        cmd = [binary, "-p"]
         if self.model:
             cmd += ["--model", self.model]
-        r = subprocess.run(cmd, input=prompt, capture_output=True, text=True,
-                           encoding="utf-8", timeout=600, shell=True)
+        # shell=False: on POSIX, shell=True + a list only runs cmd[0] as the
+        # script and treats the rest as extra *shell* arguments — broken on Linux.
+        r = subprocess.run(
+            cmd,
+            input=prompt,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=600,
+            shell=False,
+        )
         if r.returncode != 0:
             raise RuntimeError(f"claude-cli failed: {r.stderr[:500]}")
         return r.stdout.strip()

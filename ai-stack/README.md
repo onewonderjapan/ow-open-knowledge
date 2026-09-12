@@ -13,21 +13,36 @@ Use it as the backbone for sales demos, internal dogfooding, or a client PoC.
 Verified end-to-end — the stub provider needs no network and no API key:
 
 ```bash
-python -m venv .venv
-# Windows (Git Bash / PowerShell):
-.venv/Scripts/pip install -r requirements.txt
-.venv/Scripts/python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
-# macOS / Linux:
-# source .venv/bin/activate && pip install -r requirements.txt
-# python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt    # janome (optional but recommended for RAG)
 
-# Dependency-free demo web UI (standard library only):
+# Network-free demo (stub responses)
+python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
+
+# Real Claude via a Claude Code subscription (no API key; PoC / internal use only)
+python pipeline/run.py demo_data/incoming/new_rfp.md --provider claude-cli
+
+# Production-oriented (requires ANTHROPIC_API_KEY)
+pip install -r requirements-llm.txt
+python pipeline/run.py demo_data/incoming/new_rfp.md --provider anthropic-api
+
+# Demo web UI (standard library; janome optional)
 python ui/app.py   # → http://127.0.0.1:7877
 ```
 
 Output: `out/<name>_draft.md` (design-doc draft) / `out/<name>_masked.md` (what actually leaves the building) / `out/<name>_report.json` (audit trail).
 
-> Dependencies: the pipeline needs `janome` (RAG layer) even with the stub provider. `anthropic` is only needed for the API provider. The web UI needs nothing.
+> Dependencies: `janome` improves RAG quality; without it the retriever falls back to CJK bigrams so the UI and stub pipeline still run. `anthropic` is only needed for the API provider (`requirements-llm.txt`). PPTX helpers need `requirements-tools.txt`.
+
+## Tests
+
+From the repository root:
+
+```bash
+pip install -r ai-stack/requirements.txt
+python scripts/verify.py
+```
 
 ## Providers
 
@@ -67,16 +82,17 @@ Interfaces stay fixed, so each layer can be thickened independently.
 ai-stack/
 ├── pipeline/run.py        # one-shot CLI: mask → RAG → draft → check
 ├── masking/               # masking layer (masker.py + entities.json)
-├── rag/                   # precedent search (janome + BM25)
+├── rag/                   # precedent search (janome + BM25, bigram fallback)
 ├── llm/                   # swappable providers (stub / claude-cli / anthropic-api)
 ├── evalkit/               # deterministic structure checks (structure_check.py)
-├── ui/app.py              # zero-dependency demo web UI
+├── ui/app.py              # stdlib demo web UI
+├── tests/                 # masking / QC / stub pipeline
 ├── tools/                 # markdown→pptx rendering, pptx extraction
 ├── demo_data/             # all-fictional demo data
 └── templates/             # skeleton for new projects
 ```
 
-The methodology behind this repo (cultivation standard, startup standard, pitfalls) lives in [../agent-cultivation/](../agent-cultivation/).
+The methodology behind this repo (cultivation standard, startup standard, pitfalls) lives in [../agent-cultivation/](../agent-cultivation/). The layered upgrade path is in [../ROADMAP.md](../ROADMAP.md).
 
 ## Notes
 

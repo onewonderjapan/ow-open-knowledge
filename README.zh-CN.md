@@ -4,7 +4,7 @@ OneWonder Japan 的公开知识库：把内部实战中蒸馏出来的 AI Agent 
 
 [English](README.md) | 简体中文 | [日本語](README.ja.md)
 
-![License](https://img.shields.io/badge/license-MIT-blue)
+![License](https://img.shields.io/badge/license-MIT-blue) ![CI](https://github.com/onewonderjapan/ow-open-knowledge/actions/workflows/ci.yml/badge.svg)
 
 ## 这个仓库是什么 / 不是什么
 
@@ -25,31 +25,32 @@ OneWonder Japan 的公开知识库：把内部实战中蒸馏出来的 AI Agent 
 | [dev-pipeline/](dev-pipeline/) | 6-agent 开发管线：Dispatcher/Investigator/Analyst/Developer/Reviewer/Tester + 自我学习 |
 | [cloud-patterns/](cloud-patterns/) | 云架构模式 skill：Glue×RDS 合并、API Gateway+Lambda+SES 表单、Form→IAM、Terraform 踩坑 |
 | [team-norms/](team-norms/) | 团队协作规范（日语）：Git 使用规范、Teams 聊天礼仪、商务邮件基础 |
+| [ROADMAP.zh-CN.md](ROADMAP.zh-CN.md) | 改善与升级方案（[English](ROADMAP.md)） |
 
 ## 快速开始
 
-最快的体验路径——ai-stack 的离线 demo（无需 API key，已实测通过）：
+最快的体验路径——ai-stack 的离线 demo（无需 API key）：
 
 ```bash
-cd ai-stack
-python -m venv .venv
-# Windows (Git Bash / PowerShell)：
-.venv/Scripts/pip install -r requirements.txt
-.venv/Scripts/python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
-# macOS / Linux：
-# source .venv/bin/activate && pip install -r requirements.txt
-# python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r ai-stack/requirements.txt
+python scripts/verify.py           # 测试 + stub 管线
+# 只跑演示：
+python ai-stack/pipeline/run.py ai-stack/demo_data/incoming/new_rfp.md --provider stub --out ai-stack/out
 ```
 
-输出三件套：脱敏后的发送内容（`out/*_masked.md`）、设计书草稿（`out/*_draft.md`）、审计报告（`out/*_report.json`）。
+输出三件套：脱敏后的发送内容（`ai-stack/out/*_masked.md`）、设计书草稿（`*_draft.md`）、审计报告（`*_report.json`）。
 
-另附零依赖演示 Web UI（纯标准库）：
+另附标准库演示 Web UI（janome 可选；没有时 RAG 回退到 CJK 二元语法）：
 
 ```bash
-python ui/app.py    # → http://127.0.0.1:7877
+python ai-stack/ui/app.py    # → http://127.0.0.1:7877
 ```
 
-> 注意：pipeline 本身即使在 stub 模式下也需要 `janome`（RAG 层）；`anthropic` 仅 API provider 需要。Web UI 才是真正的零依赖。
+> `janome` 能提高 RAG 质量。`anthropic` 仅 `--provider anthropic-api` 需要（`pip install -r ai-stack/requirements-llm.txt`）。
+
+分阶段升级见 [ROADMAP.zh-CN.md](ROADMAP.zh-CN.md)。
 
 ## 关联公开仓库
 

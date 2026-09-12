@@ -307,15 +307,19 @@ def run_consolidate(args: argparse.Namespace) -> None:
     if args.model:
         config.model = args.model
 
+    from agents.dispatcher import DispatcherAgent
     from agents.investigator import InvestigatorAgent
     from agents.analyst import AnalystAgent
     from agents.developer import DeveloperAgent
+    from agents.reviewer import ReviewerAgent
     from agents.tester import TesterAgent
 
     agents = [
+        DispatcherAgent(config),
         InvestigatorAgent(config),
         AnalystAgent(config),
         DeveloperAgent(config),
+        ReviewerAgent(config),
         TesterAgent(config),
     ]
 
@@ -334,7 +338,7 @@ def run_show_memory() -> None:
     print("  Agent メモリ一覧")
     print("=" * 50)
 
-    agent_names = ["investigator", "analyst", "developer", "tester"]
+    agent_names = ["dispatcher", "investigator", "analyst", "developer", "reviewer", "tester"]
     for name in agent_names:
         path = MEMORY_DIR / f"{name}.md"
         if path.exists():
@@ -359,15 +363,19 @@ def run_optimize(args: argparse.Namespace) -> None:
     if args.model:
         config.model = args.model
 
+    from agents.dispatcher import DispatcherAgent, SYSTEM_PROMPT as DISPATCHER_PROMPT
     from agents.investigator import InvestigatorAgent, PRE_INVESTIGATION_PROMPT
     from agents.analyst import AnalystAgent, SYSTEM_PROMPT as ANALYST_PROMPT
     from agents.developer import DeveloperAgent, SYSTEM_PROMPT as DEVELOPER_PROMPT
+    from agents.reviewer import ReviewerAgent, SYSTEM_PROMPT as REVIEWER_PROMPT
     from agents.tester import TesterAgent, SYSTEM_PROMPT as TESTER_PROMPT
 
     agent_prompts = [
+        (DispatcherAgent(config), DISPATCHER_PROMPT),
         (InvestigatorAgent(config), PRE_INVESTIGATION_PROMPT),
         (AnalystAgent(config), ANALYST_PROMPT),
         (DeveloperAgent(config), DEVELOPER_PROMPT),
+        (ReviewerAgent(config), REVIEWER_PROMPT),
         (TesterAgent(config), TESTER_PROMPT),
     ]
 
@@ -487,7 +495,7 @@ def run_full_pipeline(args: argparse.Namespace) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="4 Agent 協調パイプライン",
+        description="6 Agent 協調パイプライン",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""\
 単独 Agent 実行:
@@ -497,7 +505,8 @@ def main() -> None:
   --test         Analyst + Developer + Tester（分析→実装→テスト）
 
 フルパイプライン:
-  -f FILE        全5フェーズ実行（調査→分析→実装→テスト→問題調査）
+  -f FILE        Dispatcher → Investigator → Analyst → Developer → Reviewer → Tester
+                 （最後に Tester 結果を Investigator が再調査）
 """,
     )
     parser.add_argument("requirement", nargs="?", help="要件テキスト")

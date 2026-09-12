@@ -1,0 +1,29 @@
+name: Bug
+description: 报告可复现的问题（脱敏泄漏请走 SECURITY.md，不要公开）
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        脱敏泄漏、密钥、真实客户数据请按 [SECURITY.md](../SECURITY.md) 私下报告。
+  - type: textarea
+    id: what
+    attributes:
+      label: 发生了什么
+      description: 期望 vs 实际
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: 复现命令
+      render: bash
+      placeholder: python scripts/verify.py
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: 环境
+      placeholder: "Python 3.12 / Ubuntu 24.04"

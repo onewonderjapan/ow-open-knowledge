@@ -12,8 +12,15 @@
 
 1. 大改动先开 issue 对齐方向，小改动可直接 PR。
 2. 保持各文档原有语言：日文文档用日文修改，中文文档用中文修改，不做翻译式重写。
-3. 代码改动需附可运行的验证命令与输出（证据主义）。
-4. 每个 PR 聚焦一件事，保持最小可审。
+3. 代码改动需附可运行的验证命令与输出（证据主义）。根目录执行：
+
+   ```bash
+   python scripts/verify.py
+   ```
+
+   脱敏规则变更必须先补 `ai-stack/tests/test_masker.py` 的失败用例。
+4. 每个 PR 聚焦一件事，保持最小可审。大方向见 [ROADMAP.md](ROADMAP.md) / [ROADMAP.zh-CN.md](ROADMAP.zh-CN.md)。
+5. 安全类问题（脱敏泄漏、密钥）走 [SECURITY.md](SECURITY.md)，不要开公开 issue。
 
 ## 文档约定
 

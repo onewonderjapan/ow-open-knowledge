@@ -11,6 +11,8 @@
 制限(薄切片): 辞書外の人名は「様/氏/さん」が付く場合のみ検出。
              本格版は GiNZA(NER) を重ねる予定 → docs/PITFALLS.md 参照。
 """
+from __future__ import annotations
+
 import json
 import re
 from pathlib import Path
@@ -57,7 +59,11 @@ class Masker:
             if name in mapping:
                 return mapping[name]
             if kind == "company":
-                lab = _COMPANY_LABELS[min(counters["company"], len(_COMPANY_LABELS) - 1)]
+                idx = counters["company"]
+                if idx < len(_COMPANY_LABELS):
+                    lab = _COMPANY_LABELS[idx]
+                else:
+                    lab = f"会社{idx + 1:02d}"  # A-N を超えたら連番（衝突なし）
                 counters["company"] += 1
             else:
                 counters["person"] += 1

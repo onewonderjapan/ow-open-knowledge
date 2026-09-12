@@ -9,6 +9,10 @@ venv/
 out/
 ai-stack/out/
 
+# Real-name dictionaries must never be committed
+entities.local.json
+**/entities.local.json
+
 # Project outputs (dev-pipeline)
 workspace/
 output/

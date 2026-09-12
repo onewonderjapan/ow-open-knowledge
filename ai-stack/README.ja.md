@@ -10,20 +10,22 @@
 ## クイックスタート
 
 ```bash
-python -m venv .venv
-.venv/Scripts/pip install -r requirements.txt   # janome / anthropic（stub・Web UI は依存ゼロ）
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt    # janome（任意。RAG の形態素解析）
 
 # ネット不要のデモ(スタブ応答)
-.venv/Scripts/python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
+python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
 
 # 本物のClaude(Claude Code サブスク認証を流用、APIキー不要)
-.venv/Scripts/python pipeline/run.py demo_data/incoming/new_rfp.md --provider claude-cli
+python pipeline/run.py demo_data/incoming/new_rfp.md --provider claude-cli
 
 # 本番向け(要 ANTHROPIC_API_KEY)
-.venv/Scripts/python pipeline/run.py demo_data/incoming/new_rfp.md --provider anthropic-api
+pip install -r requirements-llm.txt
+python pipeline/run.py demo_data/incoming/new_rfp.md --provider anthropic-api
 
-# デモ用Web UI (依存ゼロ・オフライン可)
-.venv/Scripts/python ui/app.py   # → http://127.0.0.1:7877
+# デモ用Web UI（標準ライブラリ。janome は任意）
+python ui/app.py   # → http://127.0.0.1:7877
 ```
 
 出力: `out/<name>_draft.md`(設計書ドラフト) / `out/<name>_masked.md`(脱敏後の送信内容) / `out/<name>_report.json`(監査レポート)
@@ -52,6 +54,7 @@ python -m venv .venv
 - `demo_data/` は全て架空の会社・人物・案件です
 - `claude-cli` プロバイダは PoC/社内利用専用（サブスク規約準拠）。顧客本番は API 契約に切替
 - 踩んだ坑は `../agent-cultivation/PITFALLS.md` に追記していくこと（これ自体が商品）
+- 段階的アップグレードは [../ROADMAP.md](../ROADMAP.md)
 
 ## ディレクトリ構成
 
@@ -59,10 +62,11 @@ python -m venv .venv
 ai-stack/
 ├── pipeline/run.py        # CLI 一本道（mask → RAG → draft → check）
 ├── masking/               # 脱敏層（正規表現+辞書 / masker.py・entities.json）
-├── rag/                   # 社内先例検索（janome+BM25 / retriever.py）
+├── rag/                   # 社内先例検索（janome+BM25、未導入時はバイグラム）
 ├── llm/                   # provider 差し替え（stub / claude-cli / anthropic-api）
 ├── evalkit/               # 決定論的構造検査（structure_check.py）
-├── ui/app.py              # 依存ゼロのデモ Web UI（標準ライブラリのみ）
+├── ui/app.py              # 標準ライブラリのデモ Web UI
+├── tests/                 # 脱敏・質検・stub パイプライン
 ├── tools/                 # md→pptx 変換・pptx抽出
 ├── demo_data/             # 全て架空のデモデータ
 └── templates/             # 新プロジェクトのスケルトン

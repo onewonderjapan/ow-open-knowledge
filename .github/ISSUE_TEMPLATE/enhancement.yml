@@ -1,0 +1,33 @@
+name: Enhancement
+description: 提案改善或升级（大改动请先对齐方向）
+title: "[enhance] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: 模块
+      options:
+        - agent-cultivation
+        - ai-stack
+        - workflow-standard
+        - task-orchestrator
+        - dev-pipeline
+        - cloud-patterns
+        - team-norms
+        - repo-wide
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: 要解决的问题
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议做法
+      description: 对照 ROADMAP.md 的阶段，说明这是 Phase 几、是否破坏 mask/search/get_provider/check 接口。
+    validations:
+      required: true

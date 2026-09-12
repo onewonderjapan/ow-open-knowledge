@@ -37,8 +37,8 @@ SYSTEM_PROMPT = """\
 
 ## 各作業種別のパイプライン
 
-- development: investigator → analyst → developer → tester → investigator(問題調査)
-- infrastructure: investigator → analyst → developer → tester → investigator(問題調査)
+- development: investigator → analyst → developer → reviewer → tester → investigator(問題調査)
+- infrastructure: investigator → analyst → developer → reviewer → tester → investigator(問題調査)
 - investigation: investigator のみ
 - design_review: analyst → developer
 
@@ -50,7 +50,7 @@ JSON のみ出力してください：
   "work_type": "development|infrastructure|investigation|design_review",
   "label": "日本語ラベル（機能開発/基盤構築/調査/設計レビュー）",
   "reason": "判断理由を1-2文で",
-  "pipeline": ["investigator", "analyst", "developer", "tester", "investigator_post"],
+  "pipeline": ["investigator", "analyst", "developer", "reviewer", "tester", "investigator_post"],
   "notes": "補足事項（あれば）"
 }
 ```
@@ -66,8 +66,8 @@ WORK_TYPE_LABELS = {
 
 # 作業種別ごとのデフォルトパイプライン
 DEFAULT_PIPELINES = {
-    WorkType.DEVELOPMENT: ["investigator", "analyst", "developer", "tester", "investigator_post"],
-    WorkType.INFRASTRUCTURE: ["investigator", "analyst", "developer", "tester", "investigator_post"],
+    WorkType.DEVELOPMENT: ["investigator", "analyst", "developer", "reviewer", "tester", "investigator_post"],
+    WorkType.INFRASTRUCTURE: ["investigator", "analyst", "developer", "reviewer", "tester", "investigator_post"],
     WorkType.INVESTIGATION: ["investigator"],
     WorkType.DESIGN_REVIEW: ["analyst", "developer"],
 }

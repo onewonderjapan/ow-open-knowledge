@@ -77,7 +77,7 @@ HTML = """<!DOCTYPE html>
   <textarea id="rfp"></textarea>
   <div style="margin-top:10px; display:flex; gap:12px; align-items:center;">
    <button class="ghost" onclick="loadDemo()">デモ要件書を読み込む</button>
-   <select id="provider"><option value="claude-cli">Claude(本物)</option><option value="stub">スタブ(オフライン)</option></select>
+   <select id="provider"><option value="stub" selected>スタブ(オフライン)</option><option value="claude-cli">Claude(本物)</option><option value="anthropic-api">Anthropic API</option></select>
    <button id="goBtn" onclick="prepare()">▶ 実行</button>
    <span class="note">実行しても、この画面の下で「何が社外に渡るか」を確認できます</span>
   </div>
@@ -114,7 +114,7 @@ let PREP = null;
 const $ = id => document.getElementById(id);
 function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
 function hi(s){ // 伏せ字ラベルをハイライト
-  return esc(s).replace(/(\\[(?:EMAIL|PHONE|MONEY|POSTAL|URL)\\]|[A-N]社|担当者[甲乙丙丁戊己庚辛])/g, "<mark>$1</mark>");
+  return esc(s).replace(/(\\[[A-Z]+\\]|[A-N]社|会社\\d+|担当者\\d+)/g, "<mark>$1</mark>");
 }
 function loadDemo(){ fetch("/demo").then(r=>r.text()).then(t=>{ $("rfp").value = t; }); }
 async function prepare(){

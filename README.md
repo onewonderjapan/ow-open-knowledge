@@ -4,7 +4,7 @@ OneWonder Japan's public knowledge base: battle-tested methodology for growing A
 
 English | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
-![License](https://img.shields.io/badge/license-MIT-blue)
+![License](https://img.shields.io/badge/license-MIT-blue) ![CI](https://github.com/onewonderjapan/ow-open-knowledge/actions/workflows/ci.yml/badge.svg)
 
 ## What this repo is / isn't
 
@@ -25,31 +25,32 @@ English | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 | [dev-pipeline/](dev-pipeline/) | A 6-agent development pipeline: Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester with self-learning |
 | [cloud-patterns/](cloud-patterns/) | Cloud architecture skills: Glue×RDS merge, API Gateway + Lambda + SES contact form, Form→IAM, Terraform pitfalls |
 | [team-norms/](team-norms/) | Team norms (Japanese): Git conventions, Teams chat manners, business email basics |
+| [ROADMAP.md](ROADMAP.md) | Improvement and upgrade plan ([简体中文](ROADMAP.zh-CN.md)) |
 
 ## Quick start
 
-The fastest way to see the whole idea — ai-stack's offline demo (no API key needed; verified end-to-end):
+The fastest way to see the whole idea — ai-stack's offline demo (no API key needed):
 
 ```bash
-cd ai-stack
-python -m venv .venv
-# Windows (Git Bash / PowerShell):
-.venv/Scripts/pip install -r requirements.txt
-.venv/Scripts/python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
-# macOS / Linux:
-# source .venv/bin/activate && pip install -r requirements.txt
-# python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r ai-stack/requirements.txt
+python scripts/verify.py           # tests + stub pipeline
+# or just the demo:
+python ai-stack/pipeline/run.py ai-stack/demo_data/incoming/new_rfp.md --provider stub --out ai-stack/out
 ```
 
-Output: the masked content actually sent out (`out/*_masked.md`), a design-doc draft (`out/*_draft.md`), and an audit report (`out/*_report.json`).
+Output: the masked content actually sent out (`ai-stack/out/*_masked.md`), a design-doc draft (`*_draft.md`), and an audit report (`*_report.json`).
 
-A dependency-free demo web UI (standard library only) is also included:
+A standard-library demo web UI is also included (janome is optional; RAG falls back to CJK bigrams):
 
 ```bash
-python ui/app.py    # → http://127.0.0.1:7877
+python ai-stack/ui/app.py    # → http://127.0.0.1:7877
 ```
 
-> Note: the pipeline itself needs `janome` (RAG layer) even in stub mode; `anthropic` is only required for the API provider. The web UI truly needs nothing.
+> `janome` improves the RAG layer. `anthropic` is only required for `--provider anthropic-api` (`pip install -r ai-stack/requirements-llm.txt`).
+
+See [ROADMAP.md](ROADMAP.md) for the phased upgrade path (masking NER, vector RAG, evalkit judge, skill-pack installer).
 
 ## Related public repos
 

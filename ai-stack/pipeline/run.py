@@ -70,13 +70,15 @@ def main():
     report["elapsed_sec"] = round(time.time() - t0, 1)
 
     # 6) 出力
-    outdir = Path(args.out); outdir.mkdir(exist_ok=True)
+    outdir = Path(args.out)
+    outdir.mkdir(parents=True, exist_ok=True)
     stem = Path(args.rfp).stem
-    (outdir / f"{stem}_draft.md").write_text(draft, encoding="utf-8")
+    draft_path = outdir / f"{stem}_draft.md"
+    draft_path.write_text(draft, encoding="utf-8")
     (outdir / f"{stem}_masked.md").write_text(masked, encoding="utf-8")
     (outdir / f"{stem}_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    print(f"[OK] draft -> out/{stem}_draft.md")
+    print(f"[OK] draft -> {draft_path}")
     print(f"     masked entities: {len(mapping)} | refs: {[h['title'] for h in hits]}")
     print(f"     QC: {'PASS' if qc['ok'] else 'FINDINGS: ' + '; '.join(qc['findings'])}")
     print(f"     elapsed: {report['elapsed_sec']}s (provider={args.provider})")

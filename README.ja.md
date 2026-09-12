@@ -4,7 +4,7 @@ OneWonder Japan の公開ナレッジベース。実戦で検証してきた AI 
 
 [English](README.md) | [简体中文](README.zh-CN.md) | 日本語
 
-![License](https://img.shields.io/badge/license-MIT-blue)
+![License](https://img.shields.io/badge/license-MIT-blue) ![CI](https://github.com/onewonderjapan/ow-open-knowledge/actions/workflows/ci.yml/badge.svg)
 
 ## このリポジトリについて
 
@@ -25,31 +25,31 @@ OneWonder Japan の公開ナレッジベース。実戦で検証してきた AI 
 | [dev-pipeline/](dev-pipeline/) | 6 エージェント開発パイプライン：Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester＋自己学習 |
 | [cloud-patterns/](cloud-patterns/) | クラウドパターン skill 集：Glue×RDS 結合、API Gateway＋Lambda＋SES 問い合わせフォーム、Form→IAM、Terraform の落とし穴 |
 | [team-norms/](team-norms/) | チーム規範（日本語）：Git 使用規範、Teams チャットマナー、ビジネスメール基礎 |
+| [ROADMAP.md](ROADMAP.md) | 改善・アップグレード計画（[简体中文](ROADMAP.zh-CN.md)） |
 
 ## クイックスタート
 
-一番速く全体像を掴む方法——ai-stack のオフラインデモ（API キー不要、動作検証済み）：
+一番速く全体像を掴む方法——ai-stack のオフラインデモ（API キー不要）：
 
 ```bash
-cd ai-stack
-python -m venv .venv
-# Windows (Git Bash / PowerShell)：
-.venv/Scripts/pip install -r requirements.txt
-.venv/Scripts/python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
-# macOS / Linux：
-# source .venv/bin/activate && pip install -r requirements.txt
-# python pipeline/run.py demo_data/incoming/new_rfp.md --provider stub
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r ai-stack/requirements.txt
+python scripts/verify.py           # テスト + stub パイプライン
+python ai-stack/pipeline/run.py ai-stack/demo_data/incoming/new_rfp.md --provider stub --out ai-stack/out
 ```
 
-出力は3点セット：送信内容のマスキング結果（`out/*_masked.md`）、設計書ドラフト（`out/*_draft.md`）、監査レポート（`out/*_report.json`）。
+出力は3点セット：送信内容のマスキング結果（`ai-stack/out/*_masked.md`）、設計書ドラフト（`*_draft.md`）、監査レポート（`*_report.json`）。
 
-依存ゼロのデモ Web UI（標準ライブラリのみ）もあります：
+標準ライブラリのみのデモ Web UI もあります（janome は任意。未導入時は CJK バイグラムにフォールバック）：
 
 ```bash
-python ui/app.py    # → http://127.0.0.1:7877
+python ai-stack/ui/app.py    # → http://127.0.0.1:7877
 ```
 
-> 注意：パイプライン自体は stub モードでも `janome`（RAG 層）が必要です。`anthropic` は API プロバイダ利用時のみ。Web UI のみ完全に依存ゼロです。
+> `janome` は RAG 層の精度を上げます。`anthropic` は `--provider anthropic-api` のときだけ必要です（`pip install -r ai-stack/requirements-llm.txt`）。
+
+段階的なアップグレードは [ROADMAP.md](ROADMAP.md) を参照。
 
 ## 関連公開リポジトリ
 

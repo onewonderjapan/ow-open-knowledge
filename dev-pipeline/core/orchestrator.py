@@ -43,7 +43,7 @@ class PipelineResult:
 
 
 class Orchestrator:
-    """4つの Agent を順次実行するパイプラインオーケストレーター."""
+    """6つの Agent を順次実行するパイプラインオーケストレーター."""
 
     def __init__(self, config: Config | None = None) -> None:
         self.config = config or Config()
