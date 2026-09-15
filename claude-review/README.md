@@ -6,5 +6,5 @@
 - **读取方**：开发 agent / 机主。专管 Grok Bot 也可读，作为选题参考。
 - **路径**：`claude-review/YYYY-MM-DD-<slug>.md`
 - **条目 ID**：`CR-<仓短名大写>-YYYYMMDD-NN`
-- **不进 `main`**：本分支是建议轨，不是仓库正本。采纳的项走正常 PR → `main`，PR 描述引用 CR 条目 ID。
+- **默认不合并进 main；经机主内容 review 后可例外合入（先例：2026-09-13、2026-09-15 机主令合并）**：本分支是建议轨，不是仓库正本。采纳的项走正常 PR → `main`，PR 描述引用 CR 条目 ID。
 - 与 `grok/knowledge`（Bot 建议）、`grok/feedback`（对 Bot 的反馈）并列，三者互不合并。
