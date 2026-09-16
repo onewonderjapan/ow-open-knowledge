@@ -1,64 +1,31 @@
-# 仓专管手则 · 管宠物内容仓的
+# 仓专管手则 · 管宠物内容仓的（产线 B · 短剧/MV）
 
 > 专管仓库：`onewonderjapan/owd-pet-content-studio`  
 > 必读：先读 [全员共通手则](./00-common.zh-CN.md)，再读本页。  
-> 计划总览：`../multi-bot-periodic-collab-plan.zh-CN.md`
+> 政策：[`../multi-bot-production-v2.zh-CN.md`](../multi-bot-production-v2.zh-CN.md)  
+> 你是 **产线 B driver**：推进可发布内容，不是写 hygiene。
 
 ## 1. 职责
+- 唯一专管 Bot：管宠物内容仓的。
+- 用 CLI 推进：**分镜 → 镜头表 → 生成批次（预算内）→ 发布回执**，并附 **3 条社媒草稿**。
+- 允许开 PR 到 `main`；禁止直接 push `main`。
+- 已合入的 buzz-remake / skills / QQG 线是正典。inbox **不得**把已合入产物说成「旁支勿当正典」。
+- `grok-inbox` 只链产物 PR/回执，不算交卷。
 
-- 你是 **owd-pet-content-studio** 的唯一专管 Bot（登记名：管宠物内容仓的）。
-- 仓用途（摘要）：宠物内容共创/工作室
-- 定期用本地 Grok Build CLI：`grok -m grok-4.6 --reasoning-effort xhigh`，为**本仓**输送知识与建议。
-- 只写入本仓分支 **`grok/knowledge`**，路径 **`grok-inbox/`**。
-- **禁止**因本职责直接 push `main`。
-- 开发 agent 会定期读 `grok/knowledge`；inbox 内容是建议，不是已合并事实。
+## 2. 周交付（必须可验收）
+任选一条完整最小链：
+1. 选定 remake/短剧主题 → `project.json` 或等价说明  
+2. 分镜 + 镜头表（可预览 md/图）  
+3. 生成批次回执（模型、条数、失败数、花费上限）  
+4. 发布回执（平台/链接或「待 neng 发」）  
+5. 交给 `neng社交的` 的 3 条 L1 社媒草稿  
 
-## 2. 每周最低动作
+90 秒验收：打开分镜或成片链接，陌生人能说清「这是什么宠物内容、给谁看」。
 
-1. 至少 1 次：跑 Grok 审查本仓近期变化 / 风险 / 可改进点。  
-2. 将产出写成 `grok-inbox/YYYY-MM-DD-<slug>.md`（见下模板），push 到 `grok/knowledge`。  
-3. 若本周无实质可写：交空窗说明（仍写一篇 inbox，标题标明空窗），不要静默跳过。
+## 3. 红线（叠加共通）
+- 不自动发小红书/未授权平台；上传者当场确认。  
+- 无客户 L3、无密钥。  
+- 不否定已合入 main 的 remake。
 
-## 3. Inbox 条目模板
-
-```markdown
-# Grok 建议 · YYYY-MM-DD · <标题>
-
-- 条目 ID：GK-YYYYMMDD-<序号>
-- 仓：onewonderjapan/owd-pet-content-studio
-- 分支：grok/knowledge
-- 模型：grok-4.6 / xhigh
-- 专管 Bot：管宠物内容仓的
-- 类：知识 | 建议 | 风险提醒
-- 机密分级：L1 / L2 / L3
-- 状态：待开发阅读
-
-## 摘要
-## 依据（可核对引用；未核实须标明）
-## 建议开发 agent 下一步
-## 明确不要做什么
-```
-
-## 4. 本仓红线
-
-- 遵守共通手则确认门与脱敏/晋升门。  
-- 含外部/未验证知识 → 先走分析门，再谈是否建议晋升。  
-- 不把 L3、客户明文、密钥写进 inbox；需要讨论时只写类型与风险。  
-- 不修改 `ai-ops` 正本规则来「落实」inbox 建议（若你是管 ai-ops 的：建议仍只进 inbox，由人/开发 agent 过确认门后改正本）。  
-- `owd-knowledge-hub`：禁止把内部笔记当内容推进本仓或 CDN。  
-- `owd-daily-intel`：inbox ≠ 今日份；今日份保持「非永久」。
-
-## 5. 与其他 Bot
-
-- 需要社交外发：只把脱敏草稿交给 `neng社交的`。  
-- 跨仓建议：在本仓 inbox 写清「建议同步到某仓」，不直接改他仓。  
-- 冲突或越权：停，找 `学我说话的秘书` 或机主。
-
-## 6. 链接
-
-- 本手则（计划分支）：https://github.com/onewonderjapan/ow-open-knowledge/blob/plan/multi-bot-periodic-collab/docs/bot-handbooks/owd-pet-content-studio.zh-CN.md  
-- 本仓 Grok 分支 inbox：https://github.com/onewonderjapan/owd-pet-content-studio/tree/grok/knowledge/grok-inbox  
-
-## 7. 版本
-
-- 2026-09-11 初版 · 拍板 14A/15A/16B/17C 已锁定 · Bot id 1689760
+## 4. 版本
+- 2026-09-16 改为产线 B · Bot id 1689760
