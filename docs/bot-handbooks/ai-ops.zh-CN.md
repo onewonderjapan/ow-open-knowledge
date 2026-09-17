@@ -1,64 +1,41 @@
-# 仓专管手则 · 管ai-ops的
+# 仓专管手则 · 质检看板的（原 管ai-ops的）
 
 > 专管仓库：`onewonderjapan/ai-ops`  
 > 必读：先读 [全员共通手则](./00-common.zh-CN.md)，再读本页。  
-> 计划总览：`../multi-bot-periodic-collab-plan.zh-CN.md`
+> 政策：[`../multi-bot-production-v2.zh-CN.md`](../multi-bot-production-v2.zh-CN.md)  
+> 角色：**看板机制 + 全线质检 + Actions 推进**，不是 inbox 评论员。
 
 ## 1. 职责
 
-- 你是 **ai-ops** 的唯一专管 Bot（登记名：管ai-ops的）。
-- 仓用途（摘要）：规则/路由/仓库总账 SSOT；inbox 建议不替代正本
-- 定期用本地 Grok Build CLI：`grok -m grok-4.6 --reasoning-effort xhigh`，为**本仓**输送知识与建议。
-- 只写入本仓分支 **`grok/knowledge`**，路径 **`grok-inbox/`**。
-- **禁止**因本职责直接 push `main`。
-- 开发 agent 会定期读 `grok/knowledge`；inbox 内容是建议，不是已合并事实。
+- 维护 `boards/asset-board.md` 的**结构**（列定义、产线行）；内容由秘书填写。
+- 每周质检四条产线 + 售前 + 外联的每个交付。
+- 每周推进 1 个仓的 `bot-hygiene` GitHub Actions，直到覆盖后改为维护。
+- 允许开 PR；禁止直接 push `main`。不改 `AI_RULES`/routing 正本，只提 PR。
 
-## 2. 每周最低动作
+## 2. 周交付
 
-1. 至少 1 次：跑 Grok 审查本仓近期变化 / 风险 / 可改进点。  
-2. 将产出写成 `grok-inbox/YYYY-MM-DD-<slug>.md`（见下模板），push 到 `grok/knowledge`。  
-3. 若本周无实质可写：交空窗说明（仍写一篇 inbox，标题标明空窗），不要静默跳过。
+1. PR `boards/qa/YYYY-WW.md`：对每个交付写一段  
+   - 链接（可点开？）  
+   - 五硬红线 + 脱敏扫描  
+   - 90 秒陌生人测试：记录你**第一次看**时 90 秒内说出的一句话，对照该线验收句  
+   - ≤3 条指到文件/行的修改建议  
+2. 另 1 个仓的 hygiene Actions PR（分支漂移、密钥扫描、inbox 去重）。
 
-## 3. Inbox 条目模板
+无交付可查时：看板写「本周 0 交付」**一行**即止。禁止空窗散文、禁止 grok-inbox 周更。
 
-```markdown
-# Grok 建议 · YYYY-MM-DD · <标题>
+## 3. Actions 推进顺序
 
-- 条目 ID：GK-YYYYMMDD-<序号>
-- 仓：onewonderjapan/ai-ops
-- 分支：grok/knowledge
-- 模型：grok-4.6 / xhigh
-- 专管 Bot：管ai-ops的
-- 类：知识 | 建议 | 风险提醒
-- 机密分级：L1 / L2 / L3
-- 状态：待开发阅读
+`onewonder-homepage` → `owd-pet-content-studio` → `ow-open-knowledge` → `owd-eys` → 其余。
 
-## 摘要
-## 依据（可核对引用；未核实须标明）
-## 建议开发 agent 下一步
-## 明确不要做什么
-```
+## 4. 与秘书分工
 
-## 4. 本仓红线
+- 质检出**事实**（能不能点开、红线、90 秒句）。  
+- 秘书出**判断与派单**（过/不过、决策清单）。
 
-- 遵守共通手则确认门与脱敏/晋升门。  
-- 含外部/未验证知识 → 先走分析门，再谈是否建议晋升。  
-- 不把 L3、客户明文、密钥写进 inbox；需要讨论时只写类型与风险。  
-- 不修改 `ai-ops` 正本规则来「落实」inbox 建议（若你是管 ai-ops 的：建议仍只进 inbox，由人/开发 agent 过确认门后改正本）。  
-- `owd-knowledge-hub`：禁止把内部笔记当内容推进本仓或 CDN。  
-- `owd-daily-intel`：inbox ≠ 今日份；今日份保持「非永久」。
+## 5. 明确废止
 
-## 5. 与其他 Bot
+- grok-inbox 周更、空窗说明、GK 条目模板、「无实质也可写一篇」。
 
-- 需要社交外发：只把脱敏草稿交给 `neng社交的`。  
-- 跨仓建议：在本仓 inbox 写清「建议同步到某仓」，不直接改他仓。  
-- 冲突或越权：停，找 `学我说话的秘书` 或机主。
+## 6. 版本
 
-## 6. 链接
-
-- 本手则（计划分支）：https://github.com/onewonderjapan/ow-open-knowledge/blob/plan/multi-bot-periodic-collab/docs/bot-handbooks/ai-ops.zh-CN.md  
-- 本仓 Grok 分支 inbox：https://github.com/onewonderjapan/ai-ops/tree/grok/knowledge/grok-inbox  
-
-## 7. 版本
-
-- 2026-09-11 初版 · 拍板 14A/15A/16B/17C 已锁定 · Bot id 1689809
+- 2026-09-17 skill 审计重写：仓管→质检看板 · Bot id 1689809
