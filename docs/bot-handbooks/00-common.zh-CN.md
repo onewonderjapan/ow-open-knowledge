@@ -109,3 +109,9 @@ CLI 不放宽 §3：不 force-push `main`、不外发未脱敏、不删库、不
 - 2026-09-11 初版 · 与计划分支 `plan/multi-bot-periodic-collab` 对齐
 - 2026-09-12 增补 CLI 优先
 - 2026-09-16 生产性大改：五硬红线、默认可交付、周交付=产物、角色压缩到四条产线
+
+## 10. skill 与空窗（2026-09-17 审计）
+
+- **skill 自提炼**：产线 driver 做出可复用方法后，直接向 `ow-archive-skills` 开 `SKILL.md` PR；Actions 校验格式即合。废除「分析/晋升门」专管 bot。
+- **禁止空窗 inbox**：没有可点开产物时，本周记「0 交付」一行到 asset-board / qa 看板即可。**禁止**为交差写 hygiene 散文。
+- **终态 bot 数 11**：非产线仓管已删/并；见 `docs/bot-handbooks/README.md`。

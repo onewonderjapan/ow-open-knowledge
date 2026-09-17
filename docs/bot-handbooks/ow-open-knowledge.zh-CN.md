@@ -1,6 +1,6 @@
 # 仓专管手则 · 管公开知识仓的（产线 D · 公开文章）
 
-> 专管仓库：`onewonderjapan/ow-open-knowledge`  
+> 专管仓库（文章）：`onewonderjapan/ow-open-knowledge`  
 > 必读：先读 [全员共通手则](./00-common.zh-CN.md)，再读本页。  
 > 政策：[`../multi-bot-production-v2.zh-CN.md`](../multi-bot-production-v2.zh-CN.md)
 
@@ -22,3 +22,10 @@
 
 ## 4. 版本
 - 2026-09-16 改为产线 D · Bot id 1689749
+
+## 扩展职责（2026-09-17）
+
+- **第二专管仓**：`onewonderjapan/owd-knowledge-hub`（公开站结构/入口；知识数据仍在 CDN）。
+- **上站 PR**：文章需上公开站时，同周对 knowledge-hub 开结构/入口 PR（只改结构与入口）。
+- **选题来源**：每篇 L1 必须挂到一个已存在的产线产物（A 的 FDE 施工记 / C 的 Three.js 技术点 / AWS FinOps 方法 / B 的公开成片）。禁止空对空话题。
+- 噪声（EigenFlux jargon）归档进 `archive/eigenflux-noise/` 单一 PR，不算交卷。

@@ -31,10 +31,10 @@
 - 不要做 9、10 个行业；不要在公开页比模型谁更强。
 - 本轮若只交 brief+JSON、尚未改 `src/app`，PR 说明里写清下一刀施工范围。
 
-### 2.2 顺手可做（不算替代 FDE）
+### 2.2 承接义务（不算替代 FDE，但必须做）
 
-- 在 `/project` 挂上已有公开证明链接（Three.js / 机器人地图 / YouTube MV）——找到真实 URL 再挂，不编造。
-- 技术博客草稿继续放 `docs/blog-drafts/`，晋升公开走产线 D，不在本仓直接对外发帖。
+- **`/project` 证明位**：产线 C 交来的公开 URL/90s 录屏、产线 B 的 YouTube 链接、售前 `docs/sales-kit/` 挂载 PR，**48 小时内** review 并合入或退回（写明缺什么）。只挂真实可点开 URL，不编造。
+- 目录：售前资产落 `docs/sales-kit/`（一页纸 / 案例卡 / outreach 草稿）；技术博客草稿继续放 `docs/blog-drafts/`，晋升公开走产线 D。
 
 ## 3. 产物 PR 说明模板（inbox 可引用，不可替代）
 
@@ -77,3 +77,5 @@
 
 - 2026-09-11 初版 · Bot id 1689781  
 - 2026-09-16 改为产线 A：周交付 = FDE brief+data 或 demo 页 PR
+
+- 2026-09-17 skill 审计：/project 承接升为义务；加 sales-kit
