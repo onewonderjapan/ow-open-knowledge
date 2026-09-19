@@ -1,12 +1,11 @@
-# 已归档手则
+# 已归档手则（R2 · 2026-09）
 
-2026-09-17 skill 审计后：对应 bot 删除或合并，手则移入本目录仅供参考，**不再作为交卷依据**。
+以下产线随漏斗编制退役，正文保留备查，**不再作为在役 bot 必读**：
 
-| 原文件 | 处置 |
-|---|---|
-| owd-daily-intel | DELETE bot；日更改 Actions（若还要） |
-| owd-lingwan | DELETE bot |
-| skill-platform | DELETE bot；仓定位待机主定 |
-| ow-archive-skills | DELETE bot；skill 由产线 driver 自 PR |
-| owd-eys | MERGE → 搞建模的（见 playable-3d） |
-| owd-knowledge-hub | MERGE → 管公开知识仓的 |
+- `content-research.zh-CN.md` — 原「研究爆款的」（纪律并入 funnel-incubator）
+- `storyboard-director.zh-CN.md` — 原「臭拍戏的」
+- `owd-pet-content-studio.zh-CN.md` — 原「管宠物内容仓的」
+- `playable-3d.zh-CN.md` — 原「搞建模的」
+- `ow-open-knowledge.zh-CN.md` — 原「管公开知识仓的」（文章规范并入 neng-social）
+
+现行编制见上级 README 与 `docs/funnel.zh-CN.md`。
