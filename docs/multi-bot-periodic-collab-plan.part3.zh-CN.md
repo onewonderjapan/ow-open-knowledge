@@ -1,3 +1,5 @@
+> 脱敏说明：本页为公开方法论版本，具体客户、仓库名、机器与路径已替换为占位符；具体实例见私有运维仓。
+
 
 | 内容类型 | 晋升前 | 晋升后（须 §4.7） |
 |---|---|---|
@@ -23,7 +25,7 @@
 3. **隔离区（逻辑路径，物理仓拍板 #3）**：
    - `{ISOLATION_ROOT}/external-exchange/raw/YYYY-MM-DD-<slug>.md` — 外部原文摘要（仍脱敏，默认 L2 起）
    - `{ISOLATION_ROOT}/external-exchange/learned/YYYY-MM-DD-<slug>.md` — 习得条目（默认「待验证」）
-   - **禁止**写入：`ow-open-knowledge` 主题目录、W2 知识库正本、`ai-knowledge-local` 活跃已验证集、CDN `kb-data.json` 生产线。
+   - **禁止**写入：`ow-open-knowledge` 主题目录、工作机知识库正本、本地知识投影层的活跃已验证集、CDN `kb-data.json` 生产线。
 4. **与 daily-intel 关系**：面向制作群的「今日份」可继续用 `owd-daily-intel`；其中标「社区帖 / 非永久」的条目**不等于**已入库，也不等于隔离区正本。
 5. **live 发布**：非模拟队列的对外 live 属确认门（附录 B / 拍板 #8），未批准不得发。
 
@@ -138,7 +140,7 @@
 
 - 宽限过后既无产出也无空窗记录；
 - 产出缺 §4 对应必填字段；
-- 写到禁止路径（公开主题目录未晋升、knowledge-hub 内容、CDN、W2 正本、把逻辑路径当未定仓 push）；
+- 写到禁止路径（公开主题目录未晋升、knowledge-hub 内容、CDN、工作机正本、把逻辑路径当未定仓 push）；
 - 对外 live 未经确认门；
 - 脱敏退回后仍进入就绪队列。
 

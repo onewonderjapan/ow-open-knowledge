@@ -1,5 +1,7 @@
 # 仓专管手则 · 管skill平台的
 
+> 脱敏说明：本页为公开方法论版本，Bot 数字 id、机器与路径等具体实例见私有运维仓。
+
 > 专管仓库：`onewonderjapan/skill-platform`  
 > 必读：先读 [全员共通手则](./00-common.zh-CN.md)，再读本页。  
 > 计划总览：`../multi-bot-periodic-collab-plan.zh-CN.md`
@@ -61,4 +63,4 @@
 
 ## 7. 版本
 
-- 2026-09-11 初版 · 拍板 14A/15A/16B/17C 已锁定 · Bot id 1689785
+- 2026-09-11 初版 · 拍板 14A/15A/16B/17C 已锁定 · Bot id 见私有运维仓登记表

@@ -1,5 +1,7 @@
 # 全员共通手则（Bot）
 
+> 脱敏说明：本页为公开方法论版本，付费工具、机器与路径等具体实例见私有运维仓。
+
 > 所有 OneWonder Bot 开干前必读。细则与拍板见多 Bot 计划：`docs/multi-bot-periodic-collab-plan.zh-CN.md`（分册 part1–part5）。  
 > 仓专管另读自己的专管手则。本文件不改机主五条共通规则，只写怎么执行。
 
@@ -36,7 +38,7 @@
 
 ## 5. CLI 优先（省 Bot 额度）
 
-机主已付费开通 Cursor；共享机上已安装并登录 Cursor CLI。接到多步/重任务时，**默认调 CLI 执行**，少用 Bot 对话本身烧额度。
+共享执行机上已安装并登录团队选定的 Agent CLI（具体工具、订阅与账号信息见私有运维仓）。接到多步/重任务时，**默认调 CLI 执行**，少用 Bot 对话本身烧额度。
 
 ### 5.1 命令名（禁止混用）
 
@@ -46,7 +48,7 @@
 | `grok` | Grok Build CLI（本地 `grok-4.6` / xhigh 等） |
 | `agent` | **仅** Grok 旧入口；**不要**用它调 Cursor |
 
-PATH 约定：`~/.local/bin` 里用 `cursor-agent`；`~/.grok/bin` 里 `grok` / `agent` 仍属 Grok。裸写 `agent` 一律当 Grok，不写 Cursor。
+PATH 约定：各 CLI 的安装目录由共享执行机的实际配置决定（见私有运维仓的机器台账），不同工具的可执行文件不共用目录。裸写 `agent` 一律当 Grok，不写 Cursor。
 
 ### 5.2 什么时候必须走 CLI
 

@@ -1,5 +1,7 @@
 # 多 Bot 定期协作计划 · 第 5 分册（附录与 §8/§9）
 
+> 脱敏说明：本页为公开方法论版本，具体客户、仓库名、机器与路径已替换为占位符；具体实例见私有运维仓。
+
 ## 附录 D · 脱敏清单与三件套
 
 抽查时逐项打勾。任一项未处理且目标为外发/公开 → 退回。
@@ -108,7 +110,7 @@ neng社交的 | 外发窗2 | 16:00 | 工作日 | outbound-queue 就绪发出 或
 
 ### 8.3 「进行中」仓库候选（来自 §2 活跃/半活跃轨；最终名单拍板 #16）
 
-**默认纳入候选（须拍板确认）**：`ow-open-knowledge`、`owd-knowledge-hub`、`owd-daily-intel`、`owd-pet-content-studio`、`owd-lingwan`、`owd-eys`、`onewonder-homepage`、`ow-archive-skills`、`skill-platform`、`ai-ops`、`ow-ai-hq`、`ow-ai-stack`、`ai-knowledge-local`、`ai-workflow-hub`、`build-workflow`、`wonder4ge-flow`、`pet-universe`、`pet-drama-studio`、`ark-harness`、`task-orchestrator`、`lora-demo-suite`。
+**默认纳入候选（须拍板确认）**：§2.1 的 10 个活跃轨仓，加上 §2.2 / §2.3 的占位仓 `<private-repo-1>` … `<private-repo-11>` 与 `task-orchestrator`，共 21 个。具体仓名对照表只存在于私有运维仓，不在本公开文档展开。
 
 **默认不纳入（除非拍板拉入）**：§2.4 低活跃/演示、已归档仓、纯救援冻结仓。
 
