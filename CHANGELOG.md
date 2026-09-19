@@ -25,6 +25,14 @@
 - Web UI 输入校验：请求体上限 2MB，校验 `Content-Length`/JSON/必需键并返回 4xx，异常详情只进服务端日志（避免泄漏路径与环境信息）。
 - 审计报告 `out/*_report.json` 不再写入实名逆查表。公开产物只保留件数与伏字标签；逆查表单独落在 `*_mapping.json`（`out/` 已被 gitignore）。
 - 新增 [SECURITY.md](SECURITY.md)：漏洞私下上报流程，明确脱敏绕过为最高深刻度，并区分「设计上的已知限制」与真正的漏洞。
+- **运营计划与 Bot 手则的脱敏**（`docs/` 下的多 Bot 协作计划分册与 `docs/bot-handbooks/`）。本仓为公开仓，
+  但这批文档此前直接写入了客户向仓库名、私有仓清单、机器代号、共享执行机的 CLI 安装路径与 Bot 数字 id。
+  现全部替换为占位符（`<customer-A-repo>` / `<private-repo-N>` / 「工作机」「算力机」），并在每页顶部注明具体实例见私有运维仓。
+  公开仓只保留方法论。
+- `.gitignore` 补入 `.env`、`.env.*`、`*.local.json`，避免本地凭证与本地覆盖配置被误提交。
+- CI 的 `actions/checkout` 与 `actions/setup-python` 由浮动 tag 改为 commit SHA 固定（附版本号注释）：
+  浮动 tag 可被重新指向，等于把构建环境的信任交给上游可变引用。
+- 新增 `.github/dependabot.yml`（pip + github-actions，weekly），让上述固定 SHA 有受控的升级通道。
 
 ### Fixed
 
@@ -50,6 +58,14 @@
 - `dev-pipeline` CLI 与元数据与实际执行对齐：`4 Agent`/`全5フェーズ` → `6 Agent`/`全6フェーズ`（`orchestrator.run()` 始终在第 4 阶段执行 Reviewer），`DEFAULT_PIPELINES` 补入 `reviewer`。
 - 修正依赖与环境声明：Web UI 并非零依赖（经 RAG 层需要 `janome`，已实测验证）；`ai-stack` 的 Python 要求 3.9+ → 3.10+（运行时求值 `str | None`，且 3.9 已 EOL）；补入 `python-pptx`；移除 `dev-pipeline` 中从未 import 的 `anthropic`。
 - 修正照抄即失败的文档路径：`workflow-standard/STANDARD.md` 的 `templates/_workflow-template` → `template`；STARTUP 标准中的 skeleton 路径指向 `../ai-stack/templates/project-skeleton/`；`dev-pipeline` 结构图根目录名 `agent/` → `dev-pipeline/`。
+- CI 新增 `ruff check .` 步骤：此前 `pyproject.toml` 的 ruff 配置从未被执行，等于摆设。
+  同时把 `target-version` 由 `py39` 改为 `py310`，与 README 与 CI 矩阵的 3.10 下限一致。
+  伴随的既有告警已修（未使用 import、无占位符 f-string、未使用变量、`raise ... from e`、分号多语句），
+  剩余两处样式债以带注释的 `per-file-ignores` 限定在具体文件，其余代码仍受完整规则约束。
+- `.cursor/environment.json` 的终端描述不再自称「zero-dependency」：RAG 层需要 `janome`，
+  与 CHANGELOG 既有的依赖声明修正保持一致。
+- `ai-stack/tests/test_pipeline_stub.py` 在缺少 `janome` 时改为 `unittest.skipUnless` 跳过而非 FAIL——
+  缺少可选依赖不是被测代码的回归。CI 仍会安装 `janome`，覆盖率不变。
 
 ### Added
 
