@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
@@ -10,7 +11,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# The pipeline shells out to run.py, which imports the janome-backed RAG layer.
+# Without janome this test cannot exercise anything, so skip instead of failing:
+# a missing optional dependency is not a regression in the code under test.
+HAS_JANOME = importlib.util.find_spec("janome") is not None
 
+
+@unittest.skipUnless(HAS_JANOME, "janome is not installed; the stub pipeline cannot run")
 class PipelineStubTests(unittest.TestCase):
     def test_stub_pipeline_writes_artifacts_without_real_names_in_report(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

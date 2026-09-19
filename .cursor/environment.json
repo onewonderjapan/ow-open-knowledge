@@ -6,7 +6,7 @@
     {
       "name": "ai-stack-ui",
       "command": "cd ai-stack && exec ../.venv/bin/python ui/app.py",
-      "description": "ai-stack zero-dependency demo web UI on http://127.0.0.1:7877"
+      "description": "ai-stack demo web UI on http://127.0.0.1:7877 (stdlib-only HTTP server, but the RAG layer requires janome from ai-stack/requirements.txt; runs offline with --provider stub, no API key needed)"
     }
   ],
   "ports": [7877]
