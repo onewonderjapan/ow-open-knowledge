@@ -59,7 +59,8 @@ def main():
     report["elapsed_sec"] = round(time.time() - t0, 1)
 
     # 6) 出力
-    outdir = Path(args.out); outdir.mkdir(exist_ok=True)
+    outdir = Path(args.out)
+    outdir.mkdir(exist_ok=True)
     stem = Path(args.rfp).stem
     (outdir / f"{stem}_draft.md").write_text(draft, encoding="utf-8")
     (outdir / f"{stem}_masked.md").write_text(masked, encoding="utf-8")

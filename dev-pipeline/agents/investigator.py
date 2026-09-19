@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any
 
 from agents.base import BaseAgent
 from core.config import Config

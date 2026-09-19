@@ -367,7 +367,7 @@ System Prompt を改善してください。"""
             raw = self.call_llm(system, user_message)
             try:
                 return self._extract_json(raw)
-            except ValueError as e:
+            except ValueError:
                 if attempt < max_retries:
                     self.logger.warning(
                         f"[{self.name}] JSON 解析失敗、リトライ {attempt + 1}/{max_retries}..."
@@ -404,7 +404,7 @@ System Prompt を改善してください。"""
         try:
             return json.loads(repaired)
         except json.JSONDecodeError as e:
-            raise ValueError(f"JSON 解析失敗（修復済み試行含む）: {e}\n先頭200文字: {text[:200]}")
+            raise ValueError(f"JSON 解析失敗（修復済み試行含む）: {e}\n先頭200文字: {text[:200]}") from e
 
 
 def _repair_truncated_json(text: str) -> str:

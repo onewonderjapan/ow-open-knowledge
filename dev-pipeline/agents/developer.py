@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
-from typing import Any
 
 from agents.base import BaseAgent
 from core.config import Config
@@ -169,7 +168,7 @@ class DeveloperAgent(BaseAgent):
             raw = self.call_llm(system, user_message)
             try:
                 return self._parse_structured_output(raw)
-            except ValueError as e:
+            except ValueError:
                 if attempt < max_retries:
                     self.logger.warning(
                         f"[{self.name}] 構造化出力の解析失敗、リトライ {attempt + 1}/{max_retries}..."
@@ -209,7 +208,7 @@ class DeveloperAgent(BaseAgent):
         try:
             metadata = json.loads(json_str)
         except json.JSONDecodeError as e:
-            raise ValueError(f"JSON メタデータの解析失敗: {e}\n先頭200文字: {json_str[:200]}")
+            raise ValueError(f"JSON メタデータの解析失敗: {e}\n先頭200文字: {json_str[:200]}") from e
 
         # <<<FILE:パス>>> ブロックを抽出（複数パターン対応）
         file_contents: dict[str, str] = {}
@@ -255,7 +254,7 @@ class DeveloperAgent(BaseAgent):
         if file_contents:
             self.logger.info(f"    解析: JSON OK, {len(file_contents)}ファイル抽出")
         else:
-            self.logger.warning(f"    解析: JSON OK, ファイル内容なし（LLM が content を JSON 内に記述した可能性）")
+            self.logger.warning("    解析: JSON OK, ファイル内容なし（LLM が content を JSON 内に記述した可能性）")
 
         return metadata, file_contents
 

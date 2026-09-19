@@ -1,6 +1,6 @@
 [tool.ruff]
 line-length = 120
-target-version = "py39"
+target-version = "py310"
 extend-exclude = [
   "ai-stack/out",
   "dev-pipeline/workspace",
@@ -10,3 +10,9 @@ extend-exclude = [
 [tool.ruff.lint]
 select = ["E", "F", "B"]
 ignore = ["E501"]
+
+# Pre-existing style debt, scoped so the rest of the tree is held to the full
+# ruleset. Cleaning these up is a separate change.
+[tool.ruff.lint.per-file-ignores]
+"ai-stack/tools/md_to_pptx.py" = ["E702", "E741"]
+"dev-pipeline/agents/base.py" = ["B024"]

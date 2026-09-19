@@ -46,7 +46,7 @@ def resolve_requirement_file(name: str) -> Path:
     """要件ファイルのパスを解決：元のパス → requirements/ ディレクトリの順で検索."""
     if Path(name).name in IGNORED_FILES:
         print(f"エラー：{name} はテンプレート/サンプルファイルです。要件としては使用できません。")
-        print(f"  コピーして別名で保存してください：")
+        print("  コピーして別名で保存してください：")
         print(f"    cp requirements/{Path(name).name} requirements/my-task.md")
         sys.exit(1)
 
@@ -58,10 +58,10 @@ def resolve_requirement_file(name: str) -> Path:
     if fallback.exists():
         return fallback
     print(f"エラー：要件ファイルが見つかりません: {name}")
-    print(f"  検索パス:")
+    print("  検索パス:")
     print(f"    - {path.resolve()}")
     print(f"    - {fallback.resolve()}")
-    print(f"\n  要件ファイルを requirements/ ディレクトリに配置してください:")
+    print("\n  要件ファイルを requirements/ ディレクトリに配置してください:")
     print(f"    {req_dir.resolve()}/")
     sys.exit(1)
 
@@ -281,7 +281,7 @@ def run_test_only(args: argparse.Namespace) -> None:
     print("[Phase 1/3] Analyst で要件分析中...")
     analysis = analyst.run(requirement, codebase_summary)
 
-    print(f"[Phase 2/3] Developer で実装中...")
+    print("[Phase 2/3] Developer で実装中...")
     dev_results = developer.run(analysis, codebase_summary)
 
     print("[Phase 3/3] Tester でテスト中...")
