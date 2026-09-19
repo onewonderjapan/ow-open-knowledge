@@ -20,3 +20,8 @@ dev-pipeline/output/
 Thumbs.db
 .idea/
 .vscode/
+
+# Secrets / local overrides
+.env
+.env.*
+*.local.json
