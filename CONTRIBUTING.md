@@ -29,6 +29,7 @@ python -m unittest discover -s task-orchestrator/tests -t task-orchestrator/test
 python -m unittest discover -s workflow-standard/tests -t workflow-standard/tests
 python scripts/check_links.py
 python scripts/check_skills.py
+python scripts/check_kb_export.py
 python -m unittest discover -s scripts -t scripts -p "test_*.py"
 
 # 离线端到端 demo（无需 API key）
@@ -36,6 +37,12 @@ cd ai-stack && python pipeline/run.py demo_data/incoming/new_rfp.md --provider s
 ```
 
 CI 在每个 PR 上跑同样的检查。
+
+## knowledge-notes/ 是生成目录
+
+- `knowledge-notes/` 只由非公开知识库仓的 `scripts/kb.py export-public` 生成（脱敏后导出），附 `manifest.json` 记录来源 commit 与每篇 sha256。
+- **不要手工编辑**这个目录里的任何文件，也不要手工新增笔记。内容有误或需要修改：开 issue，或在源知识库里改好后重新导出。
+- `python scripts/check_kb_export.py` 必须通过（CI 同样检查）：手改会让 sha256 对不上，内部路径 / 术语混入会被拦下。
 
 ## 安全问题不要开公开 issue
 
