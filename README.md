@@ -28,6 +28,12 @@ This repo is a kit, not a single product. Four directories describe how to run a
 | Reuse a distilled AWS/cloud flow (or its don't-do list) | [cloud-patterns/](cloud-patterns/) |
 | Look up Git / Teams / email conventions | [team-norms/](team-norms/) |
 
+<!-- enabled when knowledge-notes/ lands. scripts/check_links.py also scans HTML comments and fails on a
+dangling relative link, so the link is written without markdown syntax here. To enable: move this row to
+the end of the table above and make the second cell a relative markdown link to knowledge-notes/.
+| Read the team's exported research notes (pre-registered experiments; zh) | knowledge-notes/ |
+-->
+
 ### The same idea, three places
 
 These concepts appear in more than one system. Read the copy that matches the job you are doing; they are not one shared implementation.
