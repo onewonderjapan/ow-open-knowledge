@@ -8,7 +8,7 @@ summary: "预注册协议 + 实验笔记写法演示：同一组提示词跨视�
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@e73f8dd
+source: knowledge-base@8256ce7
 ---
 
 # 视频生成模型小样评测：同组提示词的稳定性对比

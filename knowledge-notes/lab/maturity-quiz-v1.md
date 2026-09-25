@@ -8,7 +8,7 @@ summary: "以 82.1% 生成 AI 使用 vs 13.3% 跨业务正式 Agent 断层为标
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@e73f8dd
+source: knowledge-base@8256ce7
 ---
 
 # 三级成熟度自评问卷 v1

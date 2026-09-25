@@ -8,7 +8,7 @@ summary: "实验已执行（batch_s1_v1，11 卡人审 11 对局 finalized 2026-
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@e73f8dd
+source: knowledge-base@8256ce7
 related: [20260904-video-gen-model-pilot, 20260905-pet-tournament-physics-rerun]
 ---
 

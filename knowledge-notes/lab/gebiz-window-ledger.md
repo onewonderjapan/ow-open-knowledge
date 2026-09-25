@@ -8,7 +8,7 @@ summary: "8 周窗口观察第 1 周：台账已建（[internal path]），首�
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@e73f8dd
+source: knowledge-base@8256ce7
 ---
 
 # 新加坡 GeBIZ 投标窗口分布实测（8 周观察，L-20）

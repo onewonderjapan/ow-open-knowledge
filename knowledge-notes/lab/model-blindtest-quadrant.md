@@ -8,7 +8,7 @@ summary: "12 道自有任务（代码/剧本/日文邮件）× 5 模型三盲盲
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@e73f8dd
+source: knowledge-base@8256ce7
 ---
 
 # 自有任务多模型盲测与价格×能力象限

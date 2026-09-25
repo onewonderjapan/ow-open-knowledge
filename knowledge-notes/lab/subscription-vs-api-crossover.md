@@ -8,7 +8,7 @@ summary: "30 天真实用量（Win+S1，33,853 Claude 请求等）双口径计�
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@e73f8dd
+source: knowledge-base@8256ce7
 related: [20260906-model-blindtest-quadrant]
 ---
 

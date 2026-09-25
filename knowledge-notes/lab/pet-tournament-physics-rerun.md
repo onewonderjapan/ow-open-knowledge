@@ -8,7 +8,7 @@ summary: "实验已执行（届次 cyc_20260906-021111，3 题材 9 卡，机评
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@e73f8dd
+source: knowledge-base@8256ce7
 related: [20260904-video-gen-model-pilot]
 ---
 

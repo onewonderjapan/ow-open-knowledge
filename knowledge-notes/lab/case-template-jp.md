@@ -8,7 +8,7 @@ summary: "四段结构（痛点→AI 切入点→人保留责任→量化指标�
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@e73f8dd
+source: knowledge-base@8256ce7
 ---
 
 # 「规则标准化型 Agent」案例卡 → 日文客户可读方案模板 v1
