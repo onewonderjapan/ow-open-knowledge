@@ -27,12 +27,8 @@ This repo is a kit, not a single product. Four directories describe how to run a
 | Send a business document to an LLM without leaking names or phone numbers | [ai-stack/](ai-stack/) |
 | Reuse a distilled AWS/cloud flow (or its don't-do list) | [cloud-patterns/](cloud-patterns/) |
 | Look up Git / Teams / email conventions | [team-norms/](team-norms/) |
+| Read the team's exported research notes (pre-registered experiments, GitHub landscape surveys; zh) | [knowledge-notes/](knowledge-notes/) |
 
-<!-- enabled when knowledge-notes/ lands. scripts/check_links.py also scans HTML comments and fails on a
-dangling relative link, so the link is written without markdown syntax here. To enable: move this row to
-the end of the table above and make the second cell a relative markdown link to knowledge-notes/.
-| Read the team's exported research notes (pre-registered experiments; zh) | knowledge-notes/ |
--->
 
 ### The same idea, three places
 

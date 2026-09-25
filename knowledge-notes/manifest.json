@@ -1,0 +1,88 @@
+{
+  "count": 11,
+  "exported_at": "2026-09-25",
+  "files": [
+    {
+      "path": "INDEX.md",
+      "sha256": "9b8a1c820a1f5254804d472fa79ea55d06dc4e14ddf7ce6157837ba4654fb297"
+    },
+    {
+      "path": "README.md",
+      "sha256": "71a2253ccdf8ec8f86c288c912b894c68f82f38d512ec59eb6d95a5aa8eeee7a"
+    }
+  ],
+  "generator": "kb export-public",
+  "notes": [
+    {
+      "id": "20260925-codegen-2d-landscape",
+      "path": "gh-research/codegen-2d-landscape.md",
+      "sha256": "4e4940e82d474bc5905dbff24b114cffc473ca637572e30f0072579ab80fcd6b"
+    },
+    {
+      "id": "20260925-gh-research-framework",
+      "path": "gh-research/gh-research-framework.md",
+      "sha256": "0e0c1e12fa529eedb6fae534da02220315c6121e202a24cbcf89fe4052150bb3"
+    },
+    {
+      "id": "20260925-render-3d-landscape",
+      "path": "gh-research/render-3d-landscape.md",
+      "sha256": "468ec0ddb4e578aef2ff63131566c4242322d562a45c4972ce6e04f793a18aa7"
+    },
+    {
+      "id": "20260906-case-template-jp",
+      "path": "lab/case-template-jp.md",
+      "sha256": "9b86eeea1f256a6708690b824903516f935b84fbb6db3ea4051b40af1730c217"
+    },
+    {
+      "id": "20260906-gebiz-window-ledger",
+      "path": "lab/gebiz-window-ledger.md",
+      "sha256": "62b2e4b32c83aa28414abc6f76f51eee71b9c52c53d459c66780d0c9795d3719"
+    },
+    {
+      "id": "20260905-judge-human-calibration-rerun",
+      "path": "lab/judge-human-calibration-rerun.md",
+      "sha256": "21a0fccf7c026ce7b6edff97e5b295e4a2f347051e79692a723ba9b3b704e9c9"
+    },
+    {
+      "id": "20260906-maturity-quiz-v1",
+      "path": "lab/maturity-quiz-v1.md",
+      "sha256": "41bef3569986af6643ce614262bbb0e166f0ee3824e9d54b97670f2d50d12623"
+    },
+    {
+      "id": "20260906-model-blindtest-quadrant",
+      "path": "lab/model-blindtest-quadrant.md",
+      "sha256": "591d4a0578b6be44924bde3dc93aff5268c83eb62cef1ac8186c5a784eed9183"
+    },
+    {
+      "id": "20260905-pet-tournament-physics-rerun",
+      "path": "lab/pet-tournament-physics-rerun.md",
+      "sha256": "3177946deaf55414e0fd2c277643aa9c5b35add6a380e0521cfbc61b975b7ae5"
+    },
+    {
+      "id": "20260906-subscription-vs-api-crossover",
+      "path": "lab/subscription-vs-api-crossover.md",
+      "sha256": "bba8c054065d794cbf52abf42cca93cccfbbe0d7555265eccbf56ad7c7e754b9"
+    },
+    {
+      "id": "20260904-video-gen-model-pilot",
+      "path": "lab/video-gen-model-pilot.md",
+      "sha256": "901e7b746dfd9dc43c86f3981f5fd28fec1f42aa0a1dc62eea41aedf193b4614"
+    }
+  ],
+  "scrub_patterns": [
+    "(?<![A-Za-z0-9+.-])(?i:smb|cifs|file|afp|nfs)://(?:[A-Za-z0-9_./~:?#@!$&*+,;=%{}\\[\\]'|-]*[A-Za-z0-9_/~#@$&*+=%{}\\[|-])?",
+    "(?<![A-Za-z0-9+.-])[A-Za-z][A-Za-z0-9+.-]*://(?:[A-Za-z0-9._~%+:-]*@)?(?:\\d{1,3}(?:\\.\\d{1,3}){3}|(?i:localhost)|[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*\\.(?i:local|lan|internal|intranet|corp|home\\.arpa))(?![A-Za-z0-9.-])(?:[A-Za-z0-9_./~:?#@!$&*+,;=%{}\\[\\]'|-]*[A-Za-z0-9_/~#@$&*+=%{}\\[|-])?",
+    "(?P<keep>(?<![A-Za-z0-9+.-])[A-Za-z][A-Za-z0-9+.-]*://[A-Za-z0-9_.~:@%+-]+(?:/[A-Za-z0-9_.~:@!$&*+,;=%{}\\[\\]'|-]*)*?/)(?:(?:lab_inputs|orchestration|state|scripts)/[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-]|(?i:home|users)/[A-Za-z0-9_.-]*[A-Za-z0-9_-](?:[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])?|(?:<internal-repo-names>)(?![A-Za-z0-9_-])(?:[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])?)",
+    "(`)?(?<![A-Za-z0-9_./~\\\\$-])\\\\{2,4}[?.]\\\\{1,2}(?:[A-Za-z]:)?(?:[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])?(?(1)`)",
+    "(`)?(?<![A-Za-z0-9_])[A-Za-z]:[\\\\/][A-Za-z0-9_./~\\\\@%+=#${}-]+[A-Za-z0-9_/~\\\\@%+=#${}-](?(1)`)",
+    "(`)?(?<![A-Za-z0-9_./~\\\\$-])(?:\\.{1,2}/)*(?:lab_inputs|orchestration|state|scripts)/[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-](?(1)`)",
+    "(`)?(?<![A-Za-z0-9_./~\\\\$-])/(?i:home|users)/[A-Za-z0-9_.-]*[A-Za-z0-9_-](?:[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])?(?(1)`)",
+    "(`)?(?<![A-Za-z0-9_./~\\\\$-])~\\/(?:[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])?(?(1)`)",
+    "(`)?(?<![A-Za-z0-9_./~\\\\$-])\\$(?:HOME|\\{HOME\\})\\/(?:[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])?(?(1)`)",
+    "(`)?(?<![A-Za-z0-9_./~\\\\$-])\\\\{2,4}(?:\\d{1,3}(?:\\.\\d{1,3}){3}|[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)*(?=\\\\))(?:[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])?(?(1)`)",
+    "(`)?(?<![A-Za-z0-9_./~\\\\$:-])//(?:\\d{1,3}(?:\\.\\d{1,3}){3}|[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)*(?=/))(?:[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])?(?(1)`)",
+    "(`)?(?:(?<![A-Za-z0-9_./~\\\\$:-])[A-Za-z0-9_./~\\\\@%+=#${}-]*[/\\\\](?:<internal-repo-names>)(?![A-Za-z0-9_-])(?:[A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])?|(?<![A-Za-z0-9_./~\\\\$-])(?:<internal-repo-names>)[/\\\\][A-Za-z0-9_./~\\\\@%+=#${}-]*[A-Za-z0-9_/~\\\\@%+=#${}-])(?(1)`)"
+  ],
+  "source_commit": "8256ce7",
+  "source_repo": "onewonderjapan/knowledge-base"
+}
