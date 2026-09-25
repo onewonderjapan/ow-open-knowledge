@@ -41,12 +41,18 @@ def note_text(note_id: str, *, scope="public", source="knowledge-base@abc1234", 
 class Fixture:
     """tmp 内に exporter 出力相当の knowledge-notes/ を組み立てる。"""
 
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, dirname: str = "knowledge-notes"):
         self.root = root
-        self.dir = root / "knowledge-notes"
+        self.dir = root / dirname
         self.dir.mkdir()
         self.notes: list[dict] = []
-        self.scrub_patterns = [r"社内コード名\w+", r"(?i)secret-project"]
+        # 3 本目は DENYLIST と同じ文字列。manifest 検査で scrub_patterns の値が除外される証拠になる。
+        self.scrub_patterns = [r"社内コード名\w+", r"(?i)secret-project", r"lab_inputs/"]
+        (self.dir / "README.md").write_text("# knowledge-notes\n\n生成物。手編集しない。\n", encoding="utf-8")
+        (self.dir / "INDEX.md").write_text("# INDEX\n\n- exp-001\n- exp-002\n", encoding="utf-8")
+
+    def sha(self, name: str) -> str:
+        return hashlib.sha256((self.dir / name).read_bytes()).hexdigest()
 
     def add_note(self, note_id: str, text: str | None = None, path: str | None = None) -> Path:
         rel = path or f"{note_id}.md"
@@ -67,6 +73,7 @@ class Fixture:
             "count": len(self.notes),
             "scrub_patterns": self.scrub_patterns,
             "notes": self.notes,
+            "files": [{"path": n, "sha256": self.sha(n)} for n in ("README.md", "INDEX.md")],
         }
         manifest.update(overrides)
         (self.dir / "manifest.json").write_text(
@@ -96,8 +103,6 @@ class CheckKbExportTests(unittest.TestCase):
         fx = Fixture(self.root)
         fx.add_note("exp-001")
         fx.add_note("exp-002", path="2026/exp-002.md")
-        (fx.dir / "README.md").write_text("# knowledge-notes\n\n生成物。手編集しない。\n", encoding="utf-8")
-        (fx.dir / "INDEX.md").write_text("# INDEX\n\n- exp-001\n- exp-002\n", encoding="utf-8")
         return fx
 
     def test_repo_state_passes(self):
@@ -234,6 +239,126 @@ class CheckKbExportTests(unittest.TestCase):
         fx.notes.append({"id": "evil", "path": "../README.md", "sha256": "0" * 64})
         fx.write_manifest()
         self.assertProblem("不正なパス")
+
+    # --- manifest.json 自体の内容検査 ---
+
+    def test_manifest_denylist_in_source_commit(self):
+        self.happy().write_manifest(source_commit="/home/baibai/kb@abc")
+        self.assertProblem("manifest.json: $.source_commit: 禁止語 '/home/baibai'")
+
+    def test_manifest_denylist_in_note_id(self):
+        fx = Fixture(self.root)
+        fx.add_note("orchestration/leak", note_text("orchestration/leak"), path="leak.md")
+        fx.write_manifest()
+        self.assertProblem("manifest.json: $.notes[0].id: 禁止語 'orchestration/'")
+
+    def test_manifest_denylist_in_extra_field(self):
+        self.happy().write_manifest(debug_host="172.72.0.1")
+        self.assertProblem("manifest.json: $.debug_host: 禁止語 '172.72.'")
+
+    def test_manifest_denylist_in_extra_key(self):
+        self.happy().write_manifest(**{"~/outbox": "x"})
+        self.assertProblem("manifest.json: $ のキー: 禁止語 '~/outbox'")
+
+    def test_manifest_scrub_pattern_hit(self):
+        self.happy().write_manifest(note="Secret-Project 由来")
+        self.assertProblem("manifest.json: $.note: scrub_pattern")
+
+    def test_manifest_scrub_patterns_value_is_not_scanned(self):
+        """scrub_patterns 自体は検出語を含むのが正常。自分自身に当たって落ちてはいけない。"""
+        fx = self.happy()
+        fx.write_manifest()
+        self.assertIn("lab_inputs/", fx.scrub_patterns)
+        self.assertEqual(self.module.check(self.root), [])
+
+    # --- scrub_patterns の件数 ---
+
+    def test_empty_scrub_patterns_fails(self):
+        fx = self.happy()
+        fx.scrub_patterns = []
+        fx.write_manifest()
+        self.assertProblem("scrub_patterns は 3 件以上")
+
+    def test_too_few_scrub_patterns_fails(self):
+        fx = self.happy()
+        fx.scrub_patterns = ["a", "b"]
+        fx.write_manifest()
+        self.assertProblem("scrub_patterns は 3 件以上")
+
+    # --- README.md / INDEX.md（manifest.files）---
+
+    def test_files_field_missing(self):
+        fx = self.happy()
+        fx.write_manifest()
+        manifest_path = fx.dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        del manifest["files"]
+        manifest_path.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
+        self.assertProblem("files が配列ではありません")
+
+    def test_files_must_list_exactly_readme_and_index(self):
+        fx = self.happy()
+        fx.write_manifest(files=[{"path": "README.md", "sha256": fx.sha("README.md")}])
+        self.assertProblem("files はちょうど")
+
+    def test_readme_sha_mismatch(self):
+        fx = self.happy()
+        fx.write_manifest()
+        (fx.dir / "README.md").write_text("# knowledge-notes\n\n手で書き換えた。\n", encoding="utf-8")
+        self.assertProblem("README.md: sha256 が manifest と一致しません")
+
+    def test_index_sha_mismatch(self):
+        fx = self.happy()
+        fx.write_manifest()
+        (fx.dir / "INDEX.md").write_text("# INDEX\n\n- exp-001\n", encoding="utf-8")
+        self.assertProblem("INDEX.md: sha256 が manifest と一致しません")
+
+    def test_index_scrub_pattern_hit(self):
+        fx = self.happy()
+        (fx.dir / "INDEX.md").write_text("# INDEX\n\n- 社内コード名ALPHA\n", encoding="utf-8")
+        fx.write_manifest()  # sha は一致させ、scrub だけで落ちることを確かめる
+        problems = self.assertProblem("INDEX.md: 3 行目: scrub_pattern")
+        self.assertFalse(any("sha256" in p for p in problems), problems)
+
+    def test_readme_scrub_pattern_hit(self):
+        fx = self.happy()
+        (fx.dir / "README.md").write_text("# notes\n\nsecret-project の記録\n", encoding="utf-8")
+        fx.write_manifest()
+        self.assertProblem("README.md: 3 行目: scrub_pattern")
+
+    def test_readme_missing(self):
+        fx = self.happy()
+        fx.write_manifest()
+        (fx.dir / "README.md").unlink()
+        self.assertProblem("README.md: ありません")
+
+    def test_readme_invalid_utf8_fails_closed(self):
+        fx = self.happy()
+        (fx.dir / "README.md").write_bytes(b"# notes\n\xff\xfe broken\n")
+        fx.write_manifest()
+        self.assertProblem("README.md: UTF-8 として読めません")
+
+    # --- シンボリックリンク ---
+
+    def test_symlinked_notes_dir_fails(self):
+        real = Fixture(self.root, dirname="real-notes")
+        real.add_note("exp-001")
+        real.write_manifest()
+        link = self.root / "knowledge-notes"
+        try:
+            link.symlink_to(real.dir, target_is_directory=True)
+        except (OSError, NotImplementedError) as error:
+            self.skipTest(f"symlink を作れない環境: {error}")
+        self.assertProblem("ディレクトリ自体がシンボリックリンク")
+        self.assertEqual(self.run_main(), 1)
+
+    def test_dangling_symlinked_notes_dir_fails(self):
+        link = self.root / "knowledge-notes"
+        try:
+            link.symlink_to(self.root / "nowhere", target_is_directory=True)
+        except (OSError, NotImplementedError) as error:
+            self.skipTest(f"symlink を作れない環境: {error}")
+        self.assertEqual(self.run_main(), 1)
 
     def test_explicit_missing_root_fails(self):
         with contextlib.redirect_stderr(io.StringIO()):
