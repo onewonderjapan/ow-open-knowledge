@@ -7,7 +7,7 @@ usage:
   python3 scripts/check_kb_export.py path/to/repo
 
 `knowledge-notes/` は非公開リポジトリ onewonderjapan/knowledge-base の
-`scripts/kb.py export-public` だけが生成する。手編集や、脱敏前の内容の混入を
+`kb export-public` だけが生成する。手編集や、脱敏前の内容の混入を
 防ぐための門番。ディレクトリがまだ無ければ何もせず 0 で終わる。
 
 検証内容:
@@ -36,7 +36,7 @@ NOTES_DIR = "knowledge-notes"
 MANIFEST = "manifest.json"
 INDEX_FILES = {"README.md", "INDEX.md"}
 MIN_SCRUB_PATTERNS = 3
-GENERATOR = "scripts/kb.py export-public"
+GENERATOR = "kb export-public"
 SOURCE_REPO = "onewonderjapan/knowledge-base"
 SOURCE_PREFIX = "knowledge-base@"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")

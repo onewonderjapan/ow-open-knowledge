@@ -66,7 +66,7 @@ class Fixture:
 
     def write_manifest(self, **overrides) -> None:
         manifest = {
-            "generator": "scripts/kb.py export-public",
+            "generator": "kb export-public",
             "source_repo": "onewonderjapan/knowledge-base",
             "source_commit": "abc1234def",
             "exported_at": "2026-09-25",

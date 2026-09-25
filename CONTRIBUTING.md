@@ -40,7 +40,7 @@ CI 在每个 PR 上跑同样的检查。
 
 ## knowledge-notes/ 是生成目录
 
-- `knowledge-notes/` 只由非公开知识库仓的 `scripts/kb.py export-public` 生成（脱敏后导出）。`manifest.json` 记录来源 commit、脱敏规则（`scrub_patterns`），以及目录内**所有文件**（每篇笔记与 README.md / INDEX.md）的 sha256。
+- `knowledge-notes/` 只由非公开知识库仓的 `kb export-public` 生成（脱敏后导出）。`manifest.json` 记录来源 commit、脱敏规则（`scrub_patterns`），以及目录内**所有文件**（每篇笔记与 README.md / INDEX.md）的 sha256。
 - **不要手工编辑**这个目录里的任何文件（包括 README.md、INDEX.md、manifest.json），也不要手工新增文件或改成软链接。内容有误或需要修改：开 issue，或在源知识库里改好后重新导出。
 - `python scripts/check_kb_export.py` 必须通过（CI 同样检查）：手改会让 sha256 对不上；笔记、README.md / INDEX.md 以及 manifest.json 本身（`scrub_patterns` 字段除外）都会按脱敏规则和内置禁止词表扫描，内部路径 / 术语混入会被拦下。
 
