@@ -271,6 +271,76 @@ class CheckKbExportTests(unittest.TestCase):
         self.assertIn("lab_inputs/", fx.scrub_patterns)
         self.assertEqual(self.module.check(self.root), [])
 
+    # --- 重複キーと生テキスト検査 ---
+
+    def write_raw_manifest(self, fx: Fixture, mutate) -> None:
+        """正規の manifest を書いてから生テキストを mutate で書き換える（json.dumps では作れない形用）。"""
+        fx.write_manifest()
+        path = fx.dir / "manifest.json"
+        path.write_text(mutate(path.read_text(encoding="utf-8")), encoding="utf-8")
+
+    def test_duplicate_top_level_key_fails(self):
+        fx = self.happy()
+        self.write_raw_manifest(
+            fx, lambda raw: raw.replace('"source_commit": ', '"source_commit": "/home/baibai",\n  "source_commit": ', 1)
+        )
+        problems = self.assertProblem("キー 'source_commit' が重複しています")
+        # 後勝ちで捨てられる値も、生テキスト検査で拾われる
+        self.assertTrue(any("生テキスト" in p and "/home/baibai" in p for p in problems), problems)
+
+    def test_duplicate_nested_key_fails(self):
+        fx = self.happy()
+        self.write_raw_manifest(fx, lambda raw: raw.replace('"id": "exp-001"', '"id": "x", "id": "exp-001"', 1))
+        self.assertProblem("キー 'id' が重複しています")
+        self.assertEqual(self.run_main(), 1)
+
+    def test_duplicate_key_without_denylist_value_still_fails(self):
+        fx = self.happy()
+        self.write_raw_manifest(
+            fx, lambda raw: raw.replace('"exported_at": ', '"exported_at": "2026-01-01",\n  "exported_at": ', 1)
+        )
+        self.assertProblem("キー 'exported_at' が重複しています")
+
+    def test_raw_text_denylist_outside_scrub_patterns(self):
+        fx = self.happy()
+        # JSON エスケープ（\\）越しの Windows パスも生テキストで当たる
+        fx.write_manifest(origin="C:\\video-plan")
+        problems = self.assertProblem("生テキスト")
+        self.assertTrue(any("'C:\\\\'" in p for p in problems), problems)
+
+    def test_raw_text_denylist_in_json_whitespace_region(self):
+        """値の外（パースで消える部分）に置かれた禁止語も拾う。"""
+        fx = self.happy()
+        self.write_raw_manifest(fx, lambda raw: raw.replace("{", "{\"172.72.0.1\": 1,", 1))
+        self.assertProblem("生テキスト")
+
+    def test_scrub_patterns_with_denylist_text_pass_raw_scan(self):
+        fx = self.happy()
+        fx.scrub_patterns = [
+            r"/home/baibai\S*",
+            r"172\.72\.\d+\.\d+",
+            "C:\\\\",  # 正規表現としての C:\\
+            "~/Base",
+            r"orchestration/[\w-]+",
+            r"(?i)lab_inputs/ \[\]{}:,",  # 括弧・カンマを含んでもトークン単位で塗れる
+        ]
+        fx.write_manifest()
+        self.assertEqual(self.module.check(self.root), [])
+
+    def test_scrub_patterns_escaped_slash_is_still_masked(self):
+        """exporter が `/` を `\\/` とエスケープして書いても、塗りつぶしはトークン単位なので通る。"""
+        fx = self.happy()
+        fx.scrub_patterns = ["~/outbox", "lab_inputs/", "orchestration/"]
+        self.write_raw_manifest(fx, lambda raw: raw.replace('"~/outbox"', '"~\\/outbox"'))
+        self.assertIn("~\\/outbox", (fx.dir / "manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(self.module.check(self.root), [])
+
+    def test_nested_scrub_patterns_key_is_not_masked(self):
+        """トップレベル以外の `scrub_patterns` は塗らない（隠れ蓑にさせない）。"""
+        fx = self.happy()
+        fx.write_manifest(extra={"scrub_patterns": ["/home/baibai"]})
+        self.assertProblem("生テキスト")
+
     # --- scrub_patterns の件数 ---
 
     def test_empty_scrub_patterns_fails(self):

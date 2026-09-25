@@ -20,7 +20,8 @@ usage:
 - 各ノートの frontmatter: `scope: public`、`source: knowledge-base@...`、
   `id` が manifest と一致、`type` が `digest` ではない
 - ノート・README.md・INDEX.md が manifest の scrub_patterns にも、下の DENYLIST にも当たらない
-- manifest.json 自体（`scrub_patterns` の値を除く全キー・全文字列）も同じく検査する
+- manifest.json 自体（`scrub_patterns` の値を除く全キー・全文字列）も同じく検査する。
+  重複キーは拒否し、生テキストにも（`scrub_patterns` 配列の文字列トークンだけ塗って）DENYLIST をかける
 """
 from __future__ import annotations
 
@@ -201,6 +202,82 @@ def _check_manifest_schema(manifest, problems: list[str]):
     return patterns, notes, files
 
 
+class DuplicateKeyError(ValueError):
+    pass
+
+
+def _reject_duplicate_keys(pairs):
+    """json.loads は重複キーの後勝ちで先の値を黙って捨てる。捨てられた値は検査されないので拒否する。"""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise DuplicateKeyError(f"キー {key!r} が重複しています（後勝ちで先の値が検査を逃れる）")
+        result[key] = value
+    return result
+
+
+JSON_TOKEN_RE = re.compile(r'"(?:[^"\\]|\\.)*"|[\[\]{}:,]|[^\s\[\]{}:,"]+')
+
+
+def scrub_pattern_spans(raw: str) -> list[tuple[int, int, str]]:
+    """生の manifest テキスト上で、トップレベル `scrub_patterns` 配列の各文字列トークンの
+    (start, end, デコード値) を返す。文字列はトークン単位で扱うので、値の中の括弧やエスケープ
+    （`\\/` など）に惑わされない。"""
+    tokens = list(JSON_TOKEN_RE.finditer(raw))
+    spans: list[tuple[int, int, str]] = []
+    depth = 0
+    index = 0
+    while index < len(tokens):
+        text = tokens[index].group(0)
+        if text in "{[" and len(text) == 1:
+            depth += 1
+        elif text in "}]" and len(text) == 1:
+            depth -= 1
+        elif (
+            depth == 1
+            and text.startswith('"')
+            and index + 2 < len(tokens)
+            and tokens[index + 1].group(0) == ":"
+            and tokens[index + 2].group(0) == "["
+        ):
+            try:
+                key = json.loads(text)
+            except ValueError:
+                key = None
+            if key == "scrub_patterns":
+                depth += 1  # 開き `[` の分
+                inner = 0
+                index += 3
+                while index < len(tokens):
+                    token = tokens[index]
+                    value = token.group(0)
+                    if value in ("[", "{"):
+                        inner += 1
+                    elif value in ("]", "}"):
+                        if inner == 0:
+                            break
+                        inner -= 1
+                    elif inner == 0 and value.startswith('"'):
+                        try:
+                            spans.append((token.start(), token.end(), json.loads(value)))
+                        except ValueError:
+                            pass
+                    index += 1
+                continue  # 閉じ `]` は次の周回で depth を戻す
+        index += 1
+    return spans
+
+
+def raw_manifest_denylist_hits(raw: str, spans: list[tuple[int, int, str]]) -> list[str]:
+    """scrub_patterns の文字列トークンだけを空白で塗り（行番号は保つ）、残りの生テキストに DENYLIST をかける。"""
+    chars = list(raw)
+    for start, end, _ in spans:
+        for position in range(start, end):
+            if chars[position] != "\n":
+                chars[position] = " "
+    return denylist_hits("".join(chars))
+
+
 def _manifest_strings(value, where: str = "$"):
     """manifest の全キー・全文字列を (JSON パス, 文字列) で列挙する。"""
     if isinstance(value, dict):
@@ -257,14 +334,32 @@ def check(root: Path) -> list[str]:
             text = on_disk[name].read_text(encoding="utf-8", errors="replace")
             problems.extend(f"{NOTES_DIR}/{name}: {hit}" for hit in denylist_hits(text))
         return problems
+    shown_manifest = f"{NOTES_DIR}/{MANIFEST}"
     try:
-        manifest = json.loads(manifest_path.read_bytes().decode("utf-8"))
-    except (UnicodeError, json.JSONDecodeError) as error:
-        problems.append(f"{NOTES_DIR}/{MANIFEST}: JSON として読めません ({error})")
+        raw_manifest = manifest_path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError as error:
+        problems.append(f"{shown_manifest}: UTF-8 として読めません ({error})")
+        return problems
+    # 生テキスト検査: パースで捨てられる値（重複キーの先の値など）も含め、
+    # scrub_patterns 配列の文字列トークン以外に禁止語があってはいけない。
+    spans = scrub_pattern_spans(raw_manifest)
+    problems.extend(f"{shown_manifest}: 生テキスト {hit}" for hit in raw_manifest_denylist_hits(raw_manifest, spans))
+    try:
+        manifest = json.loads(raw_manifest, object_pairs_hook=_reject_duplicate_keys)
+    except DuplicateKeyError as error:
+        problems.append(f"{shown_manifest}: {error}")
+        return problems
+    except ValueError as error:
+        problems.append(f"{shown_manifest}: JSON として読めません ({error})")
         return problems
     schema_problems: list[str] = []
     patterns, notes, index_entries = _check_manifest_schema(manifest, schema_problems)
     problems.extend(f"{NOTES_DIR}/{p}" for p in schema_problems)
+    if isinstance(manifest, dict) and isinstance(manifest.get("scrub_patterns"), list):
+        if [value for _, _, value in spans] != manifest["scrub_patterns"]:
+            problems.append(
+                f"{shown_manifest}: 生テキスト上の scrub_patterns を特定できません（塗りつぶし範囲が不確定）"
+            )
 
     # manifest 自体も公開物。scrub_patterns の値（検出語そのもの）だけは除いて検査する。
     if isinstance(manifest, dict):
