@@ -8,7 +8,7 @@ summary: "12 道自有任务（代码/剧本/日文邮件）× 5 模型三盲盲
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@8256ce7
+source: knowledge-base@ae7059e
 ---
 
 # 自有任务多模型盲测与价格×能力象限
@@ -41,4 +41,4 @@ source: knowledge-base@8256ce7
 - AI 会员与 API 价格指数 — supports: 价格轴来源。
 - AI 模型情报与能力评分 — supports: 榜单名次轴来源。
 - [新加坡 GeBIZ 投标窗口分布实测（8 周观察，L-20）](gebiz-window-ledger.md) — see-also: 同批（2026-09-06）lab 实验。
-- [会员订阅 vs API 按量计费交叉点实测](subscription-vs-api-crossover.md) — see-also: 同批价格侧实验，计费口径互补。
+- 会员订阅 vs API 按量计费交叉点实测— see-also: 同批价格侧实验，计费口径互补。

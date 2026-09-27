@@ -8,7 +8,7 @@ summary: "8 周窗口观察第 1 周：台账已建（[internal path]），首�
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@8256ce7
+source: knowledge-base@ae7059e
 ---
 
 # 新加坡 GeBIZ 投标窗口分布实测（8 周观察，L-20）
@@ -33,4 +33,4 @@ source: knowledge-base@8256ce7
 ## Related
 
 - 新加坡 IT 机会 · 情报速览 — supports: 数据源。
-- [三级成熟度自评问卷 v1](maturity-quiz-v1.md) — see-also: 同批（2026-09-06）lab 实验。
+- 三级成熟度自评问卷 v1— see-also: 同批（2026-09-06）lab 实验。
