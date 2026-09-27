@@ -8,8 +8,8 @@ summary: "实验已执行（batch_s1_v1，11 卡人审 11 对局 finalized 2026-
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@8256ce7
-related: [20260904-video-gen-model-pilot, 20260905-pet-tournament-physics-rerun]
+source: knowledge-base@ae7059e
+related: [20260904-video-gen-model-pilot]
 ---
 
 # 观众语言模型评审 ↔ 人审相关性持续校准（规则 6–9 生效后复测）
@@ -72,4 +72,4 @@ related: [20260904-video-gen-model-pilot, 20260905-pet-tournament-physics-rerun]
 ## Related
 
 - [视频生成模型小样评测：同组提示词的稳定性对比](video-gen-model-pilot.md) — supports：实验类笔记的字段规范与预注册写法来源。
-- [物理常识规则生效后锦标赛机评 ↔ 人审复测](pet-tournament-physics-rerun.md) — see-also：姊妹管线（pet_drama）的同型实验，其「规则生效后转正」结果与本页「未转正」形成跨管线对照。
+- 物理常识规则生效后锦标赛机评 ↔ 人审复测 — see-also：姊妹管线（pet_drama）的同型实验，其「规则生效后转正」结果与本页「未转正」形成跨管线对照。

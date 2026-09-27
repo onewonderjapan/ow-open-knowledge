@@ -8,7 +8,7 @@ summary: "本主题的调查规程：对象是 AI 做视觉产出（3D 渲染 / 
 lang: zh
 type: research
 scope: public
-source: knowledge-base@8256ce7
+source: knowledge-base@ae7059e
 related: [20260925-render-3d-landscape, 20260925-codegen-2d-landscape]
 ---
 
