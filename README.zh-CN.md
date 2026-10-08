@@ -65,6 +65,7 @@ python3 task-orchestrator/scripts/scan_skills.py --cwd . --pretty \
 |------|------|------|
 | ⭐ [agent-cultivation/](agent-cultivation/) | **核心资产**。Agent 育成标准（五条原则 + 三层固化）、既存 agent 训练指南、新项目 STARTUP 标准、数据安全分级规则、个人工作台 skill 组 | 日 / 中混写 |
 | [ai-stack/](ai-stack/) | 企业 AI 导入参考实现：需求书→脱敏→社内先例检索（RAG）→LLM 起草→质检 的端到端薄切片 | 日文（README 英 + 日） |
+| [kenzu-ai](https://github.com/onewonderjapan/kenzu-ai) ⚠️ private | 图纸检图 AI 参考实现：读 2D 图纸 PDF，带证据标出不备，并抽取涂装要求生成 3D 样品＋发包指示书（19 条规则，自测 24/24） | 日文 |
 | [workflow-standard/](workflow-standard/) | 自动化工作流构建标准：四阶段闭环 + 7 条铁则 + 新工作流脚手架 | 中文（README 英文） |
 | [task-orchestrator/](task-orchestrator/) | 自然语言任务总控 skill：技能路由→计划审批→持续执行→分层学习（纯标准库） | 英文 |
 | [dev-pipeline/](dev-pipeline/) | 6-agent 开发管线：Dispatcher/Investigator/Analyst/Developer/Reviewer/Tester + 自我学习 | 日文（README 英 + 日） |
@@ -102,6 +103,7 @@ python ui/app.py    # → http://127.0.0.1:7877
 - [wonder-contact-terraform](https://github.com/onewonderjapan/wonder-contact-terraform) — 官网问询表单基础设施（Terraform）
 - [rds-glue-s3-etl-pipeline](https://github.com/onewonderjapan/rds-glue-s3-etl-pipeline) — AWS Glue (PySpark) ETL：S3 JSON 与 RDS 合并、Secrets Manager 凭据管理、Slack 通知
 - [owd-knowledge-hub](https://github.com/onewonderjapan/owd-knowledge-hub) — 组织知识门户
+- [kenzu-ai](https://github.com/onewonderjapan/kenzu-ai) ⚠️ private — 图纸检图 AI：读 2D 图纸 PDF，带证据标出不备，并抽取涂装要求生成 3D 样品＋发包指示书。与 `ai-stack/` 同一「企业 AI 导入」模式的落地案例
 
 ## 贡献
 

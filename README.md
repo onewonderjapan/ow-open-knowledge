@@ -67,6 +67,7 @@ Copy a skill folder into `.claude/skills/` or `.agents/skills/` in *your* projec
 |-----------|---------------|----------|
 | ⭐ [agent-cultivation/](agent-cultivation/) | **The core asset.** Agent Cultivation Standard (5 principles + three-layer consolidation), training guide for existing agents, new-project startup standard, data classification rules, and a personal workbench skill set | JA / ZH (mixed) |
 | [ai-stack/](ai-stack/) | Enterprise AI adoption reference implementation: requirement doc → masking → in-house precedent search (RAG) → LLM drafting → local verification, end to end | JA (READMEs EN + JA) |
+| [kenzu-ai](https://github.com/onewonderjapan/kenzu-ai) ⚠️ private | Drawing-review AI reference implementation: read a 2D drawing PDF, flag defects with evidence, and extract coating requirements into a 3D sample + work instruction (19 rules, self-test 24/24) | JA |
 | [workflow-standard/](workflow-standard/) | Automation workflow building standard: four-phase loop + 7 iron rules + a scaffold for new workflows | ZH (README EN) |
 | [task-orchestrator/](task-orchestrator/) | A master skill for natural-language tasks: skill routing → plan approval → sustained execution → layered learning (standard library only) | EN |
 | [dev-pipeline/](dev-pipeline/) | A 6-agent development pipeline: Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester with self-learning | JA (READMEs EN + JA) |
@@ -104,6 +105,7 @@ python ui/app.py    # → http://127.0.0.1:7877
 - [wonder-contact-terraform](https://github.com/onewonderjapan/wonder-contact-terraform) — homepage contact form infrastructure (Terraform)
 - [rds-glue-s3-etl-pipeline](https://github.com/onewonderjapan/rds-glue-s3-etl-pipeline) — AWS Glue (PySpark) ETL: merge S3 JSON with RDS, Secrets Manager credentials, Slack notifications
 - [owd-knowledge-hub](https://github.com/onewonderjapan/owd-knowledge-hub) — organization knowledge portal
+- [kenzu-ai](https://github.com/onewonderjapan/kenzu-ai) ⚠️ private — drawing-review AI: read a 2D drawing PDF, flag defects with evidence, and extract coating requirements into a 3D sample + work instruction. An applied case of the AI-adoption pattern used in `ai-stack/`
 
 ## Contributing
 
