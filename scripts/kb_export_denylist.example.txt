@@ -1,0 +1,14 @@
+# check_kb_export.py のローカル禁止語リスト（書式例。値はすべてダミー）
+#
+# 使い方: このファイルを scripts/kb_export_denylist.local.txt にコピーし、
+# 組織固有の語（社内ユーザー名入りのパス、社内ディレクトリ名、内部ホスト名・IP 接頭辞など）に置き換える。
+# local.txt は .gitignore 済み。絶対にコミットしない（公開リポジトリのため）。
+# 別の場所に置く場合は環境変数 KB_EXPORT_DENYLIST_FILE にパスを、
+# CI では改行区切りの語を環境変数 KB_EXPORT_DENYLIST（シークレット）に渡す。
+#
+# 1 行 1 語。大文字小文字を区別しない部分一致。# 以降はコメント。
+/home/example-user
+~/example-outbox
+example-internal-dir/
+example-internal-repo
+10.99.

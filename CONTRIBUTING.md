@@ -42,7 +42,8 @@ CI 在每个 PR 上跑同样的检查。
 
 - `knowledge-notes/` 只由非公开知识库仓的 `kb export-public` 生成（脱敏后导出）。`manifest.json` 记录来源 commit、脱敏规则（`scrub_patterns`），以及目录内**所有文件**（每篇笔记与 README.md / INDEX.md）的 sha256。
 - **不要手工编辑**这个目录里的任何文件（包括 README.md、INDEX.md、manifest.json），也不要手工新增文件或改成软链接。内容有误或需要修改：开 issue，或在源知识库里改好后重新导出。
-- `python scripts/check_kb_export.py` 必须通过（CI 同样检查）：手改会让 sha256 对不上；笔记、README.md / INDEX.md 以及 manifest.json 本身（`scrub_patterns` 字段除外）都会按脱敏规则和内置禁止词表扫描，内部路径 / 术语混入会被拦下。
+- `python scripts/check_kb_export.py` 必须通过（CI 同样检查）：手改会让 sha256 对不上；笔记、README.md / INDEX.md 以及 manifest.json 本身（`scrub_patterns` 字段除外）都会按脱敏规则和通用禁止模式（`/home/<user>`、Windows 盘符路径、RFC1918 内网 IP、各类 token）扫描，内部路径 / 术语混入会被拦下。
+  - 组织特有的禁止词（内部用户名、内部目录名、内部主机名等）**不写进本公开仓库**：复制 `scripts/kb_export_denylist.example.txt`（全是示例值）为 `scripts/kb_export_denylist.local.txt`（已 gitignore）再填真实值；或用环境变量 `KB_EXPORT_DENYLIST`（换行分隔）/ `KB_EXPORT_DENYLIST_FILE`（文件路径）传入。命中时日志只报"ローカル禁止語に一致"，不回显词本身。
 
 ## 安全问题不要开公开 issue
 
@@ -58,26 +59,3 @@ CI 在每个 PR 上跑同样的检查。
 ## License
 
 提交即表示你同意以 [MIT](LICENSE) 许可证发布你的贡献。
-
-
-## Bot 协作轨（2026-09-11 起）
-
-本仓有三条协作分支。它们都**不是仓库正本**，默认不合并进 main；经机主内容 review 后可例外合入（先例：2026-09-13、2026-09-15 机主令合并），只作为建议与反馈的输送通道：
-
-| 分支 | 目录 | 写入方 | 读取方 | 用途 |
-|---|---|---|---|---|
-| `grok/knowledge` | `grok-inbox/` | 专管 Grok Bot | 开发 agent | Bot 定期推送的知识 / 建议 / 风险提醒（条目 `GK-<仓>-YYYYMMDD-NN`） |
-| `grok/feedback` | `grok-feedback/` | 开发 agent / 机主 | 专管 Grok Bot | 对 GK 条目的采纳 / 拒绝 / 修正要求（条目 `GF-<仓>-YYYYMMDD-NN`） |
-| `claude/review` | `claude-review/` | Claude（开发侧 review） | 开发 agent / 机主 | 对仓内容本身的 review 建议（条目 `CR-<仓>-YYYYMMDD-NN`） |
-
-开发 agent 每次会话开始：
-
-```bash
-git fetch origin grok/knowledge grok/feedback claude/review
-git show origin/grok/knowledge --stat --oneline   # 看最新 GK 条目
-```
-
-- 读 `grok-inbox/` 最新条目当**建议输入**，不当已生效规则。
-- 对 GK 的裁定写进 `grok/feedback`，**不直接写 `grok/knowledge`**（那是 Bot 专属写入分支）。
-- 要落地的改动走正常 PR → `main`，PR 描述引用对应 GK / CR 条目 ID。
-- 专管 Bot 只写 `grok/knowledge`，运行前读 `grok/feedback`；禁止 push `main`。

@@ -20,3 +20,6 @@ dev-pipeline/output/
 Thumbs.db
 .idea/
 .vscode/
+
+# check_kb_export.py のローカル禁止語（組織固有。コミット禁止）
+scripts/kb_export_denylist.local.txt
