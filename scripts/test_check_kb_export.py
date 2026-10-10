@@ -50,6 +50,7 @@ class Fixture:
         self.scrub_patterns = [r"社内コード名\w+", r"(?i)secret-project", r"lab_inputs/"]
         (self.dir / "README.md").write_text("# knowledge-notes\n\n生成物。手編集しない。\n", encoding="utf-8")
         (self.dir / "INDEX.md").write_text("# INDEX\n\n- exp-001\n- exp-002\n", encoding="utf-8")
+        (self.dir / "LICENSE").write_text("MIT License\n\nCopyright (c) 2026 Example\n", encoding="utf-8")
 
     def sha(self, name: str) -> str:
         return hashlib.sha256((self.dir / name).read_bytes()).hexdigest()
@@ -73,7 +74,7 @@ class Fixture:
             "count": len(self.notes),
             "scrub_patterns": self.scrub_patterns,
             "notes": self.notes,
-            "files": [{"path": n, "sha256": self.sha(n)} for n in ("README.md", "INDEX.md")],
+            "files": [{"path": n, "sha256": self.sha(n)} for n in ("README.md", "INDEX.md", "LICENSE")],
         }
         manifest.update(overrides)
         (self.dir / "manifest.json").write_text(
@@ -370,6 +371,18 @@ class CheckKbExportTests(unittest.TestCase):
         fx = self.happy()
         fx.write_manifest(files=[{"path": "README.md", "sha256": fx.sha("README.md")}])
         self.assertProblem("files はちょうど")
+
+    def test_license_must_be_mit(self):
+        fx = self.happy()
+        (fx.dir / "LICENSE").write_text("Proprietary\n", encoding="utf-8")
+        fx.write_manifest()
+        self.assertProblem("LICENSE: MIT License ではありません")
+
+    def test_license_missing(self):
+        fx = self.happy()
+        fx.write_manifest()
+        (fx.dir / "LICENSE").unlink()
+        self.assertProblem("LICENSE: ありません")
 
     def test_readme_sha_mismatch(self):
         fx = self.happy()

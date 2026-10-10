@@ -7,6 +7,15 @@
 
 ## [Unreleased]
 
+### Removed
+
+- 从 main 移除 bot 协作工作流内容（按机主 2026-10-10 决定：工作流程不属于公开知识）：`grok-inbox/`、`grok-feedback/`、`claude-review/`、`docs/bot-handbooks/`、`docs/multi-bot-periodic-collab-plan*.md`，以及 CONTRIBUTING.md 的「Bot 协作轨」一节。只删除当前树，不改写 git 历史。
+- `knowledge-notes/` 撤下 3 篇：`gebiz-window-ledger`（主体是内部台账流程，结论未成形）、`judge-human-calibration-rerun`（自家评审系统的批次记录）、`video-gen-model-pilot`（协议未执行、没有结论）。知识库侧已改回 `scope: internal`，由 `kb export-public` 重新导出（4 篇）。
+
+### Added
+
+- `knowledge-notes/LICENSE`：公开笔记以 MIT License 发布，由 exporter 生成并记入 `manifest.json` 的 `files`；`scripts/check_kb_export.py` 相应要求 LICENSE 存在、sha256 一致且为 MIT。
+
 ### Security
 
 - **脱敏层的 PII 漏出路径**（`ai-stack/masking/masker.py`）。修复前，以下四种日文商务文档中的常见写法全部原文穿透，未被打码：

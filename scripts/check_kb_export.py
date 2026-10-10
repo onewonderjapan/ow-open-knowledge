@@ -14,12 +14,13 @@ usage:
 - `knowledge-notes/` 自体・中身のどれもシンボリックリンクではない
 - `manifest.json` のスキーマ（generator / source_repo / source_commit /
   exported_at / count / scrub_patterns（3 件以上）/ notes / files）
-- 直下の README.md / INDEX.md は `files` に、それ以外の全 `*.md` は `notes` に載り、
+- 直下の README.md / INDEX.md / LICENSE は `files` に、それ以外の全 `*.md` は `notes` に載り、
   sha256 が一致する。載っているパスは全て実在し、count も一致する。
-  manifest.json 以外の非 md ファイルは不可。全ファイル strict UTF-8（BOM なし）
+  manifest.json と LICENSE 以外の非 md ファイルは不可。全ファイル strict UTF-8（BOM なし）
+- LICENSE は MIT License（公開ノートのライセンス。2026-10-10 から exporter が生成）
 - 各ノートの frontmatter: `scope: public`、`source: knowledge-base@...`、
   `id` が manifest と一致、`type` が `digest` ではない
-- ノート・README.md・INDEX.md が manifest の scrub_patterns にも、下の DENYLIST にも当たらない
+- ノート・README.md・INDEX.md・LICENSE が manifest の scrub_patterns にも、下の DENYLIST にも当たらない
 - manifest.json 自体（`scrub_patterns` の値を除く全キー・全文字列）も同じく検査する。
   重複キーは拒否し、生テキストにも（`scrub_patterns` 配列の文字列トークンだけ塗って）DENYLIST をかける
 """
@@ -34,7 +35,9 @@ from pathlib import Path, PurePosixPath
 
 NOTES_DIR = "knowledge-notes"
 MANIFEST = "manifest.json"
-INDEX_FILES = {"README.md", "INDEX.md"}
+INDEX_FILES = {"README.md", "INDEX.md", "LICENSE"}
+LICENSE_FILE = "LICENSE"
+LICENSE_HEAD = "MIT License"
 MIN_SCRUB_PATTERNS = 3
 GENERATOR = "kb export-public"
 SOURCE_REPO = "onewonderjapan/knowledge-base"
@@ -174,7 +177,7 @@ def _check_manifest_schema(manifest, problems: list[str]):
     files = []
     raw_files = manifest.get("files")
     if not isinstance(raw_files, list):
-        problems.append(f"{MANIFEST}: files が配列ではありません（README.md / INDEX.md の sha256 が必要）")
+        problems.append(f"{MANIFEST}: files が配列ではありません（README.md / INDEX.md / LICENSE の sha256 が必要）")
     else:
         for position, entry in enumerate(raw_files):
             keys = ("path", "sha256")
@@ -397,7 +400,7 @@ def check(root: Path) -> list[str]:
             text = path.read_text(encoding="utf-8", errors="replace")
             problems.extend(f"{NOTES_DIR}/{name}: {hit}" for hit in denylist_hits(text))
 
-    # README.md / INDEX.md: manifest.files の sha256、strict UTF-8、scrub_patterns + DENYLIST。
+    # README.md / INDEX.md / LICENSE: manifest.files の sha256、strict UTF-8、scrub_patterns + DENYLIST。
     index_listed = {entry["path"]: entry for entry in index_entries if entry["path"] in INDEX_FILES}
     for name in sorted(INDEX_FILES):
         shown = f"{NOTES_DIR}/{name}"
@@ -413,6 +416,8 @@ def check(root: Path) -> list[str]:
         text = _read_exported(path, shown, entry["sha256"], problems)
         if text is None:
             continue
+        if name == LICENSE_FILE and not text.startswith(LICENSE_HEAD):
+            problems.append(f"{shown}: MIT License ではありません（公開ノートは MIT）")
         problems.extend(f"{shown}: {hit}" for hit in scrub_hits(text, patterns) + denylist_hits(text))
 
     for path_str, entry in listed.items():

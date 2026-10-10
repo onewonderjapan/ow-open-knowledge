@@ -8,7 +8,7 @@ summary: "代码生成 2D 五层盘点（as-of 2026-09-25）：最高星的是�
 lang: zh
 type: research
 scope: public
-source: knowledge-base@ae7059e
+source: knowledge-base@5e40ad1
 related: [20260925-gh-research-framework, 20260925-render-3d-landscape]
 ---
 
