@@ -20,15 +20,26 @@ usage:
 - LICENSE は MIT License（公開ノートのライセンス。2026-10-10 から exporter が生成）
 - 各ノートの frontmatter: `scope: public`、`source: knowledge-base@...`、
   `id` が manifest と一致、`type` が `digest` ではない
-- ノート・README.md・INDEX.md・LICENSE が manifest の scrub_patterns にも、下の DENYLIST にも当たらない
+- ノート・README.md・INDEX.md・LICENSE が manifest の scrub_patterns にも、下の汎用禁止パターン
+  （GENERIC_DENY: /home/<user>、Windows ドライブパス、RFC1918 プライベート IP、各種トークン）にも、
+  ローカル禁止語リストにも当たらない
 - manifest.json 自体（`scrub_patterns` の値を除く全キー・全文字列）も同じく検査する。
-  重複キーは拒否し、生テキストにも（`scrub_patterns` 配列の文字列トークンだけ塗って）DENYLIST をかける
+  重複キーは拒否し、生テキストにも（`scrub_patterns` 配列の文字列トークンだけ塗って）同じ禁止検査をかける
+
+組織固有の禁止語（社内ユーザー名、社内ディレクトリ名、内部ホスト名など）はこの公開リポジトリに書かない。
+次のどちらかで渡す（両方あれば両方使う。大文字小文字は区別しない部分一致）:
+- 環境変数 `KB_EXPORT_DENYLIST`: 改行区切りの語
+- ローカルファイル: 環境変数 `KB_EXPORT_DENYLIST_FILE` のパス、未指定なら
+  `scripts/kb_export_denylist.local.txt`（.gitignore 済み・コミット禁止）。1 行 1 語、`#` 以降はコメント
+書式の例は `scripts/kb_export_denylist.example.txt`（汎用のダミー値のみ）。
+CI ではローカル語が無いので汎用パターンだけが効く。必要なら CI シークレットを `KB_EXPORT_DENYLIST` に渡す。
 """
 from __future__ import annotations
 
 import datetime
 import hashlib
 import json
+import os
 import re
 import sys
 from pathlib import Path, PurePosixPath
@@ -47,17 +58,41 @@ SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 KEY_RE = re.compile(r"^([A-Za-z0-9_-]+):\s*(.*)$")
 LIST_ITEM_RE = re.compile(r"^\s+-\s*(.*)$")
 
-# 内部パス・内部構成の断片。exporter の scrub_patterns が差し替えられても、
-# これだけは公開物に出てはいけない（大文字小文字は区別しない）。
-DENYLIST = (
-    "/home/baibai",
-    "172.72.",
-    "C:\\",
-    "~/Base",
-    "~/outbox",
-    "lab_inputs/",
-    "orchestration/",
+# 汎用の禁止パターン（組織固有の値は含めない）。exporter の scrub_patterns が差し替えられても、
+# これらは公開物に出てはいけない。
+GENERIC_DENY = (
+    ("/home/<user> パス", re.compile(r"/(?:home|users)/[A-Za-z0-9._-]+", re.I)),
+    ("Windows ドライブパス", re.compile(r"(?<![A-Za-z0-9_])[A-Za-z]:\\")),
+    ("RFC1918 プライベート IP", re.compile(
+        r"(?<![\d.])(?:10(?:\.\d{1,3}){3}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}|192\.168(?:\.\d{1,3}){2})(?![\d.])")),
+    ("AWS アクセスキー", re.compile(r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b")),
+    ("GitHub トークン", re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})")),
+    ("API キー (sk-)", re.compile(r"\bsk-[A-Za-z0-9_-]{20,}")),
+    ("Slack トークン", re.compile(r"\bxox[abprs]-[A-Za-z0-9-]{10,}")),
+    ("秘密鍵", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
 )
+LOCAL_DENYLIST_ENV = "KB_EXPORT_DENYLIST"
+LOCAL_DENYLIST_FILE_ENV = "KB_EXPORT_DENYLIST_FILE"
+LOCAL_DENYLIST_DEFAULT = Path(__file__).resolve().parent / "kb_export_denylist.local.txt"
+
+
+def load_local_denylist() -> tuple[str, ...]:
+    """環境変数とローカルファイル（未コミット）から組織固有の禁止語を読む。無ければ空。"""
+    terms: list[str] = []
+    terms.extend(os.environ.get(LOCAL_DENYLIST_ENV, "").splitlines())
+    path = Path(os.environ[LOCAL_DENYLIST_FILE_ENV]) if os.environ.get(LOCAL_DENYLIST_FILE_ENV) else LOCAL_DENYLIST_DEFAULT
+    if path.is_file():
+        terms.extend(path.read_text(encoding="utf-8").splitlines())
+    out = []
+    for term in terms:
+        term = term.split("#", 1)[0].strip()
+        if term and term not in out:
+            out.append(term)
+    return tuple(out)
+
+
+# 部分一致の禁止語（ローカルからのみ）。テストからは差し替えられる。
+DENYLIST: tuple[str, ...] = load_local_denylist()
 
 
 def _unquote(value: str) -> str:
@@ -108,11 +143,16 @@ def _line_of(text: str, index: int) -> int:
 
 def denylist_hits(text: str) -> list[str]:
     hits = []
+    for label, rx in GENERIC_DENY:
+        m = rx.search(text)
+        if m:
+            hits.append(f"{_line_of(text, m.start())} 行目: 禁止パターン（{label}）")
     folded = text.casefold()
     for term in DENYLIST:
         index = folded.find(term.casefold())
         if index != -1:
-            hits.append(f"{_line_of(text, index)} 行目: 禁止語 {term!r}")
+            # 語そのものは出力しない（CI ログも公開されるため）
+            hits.append(f"{_line_of(text, index)} 行目: ローカル禁止語に一致")
     return hits
 
 
