@@ -27,6 +27,7 @@ OneWonder Japan の公開ナレッジベース。実戦で検証してきた AI 
 | ビジネス文書を LLM に渡しても人名や電話を漏らさない | [ai-stack/](ai-stack/) |
 | 蒸留済みの AWS/クラウド手順（または「やるな」リスト）を使う | [cloud-patterns/](cloud-patterns/) |
 | Git / Teams / メールの約束を見る | [team-norms/](team-norms/) |
+| チームの公開エクスポート研究ノートを読む（事前登録実験、GitHub 高星サーベイ；中国語） | [knowledge-notes/](knowledge-notes/) |
 
 ### 同じ考えが三箇所にある
 
@@ -71,6 +72,11 @@ python3 task-orchestrator/scripts/scan_skills.py --cwd . --pretty \
 | [dev-pipeline/](dev-pipeline/) | 6 エージェント開発パイプライン：Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester＋自己学習 | 日本語（README 英 + 日） |
 | [cloud-patterns/](cloud-patterns/) | クラウドパターン skill 集：Glue×RDS 結合、API Gateway＋Lambda＋SES 問い合わせフォーム、Form→IAM、Terraform の落とし穴 | 中国語（README 英語） |
 | [team-norms/](team-norms/) | チーム規範：Git 使用規範、Teams チャットマナー、ビジネスメール基礎 | 日本語 |
+| [knowledge-notes/](knowledge-notes/) | 社内ナレッジベース `kb export-public` が公開するノート（事前登録実験、GitHub 高星サーベイ）。読み取り専用で、再エクスポートで丸ごと上書きされる | 中国語 |
+| [docs/](docs/) | マルチボット定期協業計画（part1–5 分冊）とリポジトリ別ボット手則 | 中国語 |
+| [grok-inbox/](grok-inbox/) | 専任 Grok ボットが定期的にプッシュするナレッジ/提案エントリ（サイクル単位で main に吸収。提案であり確定規則ではない） | 中国語 |
+| [grok-feedback/](grok-feedback/) | 開発側 → 専任 Grok ボットへのフィードバック軌（inbox エントリへの採用/却下/修正） | 中国語 |
+| [claude-review/](claude-review/) | Claude（開発側レビュー）によるリポジトリ内容へのレビュー提案軌 | 中国語 |
 
 ## クイックスタート
 

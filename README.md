@@ -73,6 +73,11 @@ Copy a skill folder into `.claude/skills/` or `.agents/skills/` in *your* projec
 | [dev-pipeline/](dev-pipeline/) | A 6-agent development pipeline: Dispatcher / Investigator / Analyst / Developer / Reviewer / Tester with self-learning | JA (READMEs EN + JA) |
 | [cloud-patterns/](cloud-patterns/) | Cloud architecture skills: Glue×RDS merge, API Gateway + Lambda + SES contact form, Form→IAM, Terraform pitfalls | ZH (README EN) |
 | [team-norms/](team-norms/) | Team norms: Git conventions, Teams chat manners, business email basics | JA |
+| [knowledge-notes/](knowledge-notes/) | Notes exported from the internal knowledge base by `kb export-public` (pre-registered experiments, GitHub landscape surveys); read-only — the directory is re-exported wholesale | ZH |
+| [docs/](docs/) | Multi-bot periodic collaboration plan (parts 1–5) and per-repository bot handbooks | ZH |
+| [grok-inbox/](grok-inbox/) | Knowledge/suggestion entries periodically pushed by the dedicated Grok bot (cycles absorbed onto main; suggestions, not merged rules) | ZH |
+| [grok-feedback/](grok-feedback/) | Dev-side feedback track to the Grok bot: accept / reject / correction rulings on inbox items | ZH |
+| [claude-review/](claude-review/) | Claude's content-review suggestions for this repository | ZH |
 
 ## Quick start
 

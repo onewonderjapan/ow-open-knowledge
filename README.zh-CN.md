@@ -27,6 +27,7 @@ OneWonder Japan 的公开知识库：把内部实战中蒸馏出来的 AI Agent 
 | 把商务文档送给 LLM，且不漏出人名和电话 | [ai-stack/](ai-stack/) |
 | 复用蒸馏过的 AWS/云流程（或它的「不要做」清单） | [cloud-patterns/](cloud-patterns/) |
 | 查 Git / Teams / 邮件约定 | [team-norms/](team-norms/) |
+| 读团队的公开导出研究笔记（预注册实验、GitHub 高星盘点；中文） | [knowledge-notes/](knowledge-notes/) |
 
 ### 同一个概念，写了三遍
 
@@ -71,6 +72,11 @@ python3 task-orchestrator/scripts/scan_skills.py --cwd . --pretty \
 | [dev-pipeline/](dev-pipeline/) | 6-agent 开发管线：Dispatcher/Investigator/Analyst/Developer/Reviewer/Tester + 自我学习 | 日文（README 英 + 日） |
 | [cloud-patterns/](cloud-patterns/) | 云架构模式 skill：Glue×RDS 合并、API Gateway+Lambda+SES 表单、Form→IAM、Terraform 踩坑 | 中文（README 英文） |
 | [team-norms/](team-norms/) | 团队协作规范：Git 使用规范、Teams 聊天礼仪、商务邮件基础 | 日文 |
+| [knowledge-notes/](knowledge-notes/) | 内部知识库 `kb export-public` 导出的公开笔记（预注册实验、GitHub 高星盘点）；只读，整目录重导出覆盖 | 中文 |
+| [docs/](docs/) | 多 Bot 定期协作计划（分册 part1–5）与各仓 Bot 专管手则 | 中文 |
+| [grok-inbox/](grok-inbox/) | 专管 Grok Bot 定期推送的知识/建议条目（按周期吸收到 main；是建议输入，不是已生效规则） | 中文 |
+| [grok-feedback/](grok-feedback/) | 开发侧 → 专管 Grok Bot 的反馈轨（对 inbox 条目的采纳/拒绝/修正） | 中文 |
+| [claude-review/](claude-review/) | Claude（开发侧 review）对仓内容的 review 建议轨 | 中文 |
 
 ## 快速开始
 
