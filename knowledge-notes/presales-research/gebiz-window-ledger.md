@@ -8,7 +8,7 @@ summary: "8 周窗口观察第 1 周：台账已建（[internal path]），首�
 lang: zh
 type: experiment
 scope: public
-source: knowledge-base@ae7059e
+source: knowledge-base@d0e5e17
 ---
 
 # 新加坡 GeBIZ 投标窗口分布实测（8 周观察，L-20）
@@ -22,7 +22,7 @@ source: knowledge-base@ae7059e
 ## 台账与 SOP
 
 - 台账：[internal path]（周例行 SOP 内置：每周从 digest 追加、首响只记真实事件、每 4 周复算、第 8 周出报告回填本页）。
-- 数据源：自动入库的 `topics/singapore-it/singapore-it-digest.md`，不新增检索。
+- 数据源：自动入库的新加坡 IT 项目情报速览（`20260829-singapore-it-digest`），不新增检索。该速览已于 2026-10-26 从知识库删除，原文见 git 历史。
 
 ## 局限
 
