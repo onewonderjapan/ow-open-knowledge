@@ -86,6 +86,10 @@ ai-stack/
 
 The methodology behind this repo (cultivation standard, startup standard, pitfalls) lives in [../agent-cultivation/](../agent-cultivation/).
 
+## Articles
+
+- [上云前先脱敏（L1 · zh-CN · 2026-W38）](articles/2026-W38-masking-before-cloud-llm.zh-CN.md) — enterprise thin-slice: mask before cloud LLM
+
 ## Notes
 
 - Everything in `demo_data/` is fictional companies, people, and projects.
