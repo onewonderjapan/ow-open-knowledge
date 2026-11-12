@@ -1,16 +1,16 @@
-# Bot 手则目录
+# Bot 手则索引
 
-- [全员共通手则](./00-common.zh-CN.md)
+> 生产正本：[`../multi-bot-production-v2.zh-CN.md`](../multi-bot-production-v2.zh-CN.md)  
+> 审查：[`../fable-multibot-production-review.zh-CN.md`](../fable-multibot-production-review.zh-CN.md)  
+> 拍板默认：[`../multi-bot-decisions-defaults.zh-CN.md`](../multi-bot-decisions-defaults.zh-CN.md)
 
-## 仓专管
+| 文件 | 角色 |
+|---|---|
+| [00-common.zh-CN.md](./00-common.zh-CN.md) | 全员共通 |
+| [neng-social.zh-CN.md](./neng-social.zh-CN.md) | 外联 |
+| [onewonder-homepage.zh-CN.md](./onewonder-homepage.zh-CN.md) | 产线 A FDE |
+| [owd-pet-content-studio.zh-CN.md](./owd-pet-content-studio.zh-CN.md) | 产线 B 短剧/MV |
+| [ow-open-knowledge.zh-CN.md](./ow-open-knowledge.zh-CN.md) | 产线 D 公开文章 |
+| 其余 `*.zh-CN.md` | 非产线仓：降频，无阻塞不写 inbox |
 
-- [管公开知识仓的 · `ow-open-knowledge`](./ow-open-knowledge.zh-CN.md)
-- [管知识中枢的 · `owd-knowledge-hub`](./owd-knowledge-hub.zh-CN.md)
-- [管每日情报的 · `owd-daily-intel`](./owd-daily-intel.zh-CN.md)
-- [管宠物内容仓的 · `owd-pet-content-studio`](./owd-pet-content-studio.zh-CN.md)
-- [管铃湾仓的 · `owd-lingwan`](./owd-lingwan.zh-CN.md)
-- [管鹅鸭仓的 · `owd-eys`](./owd-eys.zh-CN.md)
-- [管官网仓的 · `onewonder-homepage`](./onewonder-homepage.zh-CN.md)
-- [管归档skills的 · `ow-archive-skills`](./ow-archive-skills.zh-CN.md)
-- [管skill平台的 · `skill-platform`](./skill-platform.zh-CN.md)
-- [管ai-ops的 · `ai-ops`](./ai-ops.zh-CN.md)
+旧分册计划仅归档；执行以 v2 + 本目录为准。

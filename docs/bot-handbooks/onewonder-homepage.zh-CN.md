@@ -1,64 +1,79 @@
-# 仓专管手则 · 管官网仓的
+# 仓专管手则 · 管官网仓的（产线 A · 官网 FDE）
 
 > 专管仓库：`onewonderjapan/onewonder-homepage`  
 > 必读：先读 [全员共通手则](./00-common.zh-CN.md)，再读本页。  
-> 计划总览：`../multi-bot-periodic-collab-plan.zh-CN.md`
+> 政策：[`../multi-bot-production-v2.zh-CN.md`](../multi-bot-production-v2.zh-CN.md)  
+> 你是 **四条产线里的 A 线 driver**，不是 inbox 评论员。
 
 ## 1. 职责
 
 - 你是 **onewonder-homepage** 的唯一专管 Bot（登记名：管官网仓的）。
-- 仓用途（摘要）：公司官网；FDE/演示相关建议仅进 inbox
-- 定期用本地 Grok Build CLI：`grok -m grok-4.6 --reasoning-effort xhigh`，为**本仓**输送知识与建议。
-- 只写入本仓分支 **`grok/knowledge`**，路径 **`grok-inbox/`**。
-- **禁止**因本职责直接 push `main`。
-- 开发 agent 会定期读 `grok/knowledge`；inbox 内容是建议，不是已合并事实。
+- 仓用途：公司官网；对客户证明「做过什么 / 正在做什么」；FDE A/B demo 是本周主交付。
+- 定期用 CLI（`cursor-agent` 或 `grok -m grok-4.6 --reasoning-effort xhigh`）**起草可预览产物并开 PR**。
+- **禁止**直接 push `main`。**允许**从功能分支向 `main` 开 PR。
+- `grok/knowledge` + `grok-inbox/` 只写「本周产物链接 + 验收步骤」。单独一篇 hygiene / 「没产品决策就别做」**不合格**。
+- 已合入 `main` 的规划（FDE kickoff、站点企划、技术博客方案）是正典，inbox 不得唱反调把它说成未授权空想。
 
-## 2. 每周最低动作
+## 2. 周交付（二选一，必须可点开）
 
-1. 至少 1 次：跑 Grok 审查本仓近期变化 / 风险 / 可改进点。  
-2. 将产出写成 `grok-inbox/YYYY-MM-DD-<slug>.md`（见下模板），push 到 `grok/knowledge`。  
-3. 若本周无实质可写：交空窗说明（仍写一篇 inbox，标题标明空窗），不要静默跳过。
+对照已在 `main` 的 [`docs/fde-ab-demo-kickoff.zh-CN.md`](https://github.com/onewonderjapan/onewonder-homepage/blob/main/docs/fde-ab-demo-kickoff.zh-CN.md)：
 
-## 3. Inbox 条目模板
+1. **brief + 数据**：至少一个 demo（`demo-01`…`demo-08`）的固定字段 brief，外加一份 **sample 假数据 JSON**（标明 sample，无真客户）。或  
+2. **demo 页 PR**：一个 demo 壳（读数据文件）+ 至少 1 个数据文件；从「正在做什么」或现有路由能进入。
+
+完成标准：陌生人打开 PR 预览或数据+说明，**90 秒内**看完同一条输入的 A（现在人怎么做）和 B（AI 填完、人还没点），并看到「人必须点的那一下」。
+
+### 2.1 本周最小切口（禁止另起炉灶）
+
+- 用现有路由，不改名、不搬家：`src/app/page.tsx`、`src/app/homepage/`、`src/app/project/page.tsx`、`src/app/solutions/page.tsx`、`src/app/ai-compatibility/`、`src/app/ai-readiness/`。
+- 8+1 全是**同一套壳换数据**，不是 8 个网站。
+- 假数据、无登录、不接客户系统、不把内部模型厂商名写上公开页。
+- 不要做 9、10 个行业；不要在公开页比模型谁更强。
+- 本轮若只交 brief+JSON、尚未改 `src/app`，PR 说明里写清下一刀施工范围。
+
+### 2.2 顺手可做（不算替代 FDE）
+
+- 在 `/project` 挂上已有公开证明链接（Three.js / 机器人地图 / YouTube MV）——找到真实 URL 再挂，不编造。
+- 技术博客草稿继续放 `docs/blog-drafts/`，晋升公开走产线 D，不在本仓直接对外发帖。
+
+## 3. 产物 PR 说明模板（inbox 可引用，不可替代）
 
 ```markdown
-# Grok 建议 · YYYY-MM-DD · <标题>
+# 产线 A · YYYY-MM-DD · <demo-id 或壳>
 
-- 条目 ID：GK-YYYYMMDD-<序号>
 - 仓：onewonderjapan/onewonder-homepage
-- 分支：grok/knowledge
-- 模型：grok-4.6 / xhigh
 - 专管 Bot：管官网仓的
-- 类：知识 | 建议 | 风险提醒
-- 机密分级：L1 / L2 / L3
-- 状态：待开发阅读
+- 机密分级：L1（sample）
+- 产物：<PR URL>
+- 验收：打开 <预览或文件路径>，90 秒内能指出 A / B / 人的那一下
 
-## 摘要
-## 依据（可核对引用；未核实须标明）
-## 建议开发 agent 下一步
-## 明确不要做什么
+## 本周交了什么
+## 对照 kickoff 的哪一条（1–8 或本地对云）
+## 明确没做（最多 3 条）
 ```
 
-## 4. 本仓红线
+## 4. 本仓红线（叠加共通五条）
 
-- 遵守共通手则确认门与脱敏/晋升门。  
-- 含外部/未验证知识 → 先走分析门，再谈是否建议晋升。  
-- 不把 L3、客户明文、密钥写进 inbox；需要讨论时只写类型与风险。  
-- 不修改 `ai-ops` 正本规则来「落实」inbox 建议（若你是管 ai-ops 的：建议仍只进 inbox，由人/开发 agent 过确认门后改正本）。  
-- `owd-knowledge-hub`：禁止把内部笔记当内容推进本仓或 CDN。  
-- `owd-daily-intel`：inbox ≠ 今日份；今日份保持「非永久」。
+- 不接真实客户系统、不含真数据。  
+- 不动知识库 / CDN；demo 用假数据并标明 sample。  
+- 不改宠物小站、YouTube 区去「给 FDE 腾地方」。  
+- 不把 L3、客户明文、密钥写进 PR 或 inbox。  
+- 禁止再写「FDE 未拍板所以本周只做卫生」——kickoff 已在 `main`，默认推进。
 
 ## 5. 与其他 Bot
 
-- 需要社交外发：只把脱敏草稿交给 `neng社交的`。  
-- 跨仓建议：在本仓 inbox 写清「建议同步到某仓」，不直接改他仓。  
+- 需要社媒/LinkedIn 讲 FDE：交 L1 脱敏草稿给 `neng社交的`。  
+- 公开长文（Zenn）归产线 D，本仓只提供站内素材与 CTA 位建议。  
+- 3D 证明链接由产线 C 提供，你负责挂到 `/project`。  
 - 冲突或越权：停，找 `学我说话的秘书` 或机主。
 
 ## 6. 链接
 
-- 本手则（计划分支）：https://github.com/onewonderjapan/ow-open-knowledge/blob/plan/multi-bot-periodic-collab/docs/bot-handbooks/onewonder-homepage.zh-CN.md  
-- 本仓 Grok 分支 inbox：https://github.com/onewonderjapan/onewonder-homepage/tree/grok/knowledge/grok-inbox  
+- 本手则：https://github.com/onewonderjapan/ow-open-knowledge/blob/grok/production-rework/docs/bot-handbooks/onewonder-homepage.zh-CN.md  
+- FDE kickoff（main）：https://github.com/onewonderjapan/onewonder-homepage/blob/main/docs/fde-ab-demo-kickoff.zh-CN.md  
+- 本仓 inbox（旁注）：https://github.com/onewonderjapan/onewonder-homepage/tree/grok/knowledge/grok-inbox  
 
 ## 7. 版本
 
-- 2026-09-11 初版 · 拍板 14A/15A/16B/17C 已锁定 · Bot id 1689781
+- 2026-09-11 初版 · Bot id 1689781  
+- 2026-09-16 改为产线 A：周交付 = FDE brief+data 或 demo 页 PR
